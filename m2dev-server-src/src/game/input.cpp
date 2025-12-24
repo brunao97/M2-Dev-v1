@@ -13,7 +13,6 @@
 #include "questmanager.h"
 #include "login_sim.h"
 #include "fishing.h"
-#include "TrafficProfiler.h"
 #include "priv_manager.h"
 #include "castle.h"
 
@@ -24,13 +23,13 @@ bool IsEmptyAdminPage()
 	return g_stAdminPageIP.empty();
 }
 
-bool IsAdminPage(const char * ip)
+bool IsAdminPage(const char* ip)
 {
 	for (size_t n = 0; n < g_stAdminPageIP.size(); ++n)
 	{
 		if (g_stAdminPageIP[n] == ip)
-			return 1; 
-	}	
+			return 1;
+	}
 	return 0;
 }
 
@@ -40,14 +39,14 @@ CInputProcessor::CInputProcessor() : m_pPacketInfo(NULL), m_iBufferLeft(0)
 		BindPacketInfo(&m_packetInfoCG);
 }
 
-void CInputProcessor::BindPacketInfo(CPacketInfo * pPacketInfo)
+void CInputProcessor::BindPacketInfo(CPacketInfo* pPacketInfo)
 {
 	m_pPacketInfo = pPacketInfo;
 }
 
-bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, int & r_iBytesProceed)
+bool CInputProcessor::Process(LPDESC lpDesc, const void* c_pvOrig, int iBytes, int& r_iBytesProceed)
 {
-	const char * c_pData = (const char *) c_pvOrig;
+	const char* c_pData = (const char*)c_pvOrig;
 
 	BYTE	bLastHeader = 0;
 	int		iLastPacketLen = 0;
@@ -61,8 +60,8 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 
 	for (m_iBufferLeft = iBytes; m_iBufferLeft > 0;)
 	{
-		BYTE bHeader = (BYTE) *(c_pData);
-		const char * c_pszName;
+		BYTE bHeader = (BYTE) * (c_pData);
+		const char* c_pszName;
 
 		if (bHeader == 0) // 암호화 처리가 있으므로 0번 헤더는 스킵한다.
 			iPacketLen = 1;
@@ -123,18 +122,13 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 			m_pPacketInfo->End();
 		}
 
-		// TRAFFIC_PROFILER
-		if (g_bTrafficProfileOn)
-			TrafficProfiler::instance().Report(TrafficProfiler::IODIR_INPUT, bHeader, iPacketLen);
-		// END_OF_TRAFFIC_PROFILER
-
 		if (bHeader == HEADER_CG_PONG)
-			sys_log(0, "PONG! %u %u", m_pPacketInfo->IsSequence(bHeader), *(BYTE *) (c_pData + iPacketLen - sizeof(BYTE)));
+			sys_log(0, "PONG! %u %u", m_pPacketInfo->IsSequence(bHeader), *(BYTE*)(c_pData + iPacketLen - sizeof(BYTE)));
 
 		if (m_pPacketInfo->IsSequence(bHeader))
 		{
 			BYTE bSeq = lpDesc->GetSequence();
-			BYTE bSeqReceived = *(BYTE *) (c_pData + iPacketLen - sizeof(BYTE));
+			BYTE bSeqReceived = *(BYTE*)(c_pData + iPacketLen - sizeof(BYTE));
 
 			if (bSeq != bSeqReceived)
 			{
@@ -144,12 +138,12 @@ bool CInputProcessor::Process(LPDESC lpDesc, const void * c_pvOrig, int iBytes, 
 			}
 		}
 
-		c_pData	+= iPacketLen;
+		c_pData += iPacketLen;
 		m_iBufferLeft -= iPacketLen;
 		r_iBytesProceed += iPacketLen;
 
 		iLastPacketLen = iPacketLen;
-		bLastHeader	= bHeader;
+		bLastHeader = bHeader;
 
 		if (GetType() != lpDesc->GetInputProcessor()->GetType())
 			return false;
@@ -163,9 +157,9 @@ void CInputProcessor::Pong(LPDESC d)
 	d->SetPong(true);
 }
 
-void CInputProcessor::Handshake(LPDESC d, const char * c_pData)
+void CInputProcessor::Handshake(LPDESC d, const char* c_pData)
 {
-	TPacketCGHandshake * p = (TPacketCGHandshake *) c_pData;
+	TPacketCGHandshake* p = (TPacketCGHandshake*)c_pData;
 
 	if (d->GetHandshake() != p->dwHandshake)
 	{
@@ -198,12 +192,12 @@ void CInputProcessor::Version(LPCHARACTER ch, const char* c_pData)
 	if (!ch)
 		return;
 
-	TPacketCGClientVersion * p = (TPacketCGClientVersion *) c_pData;
+	TPacketCGClientVersion* p = (TPacketCGClientVersion*)c_pData;
 	sys_log(0, "VERSION: %s %s %s", ch->GetName(), p->timestamp, p->filename);
 	ch->GetDesc()->SetClientVersion(p->timestamp);
 }
 
-void LoginFailure(LPDESC d, const char * c_pszStatus)
+void LoginFailure(LPDESC d, const char* c_pszStatus)
 {
 	if (!d)
 		return;
@@ -218,7 +212,7 @@ void LoginFailure(LPDESC d, const char * c_pszStatus)
 
 CInputHandshake::CInputHandshake()
 {
-	CPacketInfoCG * pkPacketInfo = M2_NEW CPacketInfoCG;
+	CPacketInfoCG* pkPacketInfo = M2_NEW CPacketInfoCG;
 	pkPacketInfo->SetSequence(HEADER_CG_PONG, false);
 
 	m_pMainPacketInfo = m_pPacketInfo;
@@ -227,23 +221,22 @@ CInputHandshake::CInputHandshake()
 
 CInputHandshake::~CInputHandshake()
 {
-	if( NULL != m_pPacketInfo )
+	if (NULL != m_pPacketInfo)
 	{
 		M2_DELETE(m_pPacketInfo);
 		m_pPacketInfo = NULL;
 	}
 }
 
-
-std::map<DWORD, CLoginSim *> g_sim;
-std::map<DWORD, CLoginSim *> g_simByPID;
+std::map<DWORD, CLoginSim*> g_sim;
+std::map<DWORD, CLoginSim*> g_simByPID;
 std::vector<TPlayerTable> g_vec_save;
 
 // BLOCK_CHAT
 ACMD(do_block_chat);
 // END_OF_BLOCK_CHAT
 
-int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
+int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char* c_pData)
 {
 	if (bHeader == 10) // 엔터는 무시
 		return 0;
@@ -251,7 +244,7 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 	if (bHeader == HEADER_CG_TEXT)
 	{
 		++c_pData;
-		const char * c_pSep;
+		const char* c_pSep;
 
 		if (!(c_pSep = strchr(c_pData, '\n')))	// \n을 찾는다.
 			return -1;
@@ -308,7 +301,7 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 				else
 				{
 					int iTotal;
-					int * paiEmpireUserCount;
+					int* paiEmpireUserCount;
 					int iLocal;
 					DESC_MANAGER::instance().GetUserCount(iTotal, &paiEmpireUserCount, iLocal);
 					snprintf(szTmp, sizeof(szTmp), "%d %d %d %d %d", iTotal, paiEmpireUserCount[1], paiEmpireUserCount[2], paiEmpireUserCount[3], iLocal);
@@ -317,7 +310,7 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			else
 			{
 				int iTotal;
-				int * paiEmpireUserCount;
+				int* paiEmpireUserCount;
 				int iLocal;
 				DESC_MANAGER::instance().GetUserCount(iTotal, &paiEmpireUserCount, iLocal);
 				snprintf(szTmp, sizeof(szTmp), "%d %d %d %d %d", iTotal, paiEmpireUserCount[1], paiEmpireUserCount[2], paiEmpireUserCount[3], iLocal);
@@ -327,7 +320,7 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		else if (!stBuf.compare("CHECK_P2P_CONNECTIONS"))
 		{
 			std::ostringstream oss(std::ostringstream::out);
-			
+
 			oss << "P2P CONNECTION NUMBER : " << P2P_MANAGER::instance().GetDescCount() << "\n";
 			std::string hostNames;
 			P2P_MANAGER::Instance().GetP2PHostNames(hostNames);
@@ -349,23 +342,23 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			stResult = "OK";
 		}
 		//gift notify delete command
-		else if (!stBuf.compare(0,15,"DELETE_AWARDID "))
-			{
-				char szTmp[64];
-				std::string msg = stBuf.substr(15,26);	// item_award의 id범위?
-				
-				TPacketDeleteAwardID p;
-				p.dwID = (DWORD)(atoi(msg.c_str()));
-				snprintf(szTmp,sizeof(szTmp),"Sent to DB cache to delete ItemAward, id: %d",p.dwID);
-				//sys_log(0,"%d",p.dwID);
-				// strlcpy(p.login, msg.c_str(), sizeof(p.login));
-				db_clientdesc->DBPacket(HEADER_GD_DELETE_AWARDID, 0, &p, sizeof(p));
-				stResult += szTmp;
-			}
+		else if (!stBuf.compare(0, 15, "DELETE_AWARDID "))
+		{
+			char szTmp[64];
+			std::string msg = stBuf.substr(15, 26);	// item_award의 id범위?
+
+			TPacketDeleteAwardID p;
+			p.dwID = (DWORD)(atoi(msg.c_str()));
+			snprintf(szTmp, sizeof(szTmp), "Sent to DB cache to delete ItemAward, id: %d", p.dwID);
+			//sys_log(0,"%d",p.dwID);
+			// strlcpy(p.login, msg.c_str(), sizeof(p.login));
+			db_clientdesc->DBPacket(HEADER_GD_DELETE_AWARDID, 0, &p, sizeof(p));
+			stResult += szTmp;
+		}
 		else
 		{
 			stResult = "UNKNOWN";
-			
+
 			if (d->IsAdminMode())
 			{
 				// 어드민 명령들
@@ -440,30 +433,30 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 						switch (LOWER(c))
 						{
-							case 'u':
-								LoadStateUserCount();
-								break;
+						case 'u':
+							LoadStateUserCount();
+							break;
 
-							case 'p':
-								db_clientdesc->DBPacket(HEADER_GD_RELOAD_PROTO, 0, NULL, 0);
-								break;
+						case 'p':
+							db_clientdesc->DBPacket(HEADER_GD_RELOAD_PROTO, 0, NULL, 0);
+							break;
 
-							case 's':
-								DBManager::instance().LoadDBString();
-								break;
+						case 's':
+							DBManager::instance().LoadDBString();
+							break;
 
-							case 'q':
-								quest::CQuestManager::instance().Reload();
-								break;
+						case 'q':
+							quest::CQuestManager::instance().Reload();
+							break;
 
-							case 'f':
-								fishing::Initialize();
-								break;
+						case 'f':
+							fishing::Initialize();
+							break;
 
-							case 'a':
-								db_clientdesc->DBPacket(HEADER_GD_RELOAD_ADMIN, 0, NULL, 0);
-								sys_log(0, "Reloading admin infomation.");
-								break;
+						case 'a':
+							db_clientdesc->DBPacket(HEADER_GD_RELOAD_ADMIN, 0, NULL, 0);
+							sys_log(0, "Reloading admin infomation.");
+							break;
 						}
 					}
 				}
@@ -534,8 +527,8 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 							// 시간 단위로 변경
 							duration = duration * (60 * 60);
 
-							sys_log(0, "_give_empire_privileage(empire=%d, type=%d, value=%d, duration=%d) by web", 
-									empire, type, value, duration);
+							sys_log(0, "_give_empire_privileage(empire=%d, type=%d, value=%d, duration=%d) by web",
+								empire, type, value, duration);
 							CPrivManager::instance().RequestGiveEmpirePriv(empire, type, value, duration);
 						}
 					}
@@ -587,7 +580,7 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		TPacketKeyAgreement* p = (TPacketKeyAgreement*)c_pData;
 		if (!d->IsCipherPrepared())
 		{
-			sys_err ("Cipher isn't prepared. %s maybe a Hacker.", inet_ntoa(d->GetAddr().sin_addr));
+			sys_err("Cipher isn't prepared. %s maybe a Hacker.", inet_ntoa(d->GetAddr().sin_addr));
 			d->DelayedDisconnect(5);
 			return 0;
 		}
@@ -595,10 +588,12 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			// Handshaking succeeded
 			if (g_bAuthServer) {
 				d->SetPhase(PHASE_AUTH);
-			} else {
+			}
+			else {
 				d->SetPhase(PHASE_LOGIN);
 			}
-		} else {
+		}
+		else {
 			sys_log(0, "[CInputHandshake] Key agreement failed: al=%u dl=%u",
 				p->wAgreedLength, p->wDataLength);
 			d->SetPhase(PHASE_CLOSE);
@@ -610,5 +605,3 @@ int CInputHandshake::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 
 	return 0;
 }
-
-

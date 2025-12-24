@@ -1,5 +1,4 @@
-﻿
-#ifndef __INC_METIN_II_GAME_CONFIG_H__
+﻿#ifndef __INC_METIN_II_GAME_CONFIG_H__
 #define __INC_METIN_II_GAME_CONFIG_H__
 
 enum
@@ -29,18 +28,16 @@ extern bool	china_event_server;
 extern bool	g_bNoMoreClient;
 extern bool	g_bNoRegen;
 
-extern bool	g_bTrafficProfileOn;		///< true 이면 TrafficProfiler 를 켠다.
-
 extern BYTE	g_bChannel;
 
 extern bool	map_allow_find(int index);
-extern void	map_allow_copy(int32_t * pl, int size);
+extern void	map_allow_copy(int32_t* pl, int size);
 extern bool	no_wander;
 
-extern int	g_iUserLimit;
+extern int		g_iUserLimit;
 extern time_t	g_global_time;
 
-const char *	get_table_postfix();
+const char* get_table_postfix();
 
 extern std::string	g_stHostname;
 extern std::string	g_stLocale;
@@ -53,8 +50,8 @@ extern char		g_szInternalIP[16];
 extern std::string	g_stProxyIP;
 #endif
 
-extern int (*is_twobyte) (const char * str);
-extern int (*check_name) (const char * str);
+extern int (*is_twobyte) (const char* str);
+extern int (*check_name) (const char* str);
 
 extern bool		g_bSkillDisable;
 
@@ -83,7 +80,6 @@ extern std::string	g_stQuestDir;
 //extern std::string	g_stQuestObjectDir;
 extern std::set<std::string> g_setQuestObjectDir;
 
-
 extern std::vector<std::string>	g_stAdminPageIP;
 extern std::string	g_stAdminPagePassword;
 
@@ -99,8 +95,8 @@ extern int VIEW_RANGE;
 extern int VIEW_BONUS_RANGE;
 
 extern bool g_bCheckMultiHack;
-extern bool g_protectNormalPlayer;      // 범법자가 "평화모드" 인 일반유저를 공격하지 못함
-extern bool g_noticeBattleZone;         // 중립지대에 입장하면 안내메세지를 알려줌
+extern bool g_protectNormalPlayer;
+extern bool g_noticeBattleZone;
 
 extern DWORD g_GoldDropTimeLimitValue;
 
@@ -109,4 +105,3 @@ extern int gPlayerMaxLevel;
 extern bool g_BlockCharCreation;
 
 #endif /* __INC_METIN_II_GAME_CONFIG_H__ */
-

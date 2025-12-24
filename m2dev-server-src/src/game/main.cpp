@@ -38,7 +38,6 @@
 #include "wedding.h"
 #include "fishing.h"
 #include "item_addon.h"
-#include "TrafficProfiler.h"
 #include "locale_service.h"
 #include "arena.h"
 #include "OXEvent.h"
@@ -80,11 +79,6 @@ void WriteMallocMessage(const char* p1, const char* p2, const char* p3, const ch
 }
 #endif
 
-// TRAFFIC_PROFILER
-static const DWORD	TRAFFIC_PROFILE_FLUSH_CYCLE = 3600;	///< TrafficProfiler 의 Flush cycle. 1시간 간격
-// END_OF_TRAFFIC_PROFILER
-
-// 게임과 연결되는 소켓
 volatile int	num_events_called = 0;
 int             max_bytes_written = 0;
 int             current_bytes_written = 0;
@@ -364,7 +358,6 @@ int main(int argc, char** argv)
 
 	DESC_MANAGER	desc_manager;
 
-	TrafficProfiler	trafficProfiler;
 	CTableBySkill SkillPowerByLevel;
 	CPolymorphUtils polymorph_utils;
 	CProfiler		profiler;
@@ -396,9 +389,6 @@ int main(int argc, char** argv)
 	Blend_Item_init();
 	ani_init();
 	PanamaLoad();
-
-	if (g_bTrafficProfileOn)
-		TrafficProfiler::instance().Initialize(TRAFFIC_PROFILE_FLUSH_CYCLE, "ProfileLog");
 
 	//TODO : make it config
 	const std::string strPackageCryptInfoDir = "package/";
@@ -465,9 +455,6 @@ int main(int argc, char** argv)
 	sys_log(0, "<shutdown> Destroying building::CManager...");
 	building_manager.Destroy();
 
-	sys_log(0, "<shutdown> Flushing TrafficProfiler...");
-	trafficProfiler.Flush();
-
 	destroy();
 
 #ifdef DEBUG_ALLOC
@@ -485,7 +472,7 @@ void usage()
 		"-l <level>   : sets log level\n"
 		"-v           : log to stdout\n"
 		"-r           : do not load regen tables\n"
-		"-t           : traffic proflie on\n");
+	);
 }
 
 int start(int argc, char** argv)
@@ -550,12 +537,6 @@ int start(int argc, char** argv)
 		case 'r':
 			g_bNoRegen = true;
 			break;
-
-			// TRAFFIC_PROFILER
-		case 't':
-			g_bTrafficProfileOn = true;
-			break;
-			// END_OF_TRAFFIC_PROFILER
 		}
 	}
 
