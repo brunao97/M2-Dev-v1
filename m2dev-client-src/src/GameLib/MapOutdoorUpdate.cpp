@@ -196,6 +196,7 @@ void CMapOutdoor::__Game_UpdateArea(D3DXVECTOR3& v3Player)
 {
 	m_PCBlockerVector.clear();
 	m_ShadowReceiverVector.clear();
+
 	CCameraManager& rCmrMgr = CCameraManager::Instance();
 	CCamera* pCamera = rCmrMgr.GetCurrentCamera();
 
@@ -214,8 +215,11 @@ void CMapOutdoor::__Game_UpdateArea(D3DXVECTOR3& v3Player)
 	v3Light *= 50.0f / D3DXVec3Length(&v3Light);
 
 	__CollectShadowReceiver(v3Player, v3Light);
+
 	__CollectCollisionPCBlocker(v3Eye, v3Player, fDistance);
+
 	__CollectCollisionShadowReceiver(v3Player, v3Light);
+
 	__UpdateAroundAreaList();
 }
 

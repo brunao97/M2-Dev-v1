@@ -103,7 +103,6 @@ protected:
 	D3DXVECTOR3 m_v3Velocity;
 
 	D3DXVECTOR3 m_v3LastPosition;
-
 	CEaseOutInterpolation m_xPushingPosition;
 	CEaseOutInterpolation m_yPushingPosition;
 

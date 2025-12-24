@@ -56,7 +56,6 @@ void CActorInstance::OnUpdate()
 	__BlendAlpha_Update();
 }
 
-// 2004.07.05.myevan. 궁신탄영 맵에 끼이는 문제해결
 IBackground& CActorInstance::GetBackground()
 {
 	return IBackground::Instance();
@@ -155,7 +154,6 @@ void CActorInstance::SetFishingPosition(D3DXVECTOR3& rv3Position)
 	m_v3FishingPosition = rv3Position;
 }
 
-// ActorInstanceMotion.cpp 에 넣도록 하자
 void  CActorInstance::Move()
 {
 	if (m_isWalking)
@@ -458,8 +456,6 @@ void CActorInstance::PhysicsProcess()
 
 void CActorInstance::__AccumulationMovement(float fRot)
 {
-	// NOTE - 일단은 WAIT로 미끄러짐 방지
-	//        추후에는 RaceMotionData가 이동되는 모션인지에 대한 Flag를 갖고 있게끔 한다. - [levites]
 	if (CRaceMotionData::NAME_WAIT == __GetCurrentMotionIndex())
 	{
 		return;
@@ -619,10 +615,6 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance* c_pAct
 		return;
 	}
 
-	// NOTE : 기존의 Sphere Overlap됬을경우 처리가 비비기를 하면은 Penetration될 위험이 많아서 ( 실제로도 나왔고 --)
-	// Sphere간 Collision이 생겼을 경우 이전위치로 RollBack하는 방식으로 바꿨다.
-	// 단 BGObject에 대해서만.
-
 	if (isAttacking())
 	{
 		return;
@@ -633,20 +625,6 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance* c_pAct
 	if ((uActorType == TYPE_BUILDING) || (uActorType == TYPE_OBJECT) || (uActorType == TYPE_DOOR) || (uActorType == TYPE_STONE))
 	{
 		BlockMovement();
-
-		//Movement초기화
-		/*	m_v3Movement = D3DXVECTOR3(0.f,0.f,0.f);
-
-			TCollisionPointInstanceListIterator itMain = m_BodyPointInstanceList.begin();
-			for (; itMain != m_BodyPointInstanceList.end(); ++itMain)
-			{
-				CDynamicSphereInstanceVector & c_rMainSphereVector = (*itMain).SphereInstanceVector;
-				for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
-				{
-					CDynamicSphereInstance & c_rMainSphere = c_rMainSphereVector[i];
-					c_rMainSphere.v3Position =c_rMainSphere.v3LastPosition;
-				}
-			}*/
 	}
 
 	else

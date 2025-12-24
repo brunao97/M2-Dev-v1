@@ -731,6 +731,7 @@ void CActorInstance::__ProcessDataAttackSuccess(const NRaceData::TAttackData& c_
 		// VICTIM_COLLISION_TEST
 		const D3DXVECTOR3& kVictimPos = rVictim.GetPosition();
 		rVictim.m_PhysicsObject.IncreaseExternalForce(kVictimPos, c_rAttackData.fExternalForce); //*nForceRatio/100.0f);
+
 		// VICTIM_COLLISION_TEST_END
 	}
 
