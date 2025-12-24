@@ -83,11 +83,6 @@ class CPythonNetworkStream : public CNetworkStream, public CSingleton<CPythonNet
 		
 		void NotifyHack(const char* c_szMsg);		
 		void SetWaitFlag();
-#if defined(ENABLE_DISCORD_RPC)
-		void Discord_Start();
-		void Discord_Close();
-		void Discord_Update(const bool bInGame);
-#endif
 
 		void SendEmoticon(UINT eEmoticon);
 

@@ -616,9 +616,6 @@ bool CPythonNetworkStream::RecvPhasePacket()
 
 		case PHASE_SELECT:				// 캐릭터 선택 화면
 			SetSelectPhase();
-#if defined(ENABLE_DISCORD_RPC)
-			Discord_Update(false);
-#endif
 
 			BuildProcessCRC();
 	
@@ -633,9 +630,6 @@ bool CPythonNetworkStream::RecvPhasePacket()
 
 		case PHASE_GAME:				// 게임 화면
 			SetGamePhase();
-#if defined(ENABLE_DISCORD_RPC)
-			Discord_Update(true);
-#endif
 			break;
 
 		case PHASE_DEAD:				// 죽었을 때.. (게임 안에 있는 것일 수도..)
@@ -714,10 +708,6 @@ void CPythonNetworkStream::SetOffLinePhase()
 	Tracen("");
 	Tracen("## Network - OffLine Phase ##");	
 	Tracen("");
-	
-#if defined(ENABLE_DISCORD_RPC)
-	Discord_Update(false);
-#endif
 
 	m_dwChangingPhaseTime = ELTimer_GetMSec();
 	m_phaseProcessFunc.Set(this, &CPythonNetworkStream::OffLinePhase);
