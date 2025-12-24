@@ -72,16 +72,6 @@ void CPythonNetworkStream::LoginPhase()
 
 		break;
 
-	case HEADER_GC_HYBRIDCRYPT_KEYS:
-		RecvHybridCryptKeyPacket();
-		return;
-		break;
-
-	case HEADER_GC_HYBRIDCRYPT_SDB:
-		RecvHybridCryptSDBPacket();
-		return;
-		break;
-
 	default:
 		if (RecvDefaultPacket(header))
 		{
@@ -129,7 +119,6 @@ void CPythonNetworkStream::SetLoginPhase()
 			SendLoginPacket(m_stID.c_str(), m_stPassword.c_str());
 		}
 
-		// 비밀번호를 메모리에 계속 갖고 있는 문제가 있어서, 사용 즉시 날리는 것으로 변경
 		ClearLoginInfo();
 		CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();
@@ -147,7 +136,6 @@ void CPythonNetworkStream::SetLoginPhase()
 			SendLoginPacket(m_stID.c_str(), m_stPassword.c_str());
 		}
 
-		// 비밀번호를 메모리에 계속 갖고 있는 문제가 있어서, 사용 즉시 날리는 것으로 변경
 		ClearLoginInfo();
 		CAccountConnector& rkAccountConnector = CAccountConnector::Instance();
 		rkAccountConnector.ClearLoginInfo();

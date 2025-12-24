@@ -287,12 +287,6 @@ enum
 	// END_OF_SUPPORT_BGM
 
 	HEADER_GC_AUTH_SUCCESS = 150,
-	HEADER_GC_PANAMA_PACK = 151,
-
-	//HYBRID CRYPT
-	HEADER_GC_HYBRIDCRYPT_KEYS = 152,
-	HEADER_GC_HYBRIDCRYPT_SDB = 153, // SDB means Supplmentary Data Blocks
-	//HYBRID CRYPT
 
 	HEADER_GC_SPECIFIC_EFFECT = 208,
 	HEADER_GC_DRAGON_SOUL_REFINE = 209,
@@ -2458,72 +2452,6 @@ typedef struct SPacketGCResetOnTime
 {
 	uint8_t header;
 } TPacketGCResetOnTime;
-
-typedef struct SPacketGCPanamaPack
-{
-	uint8_t    bHeader;
-	char    szPackName[256];
-	uint8_t    abIV[32];
-} TPacketGCPanamaPack;
-
-typedef struct SPacketGCHybridCryptKeys
-{
-private:
-	SPacketGCHybridCryptKeys() : m_pStream(NULL) {}
-
-public:
-	SPacketGCHybridCryptKeys(int32_t iStreamSize) : iKeyStreamLen(iStreamSize)
-	{
-		m_pStream = new uint8_t[iStreamSize];
-	}
-
-	~SPacketGCHybridCryptKeys()
-	{
-		if (m_pStream)
-		{
-			delete[] m_pStream;
-			m_pStream = NULL;
-		}
-	}
-
-	static int32_t GetFixedHeaderSize()
-	{
-		return sizeof(uint8_t) + sizeof(uint16_t) + sizeof(int32_t);
-	}
-
-	uint8_t	bHeader;
-	uint16_t    wDynamicPacketSize;
-	int32_t		iKeyStreamLen;
-	uint8_t* m_pStream;
-} TPacketGCHybridCryptKeys;
-
-typedef struct SPacketGCHybridSDB
-{
-private:
-	SPacketGCHybridSDB() : m_pStream(NULL) {}
-
-public:
-	SPacketGCHybridSDB(int32_t iStreamSize) : iSDBStreamLen(iStreamSize)
-	{
-		m_pStream = new uint8_t[iStreamSize];
-	}
-
-	~SPacketGCHybridSDB()
-	{
-		delete[] m_pStream;
-		m_pStream = NULL;
-	}
-
-	static int32_t GetFixedHeaderSize()
-	{
-		return sizeof(uint8_t) + sizeof(uint16_t) + sizeof(int32_t);
-	}
-
-	uint8_t	bHeader;
-	uint16_t    wDynamicPacketSize;
-	int32_t		iSDBStreamLen;
-	uint8_t* m_pStream;
-} TPacketGCHybridSDB;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Client To Client

@@ -601,16 +601,6 @@ void CPythonNetworkStream::GamePhase()
 			return;
 			break;
 
-		case HEADER_GC_HYBRIDCRYPT_KEYS:
-			RecvHybridCryptKeyPacket();
-			return;
-			break;
-
-		case HEADER_GC_HYBRIDCRYPT_SDB:
-			RecvHybridCryptSDBPacket();
-			return;
-			break;
-
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 
 		case HEADER_GC_KEY_AGREEMENT:
@@ -4819,7 +4809,6 @@ bool CPythonNetworkStream::RecvChangeSkillGroupPacket()
 
 	CPythonPlayer::Instance().NEW_ClearSkillData();
 	__RefreshCharacterWindow();
-
 	return true;
 }
 

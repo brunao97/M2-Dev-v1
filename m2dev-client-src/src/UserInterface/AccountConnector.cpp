@@ -101,17 +101,6 @@ bool CAccountConnector::__HandshakeState_Process()
 		return false;
 	}
 
-	//  TODO :  차후 서버와 동일하게 가변길이 data serialize & deserialize  작업해야 한다.
-	if (!__AnalyzeVarSizePacket(HEADER_GC_HYBRIDCRYPT_KEYS, &CAccountConnector::__AuthState_RecvHybridCryptKeys))
-	{
-		return false;
-	}
-
-	if (!__AnalyzeVarSizePacket(HEADER_GC_HYBRIDCRYPT_SDB, &CAccountConnector::__AuthState_RecvHybridCryptSDB))
-	{
-		return false;
-	}
-
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 
 	if (!__AnalyzePacket(HEADER_GC_KEY_AGREEMENT, sizeof(TPacketKeyAgreement), &CAccountConnector::__AuthState_RecvKeyAgreement))
@@ -161,11 +150,6 @@ bool CAccountConnector::__AuthState_Process()
 		return false;
 	}
 
-	if (!__AnalyzePacket(HEADER_GC_PANAMA_PACK, sizeof(TPacketGCPanamaPack), &CAccountConnector::__AuthState_RecvPanamaPack))
-	{
-		return false;
-	}
-
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 
 	if (!__AnalyzePacket(HEADER_GC_KEY_AGREEMENT, sizeof(TPacketKeyAgreement), &CAccountConnector::__AuthState_RecvKeyAgreement))
@@ -179,17 +163,6 @@ bool CAccountConnector::__AuthState_Process()
 	}
 
 #endif
-
-	//  TODO :  차후 서버와 동일하게 가변길이 data serialize & deserialize  작업해야 한다.
-	if (!__AnalyzeVarSizePacket(HEADER_GC_HYBRIDCRYPT_KEYS, &CAccountConnector::__AuthState_RecvHybridCryptKeys))
-	{
-		return false;
-	}
-
-	if (!__AnalyzeVarSizePacket(HEADER_GC_HYBRIDCRYPT_SDB, &CAccountConnector::__AuthState_RecvHybridCryptSDB))
-	{
-		return false;
-	}
 
 	return true;
 }
@@ -292,56 +265,6 @@ bool CAccountConnector::__AuthState_RecvHandshake()
 	return true;
 }
 
-bool CAccountConnector::__AuthState_RecvPanamaPack()
-{
-	TPacketGCPanamaPack kPacket;
-
-	if (!Recv(sizeof(TPacketGCPanamaPack), &kPacket))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool CAccountConnector::__AuthState_RecvHybridCryptKeys(int iTotalSize)
-{
-	int iFixedHeaderSize = TPacketGCHybridCryptKeys::GetFixedHeaderSize();
-
-	TPacketGCHybridCryptKeys kPacket(iTotalSize - iFixedHeaderSize);
-
-	if (!Recv(iFixedHeaderSize, &kPacket))
-	{
-		return false;
-	}
-
-	if (!Recv(kPacket.iKeyStreamLen, kPacket.m_pStream))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool CAccountConnector::__AuthState_RecvHybridCryptSDB(int iTotalSize)
-{
-	int iFixedHeaderSize = TPacketGCHybridSDB::GetFixedHeaderSize();
-
-	TPacketGCHybridSDB kPacket(iTotalSize - iFixedHeaderSize);
-
-	if (!Recv(iFixedHeaderSize, &kPacket))
-	{
-		return false;
-	}
-
-	if (!Recv(kPacket.iSDBStreamLen, kPacket.m_pStream))
-	{
-		return false;
-	}
-
-	return true;
-}
-
 bool CAccountConnector::__AuthState_RecvPing()
 {
 	TPacketGCPing kPacketPing;
@@ -393,8 +316,6 @@ bool CAccountConnector::__AuthState_RecvAuthSuccess()
 
 	else
 	{
-		DWORD dwPanamaKey = kAuthSuccessPacket.dwLoginKey ^ g_adwEncryptKey[0] ^ g_adwEncryptKey[1] ^ g_adwEncryptKey[2] ^ g_adwEncryptKey[3];
-
 		CPythonNetworkStream& rkNet = CPythonNetworkStream::Instance();
 		rkNet.SetLoginKey(kAuthSuccessPacket.dwLoginKey);
 		rkNet.Connect(m_strAddr.c_str(), m_iPort);
@@ -443,7 +364,6 @@ bool CAccountConnector::__AuthState_RecvKeyAgreement()
 
 	if (agreedLength == 0)
 	{
-		// 초기화 실패
 		Disconnect();
 		return false;
 	}
@@ -452,7 +372,6 @@ bool CAccountConnector::__AuthState_RecvKeyAgreement()
 
 	if (Activate(packet.wAgreedLength, packet.data, packet.wDataLength))
 	{
-		// Key agreement 성공, 응답 전송
 		packetToSend.bHeader = HEADER_CG_KEY_AGREEMENT;
 		packetToSend.wAgreedLength = (WORD)agreedLength;
 		packetToSend.wDataLength = (WORD)dataLength;
@@ -468,7 +387,6 @@ bool CAccountConnector::__AuthState_RecvKeyAgreement()
 
 	else
 	{
-		// 키 협상 실패
 		Disconnect();
 		return false;
 	}
@@ -577,7 +495,6 @@ void CAccountConnector::OnConnectSuccess()
 
 void CAccountConnector::OnRemoteDisconnect()
 {
-	// Matrix Card Number 를 보내 놓았는데 close 되면 프로그램을 종료 한다.
 	if (m_isWaitKey)
 	{
 		if (m_poHandler)

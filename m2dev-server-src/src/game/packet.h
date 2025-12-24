@@ -262,13 +262,6 @@ enum
 
 	HEADER_GC_AUTH_SUCCESS			= 150,
 
-	HEADER_GC_PANAMA_PACK			= 151,
-
-	//HYBRID CRYPT
-	HEADER_GC_HYBRIDCRYPT_KEYS		= 152,
-	HEADER_GC_HYBRIDCRYPT_SDB		= 153, // SDB means Supplmentary Data Blocks
-	//HYBRID CRYPT
-
 	// ROULETTE
 	HEADER_GC_ROULETTE					= 200, 
 	// END_ROULETTE			
@@ -2153,110 +2146,6 @@ typedef struct SPacketGGCheckAwakeness
 {
 	uint8_t bHeader;
 } TPacketGGCheckAwakeness;
-
-typedef struct SPacketGCPanamaPack
-{
-	uint8_t	bHeader;
-	char	szPackName[256];
-	uint8_t	abIV[32];
-} TPacketGCPanamaPack;
-
-//TODO :  아우 짱나..가변패킷 사이즈 받아들일수 있게 패킷 핸들러 Refactoring 하자. 
-typedef struct SPacketGCHybridCryptKeys
-{
-	SPacketGCHybridCryptKeys() : m_pStream(NULL) {}
-	~SPacketGCHybridCryptKeys()
-	{
-		//GCC 에선 NULL delete 해도 괜찮나? 일단 안전하게 NULL 체크 하자. ( 근데 이거 C++ 표준아니었나 --a )
-		if( m_pStream )
-		{
-			delete[] m_pStream;
-			m_pStream = NULL;
-		}
-	}
-	
-	uint32_t GetStreamSize()
-	{
-		return sizeof(bHeader) + sizeof(uint16_t) + sizeof(int32_t) + KeyStreamLen; 
-	}
-
-	uint8_t* GetStreamData()
-	{
-		if( m_pStream )
-			delete[] m_pStream;
-
-		uDynamicPacketSize = (uint16_t)GetStreamSize();
-		
-		m_pStream = new uint8_t[ uDynamicPacketSize ];
-
-		memcpy( m_pStream, &bHeader, 1 );
-		memcpy( m_pStream+1, &uDynamicPacketSize, 2 );
-		memcpy( m_pStream+3, &KeyStreamLen, 4 );
-
-		if( KeyStreamLen > 0 )
-			memcpy( m_pStream+7, pDataKeyStream, KeyStreamLen );
-
-		return m_pStream;
-	}
-
-	uint8_t	bHeader;
-	uint16_t    uDynamicPacketSize; // 빌어먹을 클라  DynamicPacketHeader 구조때문에 맞춰줘야한다 -_-;
-	int32_t		KeyStreamLen;
-	uint8_t*   pDataKeyStream;
-
-private:
-	uint8_t* m_pStream;
-
-
-} TPacketGCHybridCryptKeys;
-
-
-typedef struct SPacketGCPackageSDB
-{
-	SPacketGCPackageSDB() : m_pDataSDBStream(NULL), m_pStream(NULL) {}
-	~SPacketGCPackageSDB()
-	{
-		if( m_pStream )
-		{
-			delete[] m_pStream;
-			m_pStream = NULL;
-		}
-	}
-	
-	uint32_t GetStreamSize()
-	{
-		return sizeof(bHeader) + sizeof(uint16_t) + sizeof(int32_t) + iStreamLen; 
-	}
-
-	uint8_t* GetStreamData()
-	{
-		if( m_pStream )
-			delete[] m_pStream;
-
-		uDynamicPacketSize =  GetStreamSize();
-
-		m_pStream = new uint8_t[ uDynamicPacketSize ];
-
-		memcpy( m_pStream, &bHeader, 1 );
-		memcpy( m_pStream+1, &uDynamicPacketSize, 2 );
-		memcpy( m_pStream+3, &iStreamLen, 4 );
-
-		if( iStreamLen > 0 )
-			memcpy( m_pStream+7, m_pDataSDBStream, iStreamLen );
-
-		return m_pStream;
-	}
-
-	uint8_t	bHeader;
-	uint16_t    uDynamicPacketSize; // 빌어먹을 클라  DynamicPacketHeader 구조때문에 맞춰줘야한다 -_-;
-	int32_t		iStreamLen;
-	uint8_t*   m_pDataSDBStream;
-
-private:
-	uint8_t* m_pStream;
-
-
-} TPacketGCPackageSDB;
 
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 struct TPacketKeyAgreement

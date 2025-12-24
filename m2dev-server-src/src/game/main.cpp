@@ -50,7 +50,6 @@
 #include "horsename_manager.h"
 #include "MarkManager.h"
 #include "spam.h"
-#include "panama.h"
 #include "threeway_war.h"
 #include "DragonLair.h"
 #include "skill_power.h"
@@ -388,14 +387,6 @@ int main(int argc, char** argv)
 	Cube_init();
 	Blend_Item_init();
 	ani_init();
-	PanamaLoad();
-
-	//TODO : make it config
-	const std::string strPackageCryptInfoDir = "package/";
-	if (!desc_manager.LoadClientPackageCryptInfo(strPackageCryptInfoDir.c_str()))
-	{
-		sys_err("Failed to Load ClientPackageCryptInfo File(%s)", strPackageCryptInfoDir.c_str());
-	}
 
 	while (idle());
 
@@ -414,13 +405,17 @@ int main(int argc, char** argv)
 			sys_log(0, "Queries %u", dwCount);
 
 			if (dwCount == 0)
+			{
 				break;
+			}
 
 			usleep(500000);
 
 			if (++i >= iLimit)
 				if (dwCount == DBManager::instance().CountQuery())
+				{
 					break;
+				}
 		} while (1);
 	}
 

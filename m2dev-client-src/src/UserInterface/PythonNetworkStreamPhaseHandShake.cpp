@@ -72,16 +72,6 @@ void CPythonNetworkStream::HandShakePhase()
 		return;
 		break;
 
-	case HEADER_GC_HYBRIDCRYPT_KEYS:
-		RecvHybridCryptKeyPacket();
-		return;
-		break;
-
-	case HEADER_GC_HYBRIDCRYPT_SDB:
-		RecvHybridCryptSDBPacket();
-		return;
-		break;
-
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 
 	case HEADER_GC_KEY_AGREEMENT:
@@ -177,58 +167,6 @@ bool CPythonNetworkStream::RecvHandshakeOKPacket()
 	return true;
 }
 
-bool CPythonNetworkStream::RecvHybridCryptKeyPacket()
-{
-	int iFixedHeaderSize = TPacketGCHybridCryptKeys::GetFixedHeaderSize();
-
-	TDynamicSizePacketHeader header;
-
-	if (!Peek(sizeof(header), &header))
-	{
-		return false;
-	}
-
-	TPacketGCHybridCryptKeys kPacket(header.size - iFixedHeaderSize);
-
-	if (!Recv(iFixedHeaderSize, &kPacket))
-	{
-		return false;
-	}
-
-	if (!Recv(kPacket.iKeyStreamLen, kPacket.m_pStream))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-bool CPythonNetworkStream::RecvHybridCryptSDBPacket()
-{
-	int iFixedHeaderSize = TPacketGCHybridSDB::GetFixedHeaderSize();
-
-	TDynamicSizePacketHeader header;
-
-	if (!Peek(sizeof(header), &header))
-	{
-		return false;
-	}
-
-	TPacketGCHybridSDB kPacket(header.size - iFixedHeaderSize);
-
-	if (!Recv(iFixedHeaderSize, &kPacket))
-	{
-		return false;
-	}
-
-	if (!Recv(kPacket.iSDBStreamLen, kPacket.m_pStream))
-	{
-		return false;
-	}
-
-	return true;
-}
-
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 bool CPythonNetworkStream::RecvKeyAgreementPacket()
 {
@@ -247,7 +185,6 @@ bool CPythonNetworkStream::RecvKeyAgreementPacket()
 
 	if (agreedLength == 0)
 	{
-		// 초기화 실패
 		Disconnect();
 		return false;
 	}
@@ -256,7 +193,6 @@ bool CPythonNetworkStream::RecvKeyAgreementPacket()
 
 	if (Activate(packet.wAgreedLength, packet.data, packet.wDataLength))
 	{
-		// Key agreement 성공, 응답 전송
 		packetToSend.bHeader = HEADER_CG_KEY_AGREEMENT;
 		packetToSend.wAgreedLength = (WORD)agreedLength;
 		packetToSend.wDataLength = (WORD)dataLength;
@@ -272,7 +208,6 @@ bool CPythonNetworkStream::RecvKeyAgreementPacket()
 
 	else
 	{
-		// 키 협상 실패
 		Disconnect();
 		return false;
 	}

@@ -80,7 +80,6 @@ public:
 
 	void StartGame();
 	void Warp(LONG lGlobalX, LONG lGlobalY);
-
 	void NotifyHack(const char* c_szMsg);
 	void SetWaitFlag();
 
@@ -257,15 +256,12 @@ public:
 	// CRC Report
 	bool __SendCRCReportPacket();
 
-	// 용홍석 강화
 	bool SendDragonSoulRefinePacket(BYTE bRefineType, TItemPos* pos);
 
 	// Handshake
 	bool RecvHandshakePacket();
 	bool RecvHandshakeOKPacket();
 
-	bool RecvHybridCryptKeyPacket();
-	bool RecvHybridCryptSDBPacket();
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 	bool RecvKeyAgreementPacket();
 	bool RecvKeyAgreementCompletedPacket();

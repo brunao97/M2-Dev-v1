@@ -7,7 +7,6 @@
 #include "common/length.h"
 
 class CLoginKey;
-class CClientPackageCryptInfo;
 
 class DESC_MANAGER : public singleton<DESC_MANAGER>
 {
@@ -64,11 +63,6 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 
 		bool			IsP2PDescExist(const char * szHost, WORD wPort);
 
-		// for C/S hybrid crypt
-		bool			LoadClientPackageCryptInfo(const char* pDirName);
-		void			SendClientPackageCryptKey( LPDESC desc );
-		void			SendClientPackageSDBToLoadMap( LPDESC desc, const char* pMapName );
-
 	private:
 		bool				m_bDisconnectInvalidCRC;
 
@@ -79,7 +73,6 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 
 		DESC_HANDLE_MAP			m_map_handle;
 		DESC_HANDSHAKE_MAP		m_map_handshake;
-		//DESC_ACCOUNTID_MAP		m_AccountIDMap;
 		DESC_LOGINNAME_MAP		m_map_loginName;
 		std::map<DWORD, CLoginKey *>	m_map_pkLoginKey;
 
@@ -92,7 +85,6 @@ class DESC_MANAGER : public singleton<DESC_MANAGER>
 
 		bool			m_bDestroyed;
 
-		CClientPackageCryptInfo*	m_pPackageCrypt;
 };
 
 #endif
