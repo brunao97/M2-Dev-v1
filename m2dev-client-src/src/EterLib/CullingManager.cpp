@@ -14,8 +14,6 @@ void CCullingManager::RayTraceCallback(const Vector3d& /*p1*/,         // source
 	const Vector3d& /*sect*/,
 	SpherePack* sphere)
 {
-	//if (state!=VS_OUTSIDE)
-	//{
 	if (m_RayFarDistance <= 0.0f || m_RayFarDistance >= distance)
 	{
 #ifdef SPHERELIB_STRICT
@@ -28,9 +26,6 @@ void CCullingManager::RayTraceCallback(const Vector3d& /*p1*/,         // source
 #endif
 		m_list.push_back((CGraphicObjectInstance*)sphere->GetUserData());
 	}
-
-	//f((CGraphicObjectInstance *)sphere->GetUserData());
-	//}
 }
 
 void CCullingManager::VisibilityCallback(const Frustum& /*f*/, SpherePack* sphere, ViewState state)

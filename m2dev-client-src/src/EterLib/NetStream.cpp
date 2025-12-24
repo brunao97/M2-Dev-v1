@@ -105,7 +105,6 @@ bool CNetworkStream::__RecvInternalBuffer()
 	if (restSize > 0)
 	{
 		int recvSize = recv(m_sock, m_recvBuf + m_recvBufInputPos, m_recvBufSize - m_recvBufInputPos, 0);
-		//Tracenf("RECV %d %d(%d, %d)", recvSize, restSize, m_recvTEABufSize - m_recvTEABufInputPos, m_recvBufSize - m_recvBufInputPos);
 
 		if (recvSize < 0)
 		{
@@ -872,23 +871,6 @@ bool CNetworkStream::Send(int size, const char* pSrcBuf)
 #endif
 
 	return true;
-	/*
-	if (size > 0)
-	{
-		if (IsSecurityMode())
-		{
-			m_sendBufInputPos += TEA_Encrypt((DWORD *) (m_sendBuf + m_sendBufInputPos),
-											 (DWORD *) (m_sendBuf + m_sendBufInputPos),
-											 (const DWORD *) gs_szTeaKey,
-											 size);
-		}
-		else
-		{
-		}
-	}
-
-	return __SendInternalBuffer();
-	*/
 }
 
 bool CNetworkStream::Peek(int len, void* pDestBuf)

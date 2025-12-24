@@ -15,7 +15,6 @@ public:
 
 	const char* GetDataFileName() const;
 
-	// NOTE : Object 전용
 	void SetObjectPointer(CAttributeData* pAttributeData);
 	void RefreshObject(const D3DXMATRIX& c_rmatGlobal);
 	CAttributeData* GetObjectPointer() const;

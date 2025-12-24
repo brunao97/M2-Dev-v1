@@ -893,8 +893,6 @@ CScreen::~CScreen()
 {
 }
 
-//void BuildViewFrustum() { ms_frustum.BuildViewFrustum(ms_matView*ms_matProj); }
-
 void CScreen::BuildViewFrustum()
 {
 	const D3DXVECTOR3& c_rv3Eye = CCameraManager::Instance().GetCurrentCamera()->GetEye();

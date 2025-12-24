@@ -198,7 +198,6 @@ void initMessenger()
 		{ "Destroy",					messengerDestroy,					METH_VARARGS },
 		{ "RefreshGuildMember",			messengerRefreshGuildMember,		METH_VARARGS },
 		{ "SetMessengerHandler",		messengerSetMessengerHandler,		METH_VARARGS },
-
 		{ NULL,							NULL,								NULL         },
 	};
 
