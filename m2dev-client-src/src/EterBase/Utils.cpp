@@ -413,7 +413,7 @@ void PrintAsciiData(const void* void_data, int bytes)
 	fprintf(stdout, "------------------------------------------------------------------\n");
 	j = bytes;
 
-	while (1)
+	while (true)
 	{
 		k = j >= 16 ? 16 : j;
 
@@ -529,7 +529,7 @@ void MyCreateDirectory(const char* path)
 
 	if (strlen(path) >= 3)
 	{
-		if (*(path + 1) == ':')	// C:, D: 같은 경우를 체크
+		if (*(path + 1) == ':')
 		{
 			path += 3;
 		}

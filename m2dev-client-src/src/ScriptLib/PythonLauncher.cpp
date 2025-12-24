@@ -130,8 +130,7 @@ void CPythonLauncher::SetTraceFunc(int (*pFunc) (PyObject* obj, PyFrameObject* f
 
 bool CPythonLauncher::Create(const char* c_szProgramName)
 {
-	NANOBEGIN
-		Py_SetProgramName((char*)c_szProgramName);
+	Py_SetProgramName((char*)c_szProgramName);
 #ifdef _DEBUG
 	PyEval_SetTrace(TraceFunc, NULL);
 #endif
@@ -160,14 +159,12 @@ bool CPythonLauncher::Create(const char* c_szProgramName)
 		return false;
 	}
 
-	NANOEND
-		return true;
+	return true;
 }
 
 bool CPythonLauncher::RunCompiledFile(const char* c_szFileName)
 {
-	NANOBEGIN
-		FILE* fp = fopen(c_szFileName, "rb");
+	FILE* fp = fopen(c_szFileName, "rb");
 
 	if (!fp)
 	{
@@ -219,14 +216,12 @@ bool CPythonLauncher::RunCompiledFile(const char* c_szFileName)
 		PyErr_Clear();
 	}
 
-	NANOEND
-		return true;
+	return true;
 }
 
 bool CPythonLauncher::RunMemoryTextFile(const char* c_szFileName, UINT uFileSize, const VOID* c_pvFileData)
 {
-	NANOBEGIN
-		const CHAR* c_pcFileData = (const CHAR*)c_pvFileData;
+	const CHAR* c_pcFileData = (const CHAR*)c_pvFileData;
 
 	std::string stConvFileData;
 	stConvFileData.reserve(uFileSize);
@@ -250,8 +245,8 @@ bool CPythonLauncher::RunMemoryTextFile(const char* c_szFileName, UINT uFileSize
 	stConvFileData += "'exec'))";
 
 	const CHAR* c_pcConvFileData = stConvFileData.c_str();
-	NANOEND
-		return RunLine(c_pcConvFileData);
+
+	return RunLine(c_pcConvFileData);
 }
 
 bool CPythonLauncher::RunFile(const char* c_szFileName)

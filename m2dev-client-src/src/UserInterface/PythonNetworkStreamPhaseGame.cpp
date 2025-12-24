@@ -1185,12 +1185,10 @@ bool CPythonNetworkStream::SendMessengerRemovePacket(const char* c_szKey, const 
 
 bool CPythonNetworkStream::SendCharacterStatePacket(const TPixelPosition& c_rkPPosDst, float fDstRot, UINT eFunc, UINT uArg)
 {
-	NANOBEGIN
-
-		if (!__CanActMainInstance())
-		{
-			return true;
-		}
+	if (!__CanActMainInstance())
+	{
+		return true;
+	}
 
 	if (fDstRot < 0.0f)
 	{
@@ -1228,8 +1226,7 @@ bool CPythonNetworkStream::SendCharacterStatePacket(const TPixelPosition& c_rkPP
 		return false;
 	}
 
-	NANOEND
-		return SendSequence();
+	return SendSequence();
 }
 
 // NOTE : SlotIndex는 임시

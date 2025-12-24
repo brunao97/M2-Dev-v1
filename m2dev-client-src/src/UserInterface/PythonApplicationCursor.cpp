@@ -4,8 +4,7 @@
 
 bool CPythonApplication::CreateCursors()
 {
-	NANOBEGIN
-		m_bCursorVisible = TRUE;
+	m_bCursorVisible = TRUE;
 	m_bLiarCursorOn = false;
 
 	int ResourceID[CURSOR_COUNT] =
@@ -43,8 +42,7 @@ bool CPythonApplication::CreateCursors()
 		m_CursorHandleMap.insert(TCursorHandleMap::value_type(i, hCursor));
 	}
 
-	NANOEND
-		return true;
+	return true;
 }
 
 void CPythonApplication::DestroyCursors()

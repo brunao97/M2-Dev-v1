@@ -58,12 +58,10 @@ void CInputKeyboard::ResetKeyboard()
 
 bool CInputKeyboard::InitializeKeyboard(HWND hWnd)
 {
-	NANOBEGIN
-
-		if (ms_lpKeyboard)
-		{
-			return true;
-		}
+	if (ms_lpKeyboard)
+	{
+		return true;
+	}
 
 	if (FAILED(CreateDevice(hWnd)))
 	{
@@ -95,8 +93,7 @@ bool CInputKeyboard::InitializeKeyboard(HWND hWnd)
 
 	ms_lpKeyboard->Acquire();
 
-	NANOEND
-		return true;
+	return true;
 }
 
 void CInputKeyboard::UpdateKeyboard()

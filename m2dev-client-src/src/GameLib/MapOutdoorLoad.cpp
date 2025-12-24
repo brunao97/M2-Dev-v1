@@ -314,8 +314,7 @@ bool CMapOutdoor::LoadTerrain(WORD wTerrainCoordX, WORD wTerrainCoordY, WORD wCe
 
 bool CMapOutdoor::LoadSetting(const char* c_szFileName)
 {
-	NANOBEGIN
-		CTokenVectorMap stTokenVectorMap;
+	CTokenVectorMap stTokenVectorMap;
 
 	if (!LoadMultipleTextData(c_szFileName, stTokenVectorMap))
 	{
@@ -466,8 +465,8 @@ bool CMapOutdoor::LoadSetting(const char* c_szFileName)
 	D3DXMatrixScaling(&m_matBuildingTransparent, 1.0f / ((float)ms_iWidth), -1.0f / ((float)ms_iHeight), 1.0f);
 	m_matBuildingTransparent._41 = 0.5f;
 	m_matBuildingTransparent._42 = 0.5f;
-	NANOEND
-		return true;
+
+	return true;
 }
 
 bool CMapOutdoor::LoadMonsterAreaInfo()

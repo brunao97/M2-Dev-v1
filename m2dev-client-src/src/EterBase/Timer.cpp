@@ -35,15 +35,11 @@ DWORD ELTimer_GetMSec()
 
 VOID	ELTimer_SetServerMSec(DWORD dwServerTime)
 {
-	NANOBEGIN
-
-		if (0 != dwServerTime) // nanomite를 위한 더미 if
-		{
-			gs_dwServerTime = dwServerTime;
-			gs_dwClientTime = CTimer::instance().GetCurrentMillisecond();
-		}
-
-	NANOEND
+	if (0 != dwServerTime) // nanomite를 위한 더미 if
+	{
+		gs_dwServerTime = dwServerTime;
+		gs_dwClientTime = CTimer::instance().GetCurrentMillisecond();
+	}
 }
 
 DWORD	ELTimer_GetServerMSec()
@@ -71,20 +67,16 @@ CTimer::CTimer()
 {
 	ELTimer_Init();
 
-	NANOBEGIN
+	if (this) // nanomite를 위한 더미 if
+	{
+		m_dwCurrentTime = 0;
+		m_bUseRealTime = true;
+		m_index = 0;
 
-		if (this) // nanomite를 위한 더미 if
-		{
-			m_dwCurrentTime = 0;
-			m_bUseRealTime = true;
-			m_index = 0;
+		m_dwElapsedTime = 0;
 
-			m_dwElapsedTime = 0;
-
-			m_fCurrentTime = 0.0f;
-		}
-
-	NANOEND
+		m_fCurrentTime = 0.0f;
+	}
 }
 
 CTimer::~CTimer()

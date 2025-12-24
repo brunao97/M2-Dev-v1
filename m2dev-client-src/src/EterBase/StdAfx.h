@@ -1,7 +1,7 @@
 #pragma once
 
 #pragma warning(disable:4710)	// not inlined
-#pragma warning(disable:4786)	// character 255 넘어가는거 끄기
+#pragma warning(disable:4786)
 #pragma warning(disable:4244)	// type conversion possible lose of data
 
 #include <windows.h>
@@ -33,17 +33,6 @@
 //#define access _access_s
 //#define _access _access_s
 #define atoi _atoi64
-#endif
-
-// Armadillo nanomite protection
-#ifndef NANOBEGIN
-#ifdef __BORLANDC__
-#define NANOBEGIN
-#define NANOEND
-#else
-#define NANOBEGIN
-#define NANOEND
-#endif
 #endif
 
 #include "vk.h"

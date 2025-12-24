@@ -31,8 +31,7 @@ int		MULTI_LOCALE_REPORT_PORT = 10000;
 
 void LocaleService_LoadConfig(const char* fileName)
 {
-	NANOBEGIN
-		FILE* fp = fopen(fileName, "rt");
+	FILE* fp = fopen(fileName, "rt");
 
 	if (fp)
 	{
@@ -54,8 +53,6 @@ void LocaleService_LoadConfig(const char* fileName)
 
 		fclose(fp);
 	}
-
-	NANOEND
 }
 
 unsigned LocaleService_GetLastExp(int level)
