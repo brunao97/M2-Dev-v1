@@ -138,9 +138,6 @@ void CLZObject::BeginCompress(const void* pvIn, UINT uiInLen)
 	m_pbIn = (const BYTE*)pvIn;
 
 	// sizeof(SHeader) +
-	// 암호화를 위한 fourCC 4바이트
-	// 압축된 후 만들어질 수 있는 최대 용량 +
-	// 암호화를 위한 8 바이트
 	m_dwBufferSize = sizeof(THeader) + sizeof(DWORD) + (uiInLen + uiInLen / 64 + 16 + 3) + 8;
 
 	m_pbBuffer = gs_freeMemMgr.Alloc(m_dwBufferSize);
@@ -157,9 +154,6 @@ void CLZObject::BeginCompressInBuffer(const void* pvIn, UINT uiInLen, void* /*pv
 	m_pbIn = (const BYTE*)pvIn;
 
 	// sizeof(SHeader) +
-	// 암호화를 위한 fourCC 4바이트
-	// 압축된 후 만들어질 수 있는 최대 용량 +
-	// 암호화를 위한 8 바이트
 	m_dwBufferSize = sizeof(THeader) + sizeof(DWORD) + (uiInLen + uiInLen / 64 + 16 + 3) + 8;
 
 	m_pbBuffer = gs_freeMemMgr.Alloc(m_dwBufferSize);

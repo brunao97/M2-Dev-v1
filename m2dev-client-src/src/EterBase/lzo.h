@@ -12,9 +12,9 @@ public:
 	typedef struct SHeader
 	{
 		DWORD	dwFourCC;
-		DWORD	dwEncryptSize;		// 암호화된 크기
-		DWORD	dwCompressedSize;	// 압축된 데이터 크기
-		DWORD	dwRealSize;		// 실제 데이터 크기
+		DWORD	dwEncryptSize;
+		DWORD	dwCompressedSize;
+		DWORD	dwRealSize;
 	} THeader;
 
 #pragma pack()

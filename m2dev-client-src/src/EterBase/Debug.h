@@ -2,6 +2,7 @@
 #define __INC_ETERLIB_DEBUG_H__
 
 #include <windows.h>
+#include <chrono>
 
 extern void SetLogLevel(UINT uLevel);
 extern void Log(UINT uLevel, const char* c_szMsg);
