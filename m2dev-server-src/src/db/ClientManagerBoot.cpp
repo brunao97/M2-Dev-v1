@@ -20,22 +20,23 @@ bool CClientManager::InitializeTables()
 		sys_err("InitializeMobTable FAILED");
 		return false;
 	}
+
 	if (!MirrorMobTableIntoDB())
 	{
 		sys_err("MirrorMobTableIntoDB FAILED");
-		return false; 
+		return false;
 	}
 
 	if (!InitializeItemTable())
 	{
 		sys_err("InitializeItemTable FAILED");
-		return false; 
+		return false;
 	}
 
 	if (!MirrorItemTableIntoDB())
 	{
 		sys_err("MirrorItemTableIntoDB FAILED");
-		return false; 
+		return false;
 	}
 
 	if (!InitializeShopTable())
@@ -98,7 +99,6 @@ bool CClientManager::InitializeTables()
 		return false;
 	}
 
-
 	return true;
 }
 
@@ -107,25 +107,27 @@ bool CClientManager::InitializeRefineTable()
 	char query[2048];
 
 	snprintf(query, sizeof(query),
-			"SELECT id, cost, prob, vnum0, count0, vnum1, count1, vnum2, count2,  vnum3, count3, vnum4, count4 FROM refine_proto%s",
-			GetTablePostfix());
+		"SELECT id, cost, prob, vnum0, count0, vnum1, count1, vnum2, count2,  vnum3, count3, vnum4, count4 FROM refine_proto%s",
+		GetTablePostfix());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (!pRes->uiNumRows)
+	{
 		return true;
+	}
 
 	if (m_pRefineTable)
 	{
 		sys_log(0, "RELOAD: refine_proto");
-		delete [] m_pRefineTable;
+		delete[] m_pRefineTable;
 		m_pRefineTable = NULL;
 	}
 
 	m_iRefineTableSize = pRes->uiNumRows;
 
-	m_pRefineTable	= new TRefineTable[m_iRefineTableSize];
+	m_pRefineTable = new TRefineTable[m_iRefineTableSize];
 	memset(m_pRefineTable, 0, sizeof(TRefineTable) * m_iRefineTableSize);
 
 	TRefineTable* prt = m_pRefineTable;
@@ -147,6 +149,7 @@ bool CClientManager::InitializeRefineTable()
 		{
 			str_to_number(prt->materials[i].vnum, data[col++]);
 			str_to_number(prt->materials[i].count, data[col++]);
+
 			if (prt->materials[i].vnum == 0)
 			{
 				prt->material_count = i;
@@ -158,16 +161,17 @@ bool CClientManager::InitializeRefineTable()
 
 		prt++;
 	}
+
 	return true;
 }
 
 class FCompareVnum
 {
-	public:
-		bool operator () (const TEntityTable & a, const TEntityTable & b) const
-		{
-			return (a.dwVnum < b.dwVnum);
-		}
+public:
+	bool operator() (const TEntityTable& a, const TEntityTable& b) const
+	{
+		return (a.dwVnum < b.dwVnum);
+	}
 };
 
 bool CClientManager::InitializeMobTable()
@@ -182,7 +186,7 @@ bool CClientManager::InitializeMobTable()
 	//	3) 'mob_proto.txt' 파일과  (a)[localMap] 맵으로
 	//		(!)[mob_table] 테이블을 만든다.
 	//			<참고>
-	//			각 row 들 중, 
+	//			각 row 들 중,
 	//			(b)[test_map_mobTableByVnum],(!)[mob_table] 모두에 있는 row는
 	//			(b)[test_map_mobTableByVnum]의 것을 사용한다.
 	//	4) (b)[test_map_mobTableByVnum]의 row중, (!)[mob_table]에 없는 것을 추가한다.
@@ -194,123 +198,147 @@ bool CClientManager::InitializeMobTable()
 	//	5) (최종) 게임 클라이언트에서 제대로 작동 하는지.
 	//_______________________________________________//
 
-
 	//===============================================//
 	//	1) 'mob_names.txt' 파일을 읽어서 (a)[localMap] 맵을 만든다.
 	//<(a)localMap 맵 생성>
-	map<int,const char*> localMap;
+	map<int, const char*> localMap;
 	bool isNameFile = true;
 	//<파일 읽기>
 	cCsvTable nameData;
-	if(!nameData.Load("conf/mob_names.txt",'\t'))
+
+	if (!nameData.Load("conf/mob_names.txt", '\t'))
 	{
 		fprintf(stderr, "conf/mob_names.txt 파일을 읽어오지 못했습니다\n");
 		isNameFile = false;
-	} else {
+	}
+
+	else
+	{
 		nameData.Next();	//설명row 생략.
-		while(nameData.Next()) {
+
+		while (nameData.Next())
+		{
 			localMap[atoi(nameData.AsStringByIndex(0))] = nameData.AsStringByIndex(1);
 		}
 	}
+
 	//________________________________________________//
 
-	
 	//===============================================//
 	//	2) 'mob_proto_test.txt'파일과 (a)localMap 맵으로
 	//		(b)[test_map_mobTableByVnum](vnum:TMobTable) 맵을 생성한다.
-	//0. 
+	//0.
 	set<int> vnumSet;	//테스트용 파일 데이터중, 신규여부 확인에 사용.
 	//1. 파일 읽어오기
 	bool isTestFile = true;
 	cCsvTable test_data;
-	if(!test_data.Load("mob_proto_test.txt",'\t'))
+
+	if (!test_data.Load("mob_proto_test.txt", '\t'))
 	{
 		fprintf(stderr, "테스트 파일이 없습니다. 그대로 진행합니다.\n");
 		isTestFile = false;
 	}
+
 	//2. (c)[test_map_mobTableByVnum](vnum:TMobTable) 맵 생성.
-	map<DWORD, TMobTable *> test_map_mobTableByVnum;
-	if (isTestFile) {
+	map<DWORD, TMobTable*> test_map_mobTableByVnum;
+
+	if (isTestFile)
+	{
 		test_data.Next();	//설명 로우 넘어가기.
 
 		//ㄱ. 테스트 몬스터 테이블 생성.
-		TMobTable * test_mob_table = NULL;
-		int test_MobTableSize = test_data.m_File.GetRowCount()-1;
+		TMobTable* test_mob_table = NULL;
+		int test_MobTableSize = test_data.m_File.GetRowCount() - 1;
 		test_mob_table = new TMobTable[test_MobTableSize];
 		memset(test_mob_table, 0, sizeof(TMobTable) * test_MobTableSize);
 
 		//ㄴ. 테스트 몬스터 테이블에 값을 넣고, 맵에까지 넣기.
-		while(test_data.Next()) {
-
+		while (test_data.Next())
+		{
 			if (!Set_Proto_Mob_Table(test_mob_table, test_data, localMap))
 			{
-				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");
 			}
 
-			test_map_mobTableByVnum.insert(std::map<DWORD, TMobTable *>::value_type(test_mob_table->dwVnum, test_mob_table));
+			test_map_mobTableByVnum.insert(std::map<DWORD, TMobTable*>::value_type(test_mob_table->dwVnum, test_mob_table));
 
-			
 			++test_mob_table;
-			}
-
+		}
 	}
 
 	//	3) 'mob_proto.txt' 파일과  (a)[localMap] 맵으로
 	//		(!)[mob_table] 테이블을 만든다.
 	//			<참고>
-	//			각 row 들 중, 
+	//			각 row 들 중,
 	//			(b)[test_map_mobTableByVnum],(!)[mob_table] 모두에 있는 row는
 	//			(b)[test_map_mobTableByVnum]의 것을 사용한다.
 
 	//1. 파일 읽기.
 	cCsvTable data;
-	if(!data.Load("conf/mob_proto.txt",'\t')) {
-		fprintf(stderr, "conf/mob_proto.txt 파일을 읽어오지 못했습니다\n");
-		return false;
-	}
-	data.Next();					//설명 row 넘어가기
-	//2. (!)[mob_table] 생성하기
-	//2.1 새로 추가되는 갯수를 파악
-	int addNumber = 0;
-	while(data.Next()) {
-		int vnum = atoi(data.AsStringByIndex(0));
-		std::map<DWORD, TMobTable *>::iterator it_map_mobTable;
-		it_map_mobTable = test_map_mobTableByVnum.find(vnum);
-		if(it_map_mobTable != test_map_mobTableByVnum.end()) {
-			addNumber++;
-		}
-	}
-	//data를 다시 첫줄로 옮긴다.(다시 읽어온다;;)
-	data.Destroy();
-	if(!data.Load("conf/mob_proto.txt",'\t'))
+
+	if (!data.Load("conf/mob_proto.txt", '\t'))
 	{
 		fprintf(stderr, "conf/mob_proto.txt 파일을 읽어오지 못했습니다\n");
 		return false;
 	}
+
+	data.Next();					//설명 row 넘어가기
+	//2. (!)[mob_table] 생성하기
+	//2.1 새로 추가되는 갯수를 파악
+	int addNumber = 0;
+
+	while (data.Next())
+	{
+		int vnum = atoi(data.AsStringByIndex(0));
+		std::map<DWORD, TMobTable*>::iterator it_map_mobTable;
+		it_map_mobTable = test_map_mobTableByVnum.find(vnum);
+
+		if (it_map_mobTable != test_map_mobTableByVnum.end())
+		{
+			addNumber++;
+		}
+	}
+
+	//data를 다시 첫줄로 옮긴다.(다시 읽어온다;;)
+	data.Destroy();
+
+	if (!data.Load("conf/mob_proto.txt", '\t'))
+	{
+		fprintf(stderr, "conf/mob_proto.txt 파일을 읽어오지 못했습니다\n");
+		return false;
+	}
+
 	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)
+
 	//2.2 크기에 맞게 mob_table 생성
 	if (!m_vec_mobTable.empty())
 	{
 		sys_log(0, "RELOAD: mob_proto");
 		m_vec_mobTable.clear();
 	}
-	m_vec_mobTable.resize(data.m_File.GetRowCount()-1 + addNumber);
+
+	m_vec_mobTable.resize(data.m_File.GetRowCount() - 1 + addNumber);
 	memset(&m_vec_mobTable[0], 0, sizeof(TMobTable) * m_vec_mobTable.size());
-	TMobTable * mob_table = &m_vec_mobTable[0];
+	TMobTable* mob_table = &m_vec_mobTable[0];
+
 	//2.3 데이터 채우기
 	while (data.Next())
 	{
 		int col = 0;
 		//(b)[test_map_mobTableByVnum]에 같은 row가 있는지 조사.
 		bool isSameRow = true;
-		std::map<DWORD, TMobTable *>::iterator it_map_mobTable;
+		std::map<DWORD, TMobTable*>::iterator it_map_mobTable;
 		it_map_mobTable = test_map_mobTableByVnum.find(atoi(data.AsStringByIndex(col)));
-		if(it_map_mobTable == test_map_mobTableByVnum.end()) {
+
+		if (it_map_mobTable == test_map_mobTableByVnum.end())
+		{
 			isSameRow = false;
 		}
+
 		//같은 row 가 있으면 (b)에서 읽어온다.
-		if(isSameRow) {
-			TMobTable *tempTable = it_map_mobTable->second;
+		if (isSameRow)
+		{
+			TMobTable* tempTable = it_map_mobTable->second;
 
 			mob_table->dwVnum = tempTable->dwVnum;
 			strlcpy(mob_table->szName, tempTable->szName, sizeof(tempTable->szName));
@@ -344,21 +372,25 @@ bool CClientManager::InitializeMobTable()
 			mob_table->bAggresiveHPPct = tempTable->bAggresiveHPPct;
 			mob_table->wAggressiveSight = tempTable->wAggressiveSight;
 			mob_table->wAttackRange = tempTable->wAttackRange;
-				
+
 			mob_table->dwDropItemVnum = tempTable->dwDropItemVnum;
 			mob_table->dwResurrectionVnum = tempTable->dwResurrectionVnum;
 
 			for (int i = 0; i < MOB_ENCHANTS_MAX_NUM; ++i)
+			{
 				mob_table->cEnchants[i] = tempTable->cEnchants[i];
-				
+			}
+
 			for (int i = 0; i < MOB_RESISTS_MAX_NUM; ++i)
+			{
 				mob_table->cResists[i] = tempTable->cResists[i];
-				
+			}
+
 			mob_table->fDamMultiply = tempTable->fDamMultiply;
 			mob_table->dwSummonVnum = tempTable->dwSummonVnum;
 			mob_table->dwDrainSP = tempTable->dwDrainSP;
 			mob_table->dwPolymorphItemVnum = tempTable->dwPolymorphItemVnum;
-			
+
 			mob_table->Skills[0].bLevel = tempTable->Skills[0].bLevel;
 			mob_table->Skills[0].dwVnum = tempTable->Skills[0].dwVnum;
 			mob_table->Skills[1].bLevel = tempTable->Skills[1].bLevel;
@@ -369,45 +401,44 @@ bool CClientManager::InitializeMobTable()
 			mob_table->Skills[3].dwVnum = tempTable->Skills[3].dwVnum;
 			mob_table->Skills[4].bLevel = tempTable->Skills[4].bLevel;
 			mob_table->Skills[4].dwVnum = tempTable->Skills[4].dwVnum;
-				
+
 			mob_table->bBerserkPoint = tempTable->bBerserkPoint;
 			mob_table->bStoneSkinPoint = tempTable->bStoneSkinPoint;
 			mob_table->bGodSpeedPoint = tempTable->bGodSpeedPoint;
 			mob_table->bDeathBlowPoint = tempTable->bDeathBlowPoint;
 			mob_table->bRevivePoint = tempTable->bRevivePoint;
-		} else {
+		}
 
+		else
+		{
 			if (!Set_Proto_Mob_Table(mob_table, data, localMap))
 			{
-				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");
 			}
-
-						
 		}
 
 		//셋에 vnum 추가
 		vnumSet.insert(mob_table->dwVnum);
-		
 
 		sys_log(1, "MOB #%-5d %-24s %-24s level: %-3u rank: %u empire: %d", mob_table->dwVnum, mob_table->szName, mob_table->szLocaleName, mob_table->bLevel, mob_table->bRank, mob_table->bEmpire);
 		++mob_table;
-
 	}
-	//_____________________________________________________//
 
+	//_____________________________________________________//
 
 	//	4) (b)[test_map_mobTableByVnum]의 row중, (!)[mob_table]에 없는 것을 추가한다.
 	//파일 다시 읽어오기.
 	test_data.Destroy();
 	isTestFile = true;
 
-	if (!test_data.Load("mob_proto_test.txt",'\t'))
+	if (!test_data.Load("mob_proto_test.txt", '\t'))
 	{
 		fprintf(stderr, "테스트 파일이 없습니다. 그대로 진행합니다.\n");
 		isTestFile = false;
 	}
-	
-	if (isTestFile) {
+
+	if (isTestFile)
+	{
 		test_data.Next();	//설명 로우 넘어가기.
 
 		while (test_data.Next())	//테스트 데이터 각각을 훑어나가며,새로운 것을 추가한다.
@@ -415,21 +446,22 @@ bool CClientManager::InitializeMobTable()
 			//중복되는 부분이면 넘어간다.
 			set<int>::iterator itVnum;
 			itVnum = vnumSet.find(atoi(test_data.AsStringByIndex(0)));
-			
-			if (itVnum != vnumSet.end()) {
+
+			if (itVnum != vnumSet.end())
+			{
 				continue;
 			}
 
 			if (!Set_Proto_Mob_Table(mob_table, test_data, localMap))
 			{
-				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "몹 프로토 테이블 셋팅 실패.\n");
 			}
 
 			sys_log(0, "MOB #%-5d %-24s %-24s level: %-3u rank: %u empire: %d", mob_table->dwVnum, mob_table->szName, mob_table->szLocaleName, mob_table->bLevel, mob_table->bRank, mob_table->bEmpire);
 			++mob_table;
-
 		}
 	}
+
 	sort(m_vec_mobTable.begin(), m_vec_mobTable.end(), FCompareVnum());
 	return true;
 }
@@ -439,7 +471,7 @@ bool CClientManager::InitializeShopTable()
 	MYSQL_ROW	data;
 	int		col;
 
-	static const char * s_szQuery = 
+	static const char* s_szQuery =
 		"SELECT "
 		"shop.vnum, "
 		"shop.npc_vnum, "
@@ -452,7 +484,7 @@ bool CClientManager::InitializeShopTable()
 
 	// shop의 vnum은 있는데 shop_item 이 없을경우... 실패로 처리되니 주의 요망.
 	// 고처야할부분
-	SQLResult * pRes2 = pkMsg2->Get();
+	SQLResult* pRes2 = pkMsg2->Get();
 
 	if (!pRes2->uiNumRows)
 	{
@@ -460,15 +492,15 @@ bool CClientManager::InitializeShopTable()
 		return false;
 	}
 
-	std::map<int, TShopTable *> map_shop;
+	std::map<int, TShopTable*> map_shop;
 
 	if (m_pShopTable)
 	{
-		delete [] (m_pShopTable);
+		delete[](m_pShopTable);
 		m_pShopTable = NULL;
 	}
 
-	TShopTable * shop_table = m_pShopTable;
+	TShopTable* shop_table = m_pShopTable;
 
 	while ((data = mysql_fetch_row(pRes2->pSQLResult)))
 	{
@@ -481,19 +513,24 @@ bool CClientManager::InitializeShopTable()
 		{
 			shop_table = new TShopTable;
 			memset(shop_table, 0, sizeof(TShopTable));
-			shop_table->dwVnum	= iShopVnum;
+			shop_table->dwVnum = iShopVnum;
 
 			map_shop[iShopVnum] = shop_table;
 		}
+
 		else
+		{
 			shop_table = map_shop[iShopVnum];
+		}
 
 		str_to_number(shop_table->dwNPCVnum, data[col++]);
 
 		if (!data[col])	// 아이템이 하나도 없으면 NULL이 리턴 되므로..
+		{
 			continue;
+		}
 
-		TShopItemTable * pItem = &shop_table->items[shop_table->byItemCount];
+		TShopItemTable* pItem = &shop_table->items[shop_table->byItemCount];
 
 		str_to_number(pItem->vnum, data[col++]);
 		str_to_number(pItem->count, data[col++]);
@@ -522,13 +559,13 @@ bool CClientManager::InitializeQuestItemTable()
 {
 	using namespace std;
 
-	static const char * s_szQuery = "SELECT vnum, name, %s FROM quest_item_proto ORDER BY vnum";
+	static const char* s_szQuery = "SELECT vnum, name, %s FROM quest_item_proto ORDER BY vnum";
 
 	char query[1024];
 	snprintf(query, sizeof(query), s_szQuery, g_stLocaleNameColumn.c_str());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (!pRes->uiNumRows)
 	{
@@ -548,12 +585,16 @@ bool CClientManager::InitializeQuestItemTable()
 		str_to_number(tbl.dwVnum, row[col++]);
 
 		if (row[col])
+		{
 			strlcpy(tbl.szName, row[col], sizeof(tbl.szName));
+		}
 
 		col++;
 
 		if (row[col])
+		{
 			strlcpy(tbl.szLocaleName, row[col], sizeof(tbl.szLocaleName));
+		}
 
 		col++;
 
@@ -584,7 +625,7 @@ bool CClientManager::InitializeItemTable()
 	//	3) 'item_proto.txt' 파일과  (a)[localMap] 맵으로
 	//		(!)[item_table], <m_map_itemTableByVnum>을 만든다.
 	//			<참고>
-	//			각 row 들 중, 
+	//			각 row 들 중,
 	//			(b)[test_map_itemTableByVnum],(!)[mob_table] 모두에 있는 row는
 	//			(b)[test_map_itemTableByVnum]의 것을 사용한다.
 	//	4) (b)[test_map_itemTableByVnum]의 row중, (!)[item_table]에 없는 것을 추가한다.
@@ -596,68 +637,75 @@ bool CClientManager::InitializeItemTable()
 	//	5) (최종) 게임 클라이언트에서 제대로 작동 하는지.
 	//_______________________________________________//
 
-
-
 	//=================================================================================//
 	//	1) 'item_names.txt' 파일을 읽어서 (a)[localMap](vnum:name) 맵을 만든다.
 	//=================================================================================//
 	bool isNameFile = true;
-	map<int,const char*> localMap;
+	map<int, const char*> localMap;
 	cCsvTable nameData;
-	if(!nameData.Load("conf/item_names.txt",'\t'))
+
+	if (!nameData.Load("conf/item_names.txt", '\t'))
 	{
 		fprintf(stderr, "conf/item_names.txt 파일을 읽어오지 못했습니다\n");
 		isNameFile = false;
-	} else {
+	}
+
+	else
+	{
 		nameData.Next();
-		while(nameData.Next()) {
+
+		while (nameData.Next())
+		{
 			localMap[atoi(nameData.AsStringByIndex(0))] = nameData.AsStringByIndex(1);
 		}
 	}
+
 	//_________________________________________________________________//
 
 	//=================================================================//
 	//	2) 'item_proto_text.txt'파일과 (a)[localMap] 맵으로
 	//		(b)[test_map_itemTableByVnum](vnum:TItemTable) 맵을 생성한다.
 	//=================================================================//
-	map<DWORD, TItemTable *> test_map_itemTableByVnum;
+	map<DWORD, TItemTable*> test_map_itemTableByVnum;
 	//1. 파일 읽어오기.
 	cCsvTable test_data;
-	if(!test_data.Load("item_proto_test.txt",'\t'))
+
+	if (!test_data.Load("item_proto_test.txt", '\t'))
 	{
 		fprintf(stderr, "item_proto_test.txt 파일을 읽어오지 못했습니다\n");
 		//return false;
-	} else {
+	}
+
+	else
+	{
 		test_data.Next();	//설명 로우 넘어가기.
 
 		//2. 테스트 아이템 테이블 생성.
-		TItemTable * test_item_table = NULL;
-		int test_itemTableSize = test_data.m_File.GetRowCount()-1;
+		TItemTable* test_item_table = NULL;
+		int test_itemTableSize = test_data.m_File.GetRowCount() - 1;
 		test_item_table = new TItemTable[test_itemTableSize];
 		memset(test_item_table, 0, sizeof(TItemTable) * test_itemTableSize);
 
 		//3. 테스트 아이템 테이블에 값을 넣고, 맵에까지 넣기.
-		while(test_data.Next()) {
-
-
+		while (test_data.Next())
+		{
 			if (!Set_Proto_Item_Table(test_item_table, test_data, localMap))
 			{
-				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");
 			}
 
-			test_map_itemTableByVnum.insert(std::map<DWORD, TItemTable *>::value_type(test_item_table->dwVnum, test_item_table));
+			test_map_itemTableByVnum.insert(std::map<DWORD, TItemTable*>::value_type(test_item_table->dwVnum, test_item_table));
 			test_item_table++;
-
 		}
 	}
-	//______________________________________________________________________//
 
+	//______________________________________________________________________//
 
 	//========================================================================//
 	//	3) 'item_proto.txt' 파일과  (a)[localMap] 맵으로
 	//		(!)[item_table], <m_map_itemTableByVnum>을 만든다.
 	//			<참고>
-	//			각 row 들 중, 
+	//			각 row 들 중,
 	//			(b)[test_map_itemTableByVnum],(!)[mob_table] 모두에 있는 row는
 	//			(b)[test_map_itemTableByVnum]의 것을 사용한다.
 	//========================================================================//
@@ -667,11 +715,13 @@ bool CClientManager::InitializeItemTable()
 
 	//파일 읽어오기.
 	cCsvTable data;
-	if(!data.Load("conf/item_proto.txt",'\t'))
+
+	if (!data.Load("conf/item_proto.txt", '\t'))
 	{
 		fprintf(stderr, "conf/item_proto.txt 파일을 읽어오지 못했습니다\n");
 		return false;
 	}
+
 	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)
 
 	if (!m_vec_itemTable.empty())
@@ -684,47 +734,56 @@ bool CClientManager::InitializeItemTable()
 	//===== 아이템 테이블 생성 =====//
 	//새로 추가되는 갯수를 파악한다.
 	int addNumber = 0;
-	while(data.Next()) {
+
+	while (data.Next())
+	{
 		int vnum = atoi(data.AsStringByIndex(0));
-		std::map<DWORD, TItemTable *>::iterator it_map_itemTable;
+		std::map<DWORD, TItemTable*>::iterator it_map_itemTable;
 		it_map_itemTable = test_map_itemTableByVnum.find(vnum);
-		if(it_map_itemTable != test_map_itemTableByVnum.end()) {
+
+		if (it_map_itemTable != test_map_itemTableByVnum.end())
+		{
 			addNumber++;
 		}
 	}
+
 	//data를 다시 첫줄로 옮긴다.(다시 읽어온다;;)
 	data.Destroy();
-	if(!data.Load("conf/item_proto.txt",'\t'))
+
+	if (!data.Load("conf/item_proto.txt", '\t'))
 	{
 		fprintf(stderr, "conf/item_proto.txt 파일을 읽어오지 못했습니다\n");
 		return false;
 	}
+
 	data.Next(); //맨 윗줄 제외 (아이템 칼럼을 설명하는 부분)
 
 	m_vec_itemTable.resize(data.m_File.GetRowCount() - 1 + addNumber);
 	memset(&m_vec_itemTable[0], 0, sizeof(TItemTable) * m_vec_itemTable.size());
-	int testValue =  m_vec_itemTable.size();
+	int testValue = m_vec_itemTable.size();
 
-	TItemTable * item_table = &m_vec_itemTable[0];
+	TItemTable* item_table = &m_vec_itemTable[0];
 
 	while (data.Next())
 	{
 		int col = 0;
 
-		std::map<DWORD, TItemTable *>::iterator it_map_itemTable;
+		std::map<DWORD, TItemTable*>::iterator it_map_itemTable;
 		it_map_itemTable = test_map_itemTableByVnum.find(atoi(data.AsStringByIndex(col)));
-		if(it_map_itemTable == test_map_itemTableByVnum.end()) {
+
+		if (it_map_itemTable == test_map_itemTableByVnum.end())
+		{
 			//각 칼럼 데이터 저장
-			
+
 			if (!Set_Proto_Item_Table(item_table, data, localMap))
 			{
-				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");
 			}
+		}
 
-
-			
-		} else {	//$$$$$$$$$$$$$$$$$$$$$$$ 테스트 아이템 정보가 있다!	
-			TItemTable *tempTable = it_map_itemTable->second;
+		else  	//$$$$$$$$$$$$$$$$$$$$$$$ 테스트 아이템 정보가 있다!
+		{
+			TItemTable* tempTable = it_map_itemTable->second;
 
 			item_table->dwVnum = tempTable->dwVnum;
 			strlcpy(item_table->szName, tempTable->szName, sizeof(item_table->szName));
@@ -738,8 +797,8 @@ bool CClientManager::InitializeItemTable()
 			item_table->dwImmuneFlag = tempTable->dwImmuneFlag;
 			item_table->dwGold = tempTable->dwGold;
 			item_table->dwShopBuyPrice = tempTable->dwShopBuyPrice;
-			item_table->dwRefinedVnum =tempTable->dwRefinedVnum;
-			item_table->wRefineSet =tempTable->wRefineSet;
+			item_table->dwRefinedVnum = tempTable->dwRefinedVnum;
+			item_table->wRefineSet = tempTable->wRefineSet;
 			item_table->bAlterToMagicItemPct = tempTable->bAlterToMagicItemPct;
 			item_table->cLimitRealTimeFirstUseIndex = -1;
 			item_table->cLimitTimerBasedOnWearIndex = -1;
@@ -752,10 +811,14 @@ bool CClientManager::InitializeItemTable()
 				item_table->aLimits[i].lValue = tempTable->aLimits[i].lValue;
 
 				if (LIMIT_REAL_TIME_START_FIRST_USE == item_table->aLimits[i].bType)
+				{
 					item_table->cLimitRealTimeFirstUseIndex = (char)i;
+				}
 
 				if (LIMIT_TIMER_BASED_ON_WEAR == item_table->aLimits[i].bType)
+				{
 					item_table->cLimitTimerBasedOnWearIndex = (char)i;
+				}
 			}
 
 			for (i = 0; i < ITEM_APPLY_MAX_NUM; ++i)
@@ -765,54 +828,59 @@ bool CClientManager::InitializeItemTable()
 			}
 
 			for (i = 0; i < ITEM_VALUES_MAX_NUM; ++i)
+			{
 				item_table->alValues[i] = tempTable->alValues[i];
+			}
 
 			item_table->bGainSocketPct = tempTable->bGainSocketPct;
 			item_table->sAddonType = tempTable->sAddonType;
 
-			item_table->bWeight  = tempTable->bWeight;
-
+			item_table->bWeight = tempTable->bWeight;
 		}
+
 		vnumSet.insert(item_table->dwVnum);
-		m_map_itemTableByVnum.insert(std::map<DWORD, TItemTable *>::value_type(item_table->dwVnum, item_table));
+		m_map_itemTableByVnum.insert(std::map<DWORD, TItemTable*>::value_type(item_table->dwVnum, item_table));
 		++item_table;
 	}
+
 	//_______________________________________________________________________//
 
 	//========================================================================//
 	//	4) (b)[test_map_itemTableByVnum]의 row중, (!)[item_table]에 없는 것을 추가한다.
 	//========================================================================//
 	test_data.Destroy();
-	if(!test_data.Load("item_proto_test.txt",'\t'))
+
+	if (!test_data.Load("item_proto_test.txt", '\t'))
 	{
 		fprintf(stderr, "item_proto_test.txt 파일을 읽어오지 못했습니다\n");
 		//return false;
-	} else {
+	}
+
+	else
+	{
 		test_data.Next();	//설명 로우 넘어가기.
 
 		while (test_data.Next())	//테스트 데이터 각각을 훑어나가며,새로운 것을 추가한다.
 		{
 			//중복되는 부분이면 넘어간다.
 			set<int>::iterator itVnum;
-			itVnum=vnumSet.find(atoi(test_data.AsStringByIndex(0)));
-			if (itVnum != vnumSet.end()) {
+			itVnum = vnumSet.find(atoi(test_data.AsStringByIndex(0)));
+
+			if (itVnum != vnumSet.end())
+			{
 				continue;
 			}
-			
+
 			if (!Set_Proto_Item_Table(item_table, test_data, localMap))
 			{
-				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");			
+				fprintf(stderr, "아이템 프로토 테이블 셋팅 실패.\n");
 			}
 
-
-			m_map_itemTableByVnum.insert(std::map<DWORD, TItemTable *>::value_type(item_table->dwVnum, item_table));
+			m_map_itemTableByVnum.insert(std::map<DWORD, TItemTable*>::value_type(item_table->dwVnum, item_table));
 
 			item_table++;
-
 		}
 	}
-
-
 
 	// QUEST_ITEM_PROTO_DISABLE
 	// InitializeQuestItemTable();
@@ -824,31 +892,31 @@ bool CClientManager::InitializeItemTable()
 
 	while (it != m_vec_itemTable.end())
 	{
-		TItemTable * item_table = &(*(it++));
+		TItemTable* item_table = &(*(it++));
 
-		sys_log(1, "ITEM: #%-5lu %-24s %-24s VAL: %ld %ld %ld %ld %ld %ld WEAR %lu ANTI %lu IMMUNE %lu REFINE %lu REFINE_SET %u MAGIC_PCT %u", 
-				item_table->dwVnum,
-				item_table->szName,
-				item_table->szLocaleName,
-				item_table->alValues[0],
-				item_table->alValues[1],
-				item_table->alValues[2],
-				item_table->alValues[3],
-				item_table->alValues[4],
-				item_table->alValues[5],
-				item_table->dwWearFlags,
-				item_table->dwAntiFlags,
-				item_table->dwImmuneFlag,
-				item_table->dwRefinedVnum,
-				item_table->wRefineSet,
-				item_table->bAlterToMagicItemPct);
+		sys_log(1, "ITEM: #%-5lu %-24s %-24s VAL: %ld %ld %ld %ld %ld %ld WEAR %lu ANTI %lu IMMUNE %lu REFINE %lu REFINE_SET %u MAGIC_PCT %u",
+			item_table->dwVnum,
+			item_table->szName,
+			item_table->szLocaleName,
+			item_table->alValues[0],
+			item_table->alValues[1],
+			item_table->alValues[2],
+			item_table->alValues[3],
+			item_table->alValues[4],
+			item_table->alValues[5],
+			item_table->dwWearFlags,
+			item_table->dwAntiFlags,
+			item_table->dwImmuneFlag,
+			item_table->dwRefinedVnum,
+			item_table->wRefineSet,
+			item_table->bAlterToMagicItemPct);
 
-		m_map_itemTableByVnum.insert(std::map<DWORD, TItemTable *>::value_type(item_table->dwVnum, item_table));
+		m_map_itemTableByVnum.insert(std::map<DWORD, TItemTable*>::value_type(item_table->dwVnum, item_table));
 	}
+
 	sort(m_vec_itemTable.begin(), m_vec_itemTable.end(), FCompareVnum());
 	return true;
 }
-
 
 bool CClientManager::InitializeSkillTable()
 {
@@ -864,7 +932,7 @@ bool CClientManager::InitializeSkillTable()
 		GetTablePostfix());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (!pRes->uiNumRows)
 	{
@@ -946,10 +1014,12 @@ bool CClientManager::InitializeBanwordTable()
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery("SELECT word FROM banword"));
 
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (pRes->uiNumRows == 0)
+	{
 		return true;
+	}
 
 	MYSQL_ROW data;
 
@@ -972,11 +1042,11 @@ bool CClientManager::InitializeItemAttrTable()
 {
 	char query[4096];
 	snprintf(query, sizeof(query),
-			"SELECT apply, apply+0, prob, lv1, lv2, lv3, lv4, lv5, weapon, body, wrist, foots, neck, head, shield, ear FROM item_attr%s ORDER BY apply",
-			GetTablePostfix());
+		"SELECT apply, apply+0, prob, lv1, lv2, lv3, lv4, lv5, weapon, body, wrist, foots, neck, head, shield, ear FROM item_attr%s ORDER BY apply",
+		GetTablePostfix());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (!pRes->uiNumRows)
 	{
@@ -1020,21 +1090,21 @@ bool CClientManager::InitializeItemAttrTable()
 		str_to_number(t.bMaxLevelBySet[ATTRIBUTE_SET_EAR], data[col++]);
 
 		sys_log(0, "ITEM_ATTR: %-20s %4lu { %3d %3d %3d %3d %3d } { %d %d %d %d %d %d %d }",
-				t.szApply,
-				t.dwProb,
-				t.lValues[0],
-				t.lValues[1],
-				t.lValues[2],
-				t.lValues[3],
-				t.lValues[4],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_WEAPON],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_BODY],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_WRIST],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_FOOTS],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_NECK],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_HEAD],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_SHIELD],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_EAR]);
+			t.szApply,
+			t.dwProb,
+			t.lValues[0],
+			t.lValues[1],
+			t.lValues[2],
+			t.lValues[3],
+			t.lValues[4],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_WEAPON],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_BODY],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_WRIST],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_FOOTS],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_NECK],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_HEAD],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_SHIELD],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_EAR]);
 
 		m_vec_itemAttrTable.push_back(t);
 	}
@@ -1046,11 +1116,11 @@ bool CClientManager::InitializeItemRareTable()
 {
 	char query[4096];
 	snprintf(query, sizeof(query),
-			"SELECT apply, apply+0, prob, lv1, lv2, lv3, lv4, lv5, weapon, body, wrist, foots, neck, head, shield, ear FROM item_attr_rare%s ORDER BY apply",
-			GetTablePostfix());
+		"SELECT apply, apply+0, prob, lv1, lv2, lv3, lv4, lv5, weapon, body, wrist, foots, neck, head, shield, ear FROM item_attr_rare%s ORDER BY apply",
+		GetTablePostfix());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (!pRes->uiNumRows)
 	{
@@ -1094,21 +1164,21 @@ bool CClientManager::InitializeItemRareTable()
 		str_to_number(t.bMaxLevelBySet[ATTRIBUTE_SET_EAR], data[col++]);
 
 		sys_log(0, "ITEM_RARE: %-20s %4lu { %3d %3d %3d %3d %3d } { %d %d %d %d %d %d %d }",
-				t.szApply,
-				t.dwProb,
-				t.lValues[0],
-				t.lValues[1],
-				t.lValues[2],
-				t.lValues[3],
-				t.lValues[4],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_WEAPON],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_BODY],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_WRIST],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_FOOTS],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_NECK],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_HEAD],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_SHIELD],
-				t.bMaxLevelBySet[ATTRIBUTE_SET_EAR]);
+			t.szApply,
+			t.dwProb,
+			t.lValues[0],
+			t.lValues[1],
+			t.lValues[2],
+			t.lValues[3],
+			t.lValues[4],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_WEAPON],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_BODY],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_WRIST],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_FOOTS],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_NECK],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_HEAD],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_SHIELD],
+			t.bMaxLevelBySet[ATTRIBUTE_SET_EAR]);
 
 		m_vec_itemRareTable.push_back(t);
 	}
@@ -1128,7 +1198,7 @@ bool CClientManager::InitializeLandTable()
 		GetTablePostfix());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (!m_vec_kLandTable.empty())
 	{
@@ -1167,31 +1237,34 @@ bool CClientManager::InitializeLandTable()
 	return true;
 }
 
-void parse_pair_number_string(const char * c_pszString, std::vector<std::pair<int, int> > & vec)
+void parse_pair_number_string(const char* c_pszString, std::vector<std::pair<int, int>>& vec)
 {
 	// format: 10,1/20,3/300,50
-	const char * t = c_pszString;
-	const char * p = strchr(t, '/');
+	const char* t = c_pszString;
+	const char* p = strchr(t, '/');
 	std::pair<int, int> k;
 
 	char szNum[32 + 1];
-	char * comma;
+	char* comma;
 
 	while (p)
 	{
 		if (isnhdigit(*t))
 		{
-			strlcpy(szNum, t, MIN(sizeof(szNum), (p-t)+1));
+			strlcpy(szNum, t, MIN(sizeof(szNum), (p - t) + 1));
 
 			comma = strchr(szNum, ',');
 
 			if (comma)
 			{
 				*comma = '\0';
-				str_to_number(k.second, comma+1);
+				str_to_number(k.second, comma + 1);
 			}
+
 			else
+			{
 				k.second = 0;
+			}
 
 			str_to_number(k.first, szNum);
 			vec.push_back(k);
@@ -1205,15 +1278,18 @@ void parse_pair_number_string(const char * c_pszString, std::vector<std::pair<in
 	{
 		strlcpy(szNum, t, sizeof(szNum));
 
-		comma = strchr(const_cast<char*>(t), ',');
+		comma = strchr(const_cast<char*> (t), ',');
 
 		if (comma)
 		{
 			*comma = '\0';
-			str_to_number(k.second, comma+1);
+			str_to_number(k.second, comma + 1);
 		}
+
 		else
+		{
 			k.second = 0;
+		}
 
 		str_to_number(k.first, szNum);
 		vec.push_back(k);
@@ -1226,12 +1302,12 @@ bool CClientManager::InitializeObjectProto()
 
 	char query[4096];
 	snprintf(query, sizeof(query),
-			"SELECT vnum, price, materials, upgrade_vnum, upgrade_limit_time, life, reg_1, reg_2, reg_3, reg_4, npc, group_vnum, dependent_group "
-			"FROM object_proto%s ORDER BY vnum",
-			GetTablePostfix());
+		"SELECT vnum, price, materials, upgrade_vnum, upgrade_limit_time, life, reg_1, reg_2, reg_3, reg_4, npc, group_vnum, dependent_group "
+		"FROM object_proto%s ORDER BY vnum",
+		GetTablePostfix());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (!m_vec_kObjectProto.empty())
 	{
@@ -1255,12 +1331,12 @@ bool CClientManager::InitializeObjectProto()
 			str_to_number(t.dwVnum, data[col++]);
 			str_to_number(t.dwPrice, data[col++]);
 
-			std::vector<std::pair<int, int> > vec;
+			std::vector<std::pair<int, int>> vec;
 			parse_pair_number_string(data[col++], vec);
 
 			for (unsigned int i = 0; i < OBJECT_MATERIAL_MAX_NUM && i < vec.size(); ++i)
 			{
-				std::pair<int, int> & r = vec[i];
+				std::pair<int, int>& r = vec[i];
 
 				t.kMaterials[i].dwItemVnum = r.first;
 				t.kMaterials[i].dwCount = r.second;
@@ -1280,11 +1356,11 @@ bool CClientManager::InitializeObjectProto()
 			str_to_number(t.dwDependOnGroupVnum, data[col++]);
 
 			t.lNPCX = 0;
-			t.lNPCY = MAX(t.lRegion[1], t.lRegion[3])+300;
+			t.lNPCY = MAX(t.lRegion[1], t.lRegion[3]) + 300;
 			// END_OF_ADD_BUILDING_NPC
 
 			sys_log(0, "OBJ_PROTO: vnum %lu price %lu mat %lu %lu",
-					t.dwVnum, t.dwPrice, t.kMaterials[0].dwItemVnum, t.kMaterials[0].dwCount);
+				t.dwVnum, t.dwPrice, t.kMaterials[0].dwItemVnum, t.kMaterials[0].dwCount);
 
 			m_vec_kObjectProto.push_back(t);
 		}
@@ -1300,7 +1376,7 @@ bool CClientManager::InitializeObjectTable()
 	snprintf(query, sizeof(query), "SELECT id, land_id, vnum, map_index, x, y, x_rot, y_rot, z_rot, life FROM object%s ORDER BY id", GetTablePostfix());
 
 	std::unique_ptr<SQLMsg> pkMsg(CDBManager::instance().DirectQuery(query));
-	SQLResult * pRes = pkMsg->Get();
+	SQLResult* pRes = pkMsg->Get();
 
 	if (!m_map_pkObjectTable.empty())
 	{
@@ -1313,7 +1389,7 @@ bool CClientManager::InitializeObjectTable()
 	if (pRes->uiNumRows > 0)
 		while ((data = mysql_fetch_row(pRes->pSQLResult)))
 		{
-			TObject * k = new TObject;
+			TObject* k = new TObject;
 
 			memset(k, 0, sizeof(TObject));
 
@@ -1330,8 +1406,8 @@ bool CClientManager::InitializeObjectTable()
 			str_to_number(k->zRot, data[col++]);
 			str_to_number(k->lLife, data[col++]);
 
-			sys_log(0, "OBJ: %lu vnum %lu map %-4ld %7ldx%-7ld life %ld", 
-					k->dwID, k->dwVnum, k->lMapIndex, k->x, k->y, k->lLife);
+			sys_log(0, "OBJ: %lu vnum %lu map %-4ld %7ldx%-7ld life %ld",
+				k->dwID, k->dwVnum, k->lMapIndex, k->x, k->y, k->lLife);
 
 			m_map_pkObjectTable.insert(std::make_pair(k->dwID, k));
 		}
@@ -1352,6 +1428,7 @@ bool CClientManager::MirrorMobTableIntoDB()
 	{
 		const TMobTable& t = *it;
 		char query[4096];
+
 		if (g_stLocaleNameColumn == "name")
 		{
 			snprintf(query, sizeof(query),
@@ -1373,7 +1450,7 @@ bool CClientManager::MirrorMobTableIntoDB()
 				") "
 				"values ("
 
-				"%d, \"%s\", %d, %d, %d, %d, %d, %u, %u, %u, " 
+				"%d, \"%s\", %d, %d, %d, %d, %d, %u, %u, %u, "
 				"%d, %d, %d, %d, '%s', "
 				"%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, "
 				"%d, %d, %d, %d, %d, %d, %d, %d, %d, "
@@ -1396,14 +1473,15 @@ bool CClientManager::MirrorMobTableIntoDB()
 				t.dwGoldMin, t.dwGoldMax, t.wDef, t.sAttackSpeed, t.sMovingSpeed, t.bAggresiveHPPct, t.wAggressiveSight, t.wAttackRange, t.dwPolymorphItemVnum,
 				t.cEnchants[0], t.cEnchants[1], t.cEnchants[2], t.cEnchants[3], t.cEnchants[4], t.cEnchants[5],
 				t.cResists[0], t.cResists[1], t.cResists[2], t.cResists[3], t.cResists[4], t.cResists[5],
-				t.cResists[6], t.cResists[7], t.cResists[8], t.cResists[9], t.cResists[10], 
-				t.fDamMultiply, t.dwSummonVnum, t.dwDrainSP, t.dwMobColor, 
+				t.cResists[6], t.cResists[7], t.cResists[8], t.cResists[9], t.cResists[10],
+				t.fDamMultiply, t.dwSummonVnum, t.dwDrainSP, t.dwMobColor,
 
-				t.Skills[0].dwVnum, t.Skills[0].bLevel, t.Skills[1].dwVnum, t.Skills[1].bLevel, t.Skills[2].dwVnum, t.Skills[2].bLevel, 
-				t.Skills[3].dwVnum, t.Skills[3].bLevel, t.Skills[4].dwVnum, t.Skills[4].bLevel, 
+				t.Skills[0].dwVnum, t.Skills[0].bLevel, t.Skills[1].dwVnum, t.Skills[1].bLevel, t.Skills[2].dwVnum, t.Skills[2].bLevel,
+				t.Skills[3].dwVnum, t.Skills[3].bLevel, t.Skills[4].dwVnum, t.Skills[4].bLevel,
 				t.bBerserkPoint, t.bStoneSkinPoint, t.bGodSpeedPoint, t.bDeathBlowPoint, t.bRevivePoint
-				);
+			);
 		}
+
 		else
 		{
 			snprintf(query, sizeof(query),
@@ -1425,7 +1503,7 @@ bool CClientManager::MirrorMobTableIntoDB()
 				") "
 				"values ("
 
-				"%d, \"%s\", \"%s\", %d, %d, %d, %d, %d, %u, %u, %u, " 
+				"%d, \"%s\", \"%s\", %d, %d, %d, %d, %d, %u, %u, %u, "
 				"%d, %d, %d, %d, '%s', "
 				"%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, "
 				"%d, %d, %d, %d, %d, %d, %d, %d, %d, "
@@ -1448,17 +1526,18 @@ bool CClientManager::MirrorMobTableIntoDB()
 				t.dwGoldMin, t.dwGoldMax, t.wDef, t.sAttackSpeed, t.sMovingSpeed, t.bAggresiveHPPct, t.wAggressiveSight, t.wAttackRange, t.dwPolymorphItemVnum,
 				t.cEnchants[0], t.cEnchants[1], t.cEnchants[2], t.cEnchants[3], t.cEnchants[4], t.cEnchants[5],
 				t.cResists[0], t.cResists[1], t.cResists[2], t.cResists[3], t.cResists[4], t.cResists[5],
-				t.cResists[6], t.cResists[7], t.cResists[8], t.cResists[9], t.cResists[10], 
-				t.fDamMultiply, t.dwSummonVnum, t.dwDrainSP, t.dwMobColor, 
+				t.cResists[6], t.cResists[7], t.cResists[8], t.cResists[9], t.cResists[10],
+				t.fDamMultiply, t.dwSummonVnum, t.dwDrainSP, t.dwMobColor,
 
-				t.Skills[0].dwVnum, t.Skills[0].bLevel, t.Skills[1].dwVnum, t.Skills[1].bLevel, t.Skills[2].dwVnum, t.Skills[2].bLevel, 
-				t.Skills[3].dwVnum, t.Skills[3].bLevel, t.Skills[4].dwVnum, t.Skills[4].bLevel, 
+				t.Skills[0].dwVnum, t.Skills[0].bLevel, t.Skills[1].dwVnum, t.Skills[1].bLevel, t.Skills[2].dwVnum, t.Skills[2].bLevel,
+				t.Skills[3].dwVnum, t.Skills[3].bLevel, t.Skills[4].dwVnum, t.Skills[4].bLevel,
 				t.bBerserkPoint, t.bStoneSkinPoint, t.bGodSpeedPoint, t.bDeathBlowPoint, t.bRevivePoint
-				);
+			);
 		}
 
 		CDBManager::instance().AsyncQuery(query);
 	}
+
 	return true;
 }
 
@@ -1485,15 +1564,16 @@ bool CClientManager::MirrorItemTableIntoDB()
 				"%d, %d, %d, %d, "
 				"%d, %d, %d, %d, %d, %d, "
 				"%d, %d, %d, %d, %d, %d )",
-				GetTablePostfix(), g_stLocaleNameColumn.c_str(), 
+				GetTablePostfix(), g_stLocaleNameColumn.c_str(),
 				t.dwVnum, t.bType, t.bSubType, t.szName, t.szLocaleName, t.dwGold, t.dwShopBuyPrice, t.bWeight, t.bSize,
-				t.dwFlags, t.dwWearFlags, t.dwAntiFlags, t.dwImmuneFlag, 
+				t.dwFlags, t.dwWearFlags, t.dwAntiFlags, t.dwImmuneFlag,
 				t.dwRefinedVnum, t.wRefineSet, t.bAlterToMagicItemPct, t.bGainSocketPct, t.sAddonType, t.bSpecular,
 				t.aLimits[0].bType, t.aLimits[0].lValue, t.aLimits[1].bType, t.aLimits[1].lValue,
 				t.aApplies[0].bType, t.aApplies[0].lValue, t.aApplies[1].bType, t.aApplies[1].lValue, t.aApplies[2].bType, t.aApplies[2].lValue,
 				t.alValues[0], t.alValues[1], t.alValues[2], t.alValues[3], t.alValues[4], t.alValues[5]);
 			CDBManager::instance().AsyncQuery(query);
 		}
+
 		else
 		{
 			const TItemTable& t = *it;
@@ -1513,9 +1593,9 @@ bool CClientManager::MirrorItemTableIntoDB()
 				"%d, %d, %d, %d, "
 				"%d, %d, %d, %d, %d, %d, "
 				"%d, %d, %d, %d, %d, %d )",
-				GetTablePostfix(), 
+				GetTablePostfix(),
 				t.dwVnum, t.bType, t.bSubType, t.szName, t.dwGold, t.dwShopBuyPrice, t.bWeight, t.bSize,
-				t.dwFlags, t.dwWearFlags, t.dwAntiFlags, t.dwImmuneFlag, 
+				t.dwFlags, t.dwWearFlags, t.dwAntiFlags, t.dwImmuneFlag,
 				t.dwRefinedVnum, t.wRefineSet, t.bAlterToMagicItemPct, t.bGainSocketPct, t.sAddonType, t.bSpecular,
 				t.aLimits[0].bType, t.aLimits[0].lValue, t.aLimits[1].bType, t.aLimits[1].lValue,
 				t.aApplies[0].bType, t.aApplies[0].lValue, t.aApplies[1].bType, t.aApplies[1].lValue, t.aApplies[2].bType, t.aApplies[2].lValue,
@@ -1523,5 +1603,6 @@ bool CClientManager::MirrorItemTableIntoDB()
 			CDBManager::instance().AsyncQuery(query);
 		}
 	}
+
 	return true;
 }

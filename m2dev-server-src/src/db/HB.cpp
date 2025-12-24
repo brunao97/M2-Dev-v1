@@ -22,7 +22,9 @@ bool PlayerHB::Initialize()
 	std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery));
 
 	if (pMsg->Get()->uiNumRows == 0)
+	{
 		return false;
+	}
 
 	MYSQL_ROW row = mysql_fetch_row(pMsg->Get()->pSQLResult);
 	m_stCreateTableQuery = row[1];
@@ -44,7 +46,9 @@ void PlayerHB::Put(DWORD id)
 	}
 
 	if (time(0) - it->second > m_iExpireTime)
+	{
 		Query(id);
+	}
 }
 
 //
@@ -55,8 +59,8 @@ bool PlayerHB::Query(DWORD id)
 	time_t ct = time(0);
 	struct tm curr_tm = *localtime(&ct);
 	char szTableName[64];
-	snprintf(szTableName, sizeof(szTableName), "hb_%02d%02d%02d%02d_player%s", 
-			curr_tm.tm_year - 100, curr_tm.tm_mon + 1, curr_tm.tm_mday, curr_tm.tm_hour, GetTablePostfix());
+	snprintf(szTableName, sizeof(szTableName), "hb_%02d%02d%02d%02d_player%s",
+		curr_tm.tm_year - 100, curr_tm.tm_mon + 1, curr_tm.tm_mday, curr_tm.tm_hour, GetTablePostfix());
 
 	char szQuery[4096];
 
@@ -68,13 +72,13 @@ bool PlayerHB::Query(DWORD id)
 
 		if (pos < 0)
 		{
-			sys_err("cannot find %s ", szFind);	
-		//	sys_err("cannot find %s in %s", szFind, m_stCreateTableQuery.c_str());
+			sys_err("cannot find %s ", szFind);
+			//	sys_err("cannot find %s in %s", szFind, m_stCreateTableQuery.c_str());
 			return false;
 		}
 
 		snprintf(szQuery, sizeof(szQuery), "CREATE TABLE IF NOT EXISTS %s%s", szTableName, m_stCreateTableQuery.c_str() + strlen(szFind));
-	//	sys_log(0, "%s", szQuery);
+		//	sys_log(0, "%s", szQuery);
 		std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(szQuery, SQL_HOTBACKUP));
 		m_stTableName = szTableName;
 	}
@@ -83,4 +87,3 @@ bool PlayerHB::Query(DWORD id)
 	CDBManager::instance().AsyncQuery(szQuery, SQL_HOTBACKUP);
 	return true;
 }
-

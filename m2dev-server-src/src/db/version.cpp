@@ -16,11 +16,12 @@ void WriteVersion()
 		//fprintf(fp, "%s@%s:%s\n", __USER__, __HOSTNAME__, __PWD__);
 		fclose(fp);
 	}
+
 	else
 	{
 		fprintf(stderr, "cannot open VERSION.txt\n");
 		exit(0);
 	}
+
 #endif
 }
-

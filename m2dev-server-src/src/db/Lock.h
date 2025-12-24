@@ -10,7 +10,7 @@ typedef pthread_mutex_t		lock_t;
 
 class CLock
 {
-    public:
+public:
 	CLock();
 	~CLock();
 
@@ -20,8 +20,9 @@ class CLock
 	void	Lock();
 	void	Unlock();
 
-    private:	
+private:
 	lock_t	m_lock;
 	bool	m_bLocked;
 };
+
 #endif

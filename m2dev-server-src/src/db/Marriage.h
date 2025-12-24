@@ -49,7 +49,7 @@ namespace marriage
 		DWORD pid2;
 		int   love_point;
 		DWORD time;
-		BYTE is_married; // false : 약혼 상태, true : 결혼 상태
+		BYTE is_married;
 		std::string name1;
 		std::string name2;
 
@@ -61,10 +61,14 @@ namespace marriage
 		DWORD GetOther(DWORD PID)
 		{
 			if (pid1 == PID)
+			{
 				return pid2;
+			}
 
 			if (pid2 == PID)
+			{
 				return pid1;
+			}
 
 			return 0;
 		}
@@ -72,41 +76,41 @@ namespace marriage
 
 	class CManager : public singleton<CManager>
 	{
-		public:
-			CManager();
-			virtual ~CManager();
+	public:
+		CManager();
+		virtual ~CManager();
 
-			bool Initialize();
+		bool Initialize();
 
-			TMarriage* Get(DWORD dwPlayerID);
-			bool IsMarried(DWORD dwPlayerID)
-			{
-				return Get(dwPlayerID) != NULL;
-			}
+		TMarriage* Get(DWORD dwPlayerID);
+		bool IsMarried(DWORD dwPlayerID)
+		{
+			return Get(dwPlayerID) != NULL;
+		}
 
-			//void	Reserve(DWORD dwPID1, DWORD dwPID2);
-			void	Add(DWORD dwPID1, DWORD dwPID2, const char* szName1, const char* szName2);
-			void	Remove(DWORD dwPID1, DWORD dwPID2);
-			void	Update(DWORD dwPID1, DWORD dwPID2, INT iLovePoint, BYTE byMarried);
+		//void	Reserve(DWORD dwPID1, DWORD dwPID2);
+		void	Add(DWORD dwPID1, DWORD dwPID2, const char* szName1, const char* szName2);
+		void	Remove(DWORD dwPID1, DWORD dwPID2);
+		void	Update(DWORD dwPID1, DWORD dwPID2, INT iLovePoint, BYTE byMarried);
 
-			void	EngageToMarriage(DWORD dwPID1, DWORD dwPID2);
+		void	EngageToMarriage(DWORD dwPID1, DWORD dwPID2);
 
-			void	ReadyWedding(DWORD dwMapIndex, DWORD dwPID1, DWORD dwPID2);
-			void	EndWedding(DWORD dwPID1, DWORD dwPID2);
+		void	ReadyWedding(DWORD dwMapIndex, DWORD dwPID1, DWORD dwPID2);
+		void	EndWedding(DWORD dwPID1, DWORD dwPID2);
 
-			void	OnSetup(CPeer* peer);
+		void	OnSetup(CPeer* peer);
 
-			void	Update();
+		void	Update();
 
-		private:
-			std::set<TMarriage *> m_Marriages;
-			std::map<DWORD, TMarriage *> m_MarriageByPID;
+	private:
+		std::set<TMarriage*> m_Marriages;
+		std::map<DWORD, TMarriage*> m_MarriageByPID;
 
-			std::priority_queue<TWedding, std::vector<TWedding>, std::greater<TWedding> > m_pqWeddingStart;
+		std::priority_queue<TWedding, std::vector<TWedding>, std::greater<TWedding>> m_pqWeddingStart;
 
-			std::priority_queue<TWeddingInfo, std::vector<TWeddingInfo>, std::greater<TWeddingInfo> > m_pqWeddingEnd;
+		std::priority_queue<TWeddingInfo, std::vector<TWeddingInfo>, std::greater<TWeddingInfo>> m_pqWeddingEnd;
 
-			std::map<std::pair<DWORD, DWORD>, TWedding> m_mapRunningWedding;
+		std::map<std::pair<DWORD, DWORD>, TWedding> m_mapRunningWedding;
 	};
 }
 

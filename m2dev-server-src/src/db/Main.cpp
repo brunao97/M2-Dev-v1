@@ -22,26 +22,22 @@ std::string g_stLocaleNameColumn = "name";
 std::string g_stLocale = "euckr";
 std::string g_stPlayerDBName = "";
 
-
 bool g_bHotBackup = false;
 BOOL g_test_server = false;
 
-//단위 초
-int g_iPlayerCacheFlushSeconds = 60*7;
-int g_iItemCacheFlushSeconds = 60*5;
+int g_iPlayerCacheFlushSeconds = 60 * 7;
+int g_iItemCacheFlushSeconds = 60 * 5;
 
-//g_iLogoutSeconds 수치는 g_iPlayerCacheFlushSeconds 와 g_iItemCacheFlushSeconds 보다 길어야 한다.
-int g_iLogoutSeconds = 60*10;
+int g_iLogoutSeconds = 60 * 10;
 
 int g_log = 1;
-
 
 // MYSHOP_PRICE_LIST
 int g_iItemPriceListTableCacheFlushSeconds = 540;
 // END_OF_MYSHOP_PRICE_LIST
 
 #ifdef OS_FREEBSD
-extern const char * _malloc_options;
+extern const char* _malloc_options;
 #endif
 
 extern void WriteVersion();
@@ -49,12 +45,19 @@ extern void WriteVersion();
 void emergency_sig(int sig)
 {
 	if (sig == SIGSEGV)
+	{
 		sys_log(0, "SIGNAL: SIGSEGV");
+	}
+
 	else if (sig == SIGUSR1)
+	{
 		sys_log(0, "SIGNAL: SIGUSR1");
+	}
 
 	if (sig == SIGSEGV)
+	{
 		abort();
+	}
 }
 
 int main()
@@ -69,7 +72,7 @@ int main()
 
 	CConfig Config;
 	CNetPoller poller;
-	CDBManager DBManager; 
+	CDBManager DBManager;
 	CClientManager ClientManager;
 	PlayerHB player_hb;
 	CGuildManager GuildManager;
@@ -81,12 +84,14 @@ int main()
 	CItemIDRangeManager ItemIDRangeManager;
 
 	if (!Start())
+	{
 		return 1;
+	}
 
 	GuildManager.Initialize();
 	MarriageManager.Initialize();
 	ItemIDRangeManager.Build();
-	
+
 	sys_log(0, "Metin2DBCacheServer Start\n");
 
 	CClientManager::instance().MainLoop();
@@ -104,7 +109,9 @@ int main()
 		iCount += CDBManager::instance().CountAsyncQuery(SQL_PLAYER);
 
 		if (iCount == 0)
+		{
 			break;
+		}
 
 		usleep(1000);
 		sys_log(0, "WAITING_QUERY_COUNT %d", iCount);
@@ -136,24 +143,28 @@ int Start()
 	{
 		fprintf(stderr, "Real Server\n");
 	}
+
 	else
+	{
 		fprintf(stderr, "Test Server\n");
+	}
 
 	if (!CConfig::instance().GetValue("LOG", &g_log))
 	{
 		fprintf(stderr, "Log Off");
-		g_log= 0;
+		g_log = 0;
 	}
+
 	else
 	{
 		g_log = 1;
 		fprintf(stderr, "Log On");
 	}
-	
-	
+
 	int tmpValue;
 
 	int heart_beat = 50;
+
 	if (!CConfig::instance().GetValue("CLIENT_HEART_FPS", &heart_beat))
 	{
 		fprintf(stderr, "Cannot find CLIENT_HEART_FPS configuration.\n");
@@ -163,7 +174,7 @@ int Start()
 	thecore_init(heart_beat, emptybeat);
 	signal_timer_enable(60);
 
-	char szBuf[256+1];
+	char szBuf[256 + 1];
 
 	if (CConfig::instance().GetValue("LOCALE", szBuf, 256))
 	{
@@ -176,19 +187,20 @@ int Start()
 			sys_log(0, "CIBN_LOCALE: DISABLE_HOTBACKUP");
 			g_bHotBackup = false;
 		}
+
 		// END_OF_CHINA_DISABLE_HOTBACKUP
 	}
 
 	int iDisableHotBackup;
+
 	if (CConfig::instance().GetValue("DISABLE_HOTBACKUP", &iDisableHotBackup))
 	{
 		if (iDisableHotBackup)
-		{	
+		{
 			sys_log(0, "CONFIG: DISABLE_HOTBACKUP");
 			g_bHotBackup = false;
 		}
 	}
-
 
 	if (!CConfig::instance().GetValue("TABLE_POSTFIX", szBuf, 256))
 	{
@@ -211,20 +223,23 @@ int Start()
 	}
 
 	// MYSHOP_PRICE_LIST
-	if (CConfig::instance().GetValue("ITEM_PRICELIST_CACHE_FLUSH_SECONDS", szBuf, 256)) 
+	if (CConfig::instance().GetValue("ITEM_PRICELIST_CACHE_FLUSH_SECONDS", szBuf, 256))
 	{
 		str_to_number(g_iItemPriceListTableCacheFlushSeconds, szBuf);
 		sys_log(0, "ITEM_PRICELIST_CACHE_FLUSH_SECONDS: %d", g_iItemPriceListTableCacheFlushSeconds);
 	}
+
 	// END_OF_MYSHOP_PRICE_LIST
 	//
 	if (CConfig::instance().GetValue("CACHE_FLUSH_LIMIT_PER_SECOND", szBuf, 256))
 	{
-		DWORD dwVal = 0; str_to_number(dwVal, szBuf);
+		DWORD dwVal = 0;
+		str_to_number(dwVal, szBuf);
 		CClientManager::instance().SetCacheFlushCountLimit(dwVal);
 	}
 
 	int iIDStart;
+
 	if (!CConfig::instance().GetValue("PLAYER_ID_START", &iIDStart))
 	{
 		sys_err("PLAYER_ID_START not configured");
@@ -241,7 +256,7 @@ int Start()
 
 	char szAddr[64], szDB[64], szUser[64], szPassword[64];
 	int iPort;
-	char line[256+1];
+	char line[256 + 1];
 
 	if (CConfig::instance().GetValue("SQL_PLAYER", line, 256))
 	{
@@ -262,9 +277,11 @@ int Start()
 			fprintf(stderr, "   failed, retrying in 5 seconds");
 			sleep(5);
 		} while (iRetry--);
+
 		fprintf(stderr, "Success PLAYER\n");
 		SetPlayerDBName(szDB);
 	}
+
 	else
 	{
 		sys_err("SQL_PLAYER not configured");
@@ -290,8 +307,10 @@ int Start()
 			fprintf(stderr, "   failed, retrying in 5 seconds");
 			sleep(5);
 		} while (iRetry--);
+
 		fprintf(stderr, "Success ACCOUNT\n");
 	}
+
 	else
 	{
 		sys_err("SQL_ACCOUNT not configured");
@@ -317,8 +336,10 @@ int Start()
 			fprintf(stderr, "   failed, retrying in 5 seconds");
 			sleep(5);
 		} while (iRetry--);
+
 		fprintf(stderr, "Success COMMON\n");
 	}
+
 	else
 	{
 		sys_err("SQL_COMMON not configured");
@@ -343,17 +364,17 @@ int Start()
 			sys_log(0, "   failed, retrying in 5 seconds");
 			fprintf(stderr, "   failed, retrying in 5 seconds");
 			sleep(5);
-		}
-		while (iRetry--);
+		} while (iRetry--);
 
 		fprintf(stderr, "Success HOTBACKUP\n");
 	}
+
 	else
 	{
 		sys_err("SQL_HOTBACKUP not configured");
 		return false;
 	}
-	
+
 	if (!CNetPoller::instance().Create())
 	{
 		sys_err("Cannot create network poller");
@@ -364,7 +385,7 @@ int Start()
 
 	if (!CClientManager::instance().Initialize())
 	{
-		sys_log(0, "   failed"); 
+		sys_log(0, "   failed");
 		return false;
 	}
 
@@ -386,20 +407,28 @@ int Start()
 void SetTablePostfix(const char* c_pszTablePostfix)
 {
 	if (!c_pszTablePostfix || !*c_pszTablePostfix)
+	{
 		g_stTablePostfix = "";
+	}
+
 	else
+	{
 		g_stTablePostfix = c_pszTablePostfix;
+	}
 }
 
-const char * GetTablePostfix()
+const char* GetTablePostfix()
 {
 	return g_stTablePostfix.c_str();
 }
 
 void SetPlayerDBName(const char* c_pszPlayerDBName)
 {
-	if (! c_pszPlayerDBName || ! *c_pszPlayerDBName)
+	if (!c_pszPlayerDBName || !*c_pszPlayerDBName)
+	{
 		g_stPlayerDBName = "";
+	}
+
 	else
 	{
 		g_stPlayerDBName = c_pszPlayerDBName;
@@ -407,8 +436,7 @@ void SetPlayerDBName(const char* c_pszPlayerDBName)
 	}
 }
 
-const char * GetPlayerDBName()
+const char* GetPlayerDBName()
 {
 	return g_stPlayerDBName.c_str();
 }
-

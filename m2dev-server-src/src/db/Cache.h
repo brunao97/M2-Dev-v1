@@ -6,7 +6,7 @@
 
 class CItemCache : public cache<TPlayerItem>
 {
-    public:
+public:
 	CItemCache();
 	virtual ~CItemCache();
 
@@ -16,13 +16,16 @@ class CItemCache : public cache<TPlayerItem>
 
 class CPlayerTableCache : public cache<TPlayerTable>
 {
-    public:
+public:
 	CPlayerTableCache();
 	virtual ~CPlayerTableCache();
 
 	virtual void OnFlush();
 
-	DWORD GetLastUpdateTime() { return m_lastUpdateTime; }
+	DWORD GetLastUpdateTime()
+	{
+		return m_lastUpdateTime;
+	}
 };
 
 // MYSHOP_PRICE_LIST
@@ -33,7 +36,7 @@ class CPlayerTableCache : public cache<TPlayerTable>
  */
 class CItemPriceListTableCache : public cache< TItemPriceListTable >
 {
-    public:
+public:
 
 	/// Constructor
 	/**
@@ -53,9 +56,10 @@ class CItemPriceListTableCache : public cache< TItemPriceListTable >
 	/// 가격정보를 DB 에 기록한다.
 	virtual void	OnFlush(void);
 
-    private:
+private:
 
 	static const int	s_nMinFlushSec;		///< Minimum cache expire time
 };
+
 // END_OF_MYSHOP_PRICE_LIST
 #endif

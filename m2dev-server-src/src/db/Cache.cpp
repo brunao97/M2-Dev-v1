@@ -1,5 +1,4 @@
-﻿
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Cache.h"
 
 #include "QID.h"
@@ -36,18 +35,22 @@ CItemCache::~CItemCache()
 void CItemCache::Delete()
 {
 	if (m_data.vnum == 0)
+	{
 		return;
+	}
 
 	//char szQuery[QUERY_MAX_LEN];
 	//szQuery[QUERY_MAX_LEN] = '\0';
 	if (g_test_server)
+	{
 		sys_log(0, "ItemCache::Delete : DELETE %u", m_data.id);
+	}
 
 	m_data.vnum = 0;
 	m_bNeedQuery = true;
 	m_lastUpdateTime = time(0);
 	OnFlush();
-	
+
 	//m_bNeedQuery = false;
 	//m_lastUpdateTime = time(0) - m_expireTime; // 바로 타임아웃 되도록 하자.
 }
@@ -61,8 +64,11 @@ void CItemCache::OnFlush()
 		CDBManager::instance().ReturnQuery(szQuery, QID_ITEM_DESTROY, 0, NULL);
 
 		if (g_test_server)
+		{
 			sys_log(0, "ItemCache::Flush : DELETE %u %s", m_data.id, szQuery);
+		}
 	}
+
 	else
 	{
 		long alSockets[ITEM_SOCKET_MAX_NUM];
@@ -72,13 +78,17 @@ void CItemCache::OnFlush()
 		memset(&alSockets, 0, sizeof(long) * ITEM_SOCKET_MAX_NUM);
 		memset(&aAttr, 0, sizeof(TPlayerItemAttribute) * ITEM_ATTRIBUTE_MAX_NUM);
 
-		TPlayerItem * p = &m_data;
+		TPlayerItem* p = &m_data;
 
 		if (memcmp(alSockets, p->alSockets, sizeof(long) * ITEM_SOCKET_MAX_NUM))
+		{
 			isSocket = true;
+		}
 
 		if (memcmp(aAttr, p->aAttr, sizeof(TPlayerItemAttribute) * ITEM_ATTRIBUTE_MAX_NUM))
+		{
 			isAttr = true;
+		}
 
 		char szColumns[QUERY_MAX_LEN];
 		char szValues[QUERY_MAX_LEN];
@@ -87,58 +97,60 @@ void CItemCache::OnFlush()
 		int iLen = snprintf(szColumns, sizeof(szColumns), "id, owner_id, window, pos, count, vnum");
 
 		int iValueLen = snprintf(szValues, sizeof(szValues), "%u, %u, %d, %d, %u, %u",
-				p->id, p->owner, p->window, p->pos, p->count, p->vnum);
+			p->id, p->owner, p->window, p->pos, p->count, p->vnum);
 
 		int iUpdateLen = snprintf(szUpdate, sizeof(szUpdate), "owner_id=%u, window=%d, pos=%d, count=%u, vnum=%u",
-				p->owner, p->window, p->pos, p->count, p->vnum);
+			p->owner, p->window, p->pos, p->count, p->vnum);
 
 		if (isSocket)
 		{
 			iLen += snprintf(szColumns + iLen, sizeof(szColumns) - iLen, ", socket0, socket1, socket2");
 			iValueLen += snprintf(szValues + iValueLen, sizeof(szValues) - iValueLen,
-					", %lu, %lu, %lu", static_cast<unsigned long>(p->alSockets[0]), static_cast<unsigned long>(p->alSockets[1]), static_cast<unsigned long>(p->alSockets[2]));
+				", %lu, %lu, %lu", static_cast<unsigned long> (p->alSockets[0]), static_cast<unsigned long> (p->alSockets[1]), static_cast<unsigned long> (p->alSockets[2]));
 			iUpdateLen += snprintf(szUpdate + iUpdateLen, sizeof(szUpdate) - iUpdateLen,
-					", socket0=%lu, socket1=%lu, socket2=%lu", static_cast<unsigned long>(p->alSockets[0]), static_cast<unsigned long>(p->alSockets[1]), static_cast<unsigned long>(p->alSockets[2]));
+				", socket0=%lu, socket1=%lu, socket2=%lu", static_cast<unsigned long> (p->alSockets[0]), static_cast<unsigned long> (p->alSockets[1]), static_cast<unsigned long> (p->alSockets[2]));
 		}
 
 		if (isAttr)
 		{
-			iLen += snprintf(szColumns + iLen, sizeof(szColumns) - iLen, 
-					", attrtype0, attrvalue0, attrtype1, attrvalue1, attrtype2, attrvalue2, attrtype3, attrvalue3"
-					", attrtype4, attrvalue4, attrtype5, attrvalue5, attrtype6, attrvalue6");
+			iLen += snprintf(szColumns + iLen, sizeof(szColumns) - iLen,
+				", attrtype0, attrvalue0, attrtype1, attrvalue1, attrtype2, attrvalue2, attrtype3, attrvalue3"
+				", attrtype4, attrvalue4, attrtype5, attrvalue5, attrtype6, attrvalue6");
 
 			iValueLen += snprintf(szValues + iValueLen, sizeof(szValues) - iValueLen,
-					", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
-					p->aAttr[0].bType, p->aAttr[0].sValue,
-					p->aAttr[1].bType, p->aAttr[1].sValue,
-					p->aAttr[2].bType, p->aAttr[2].sValue,
-					p->aAttr[3].bType, p->aAttr[3].sValue,
-					p->aAttr[4].bType, p->aAttr[4].sValue,
-					p->aAttr[5].bType, p->aAttr[5].sValue,
-					p->aAttr[6].bType, p->aAttr[6].sValue);
+				", %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d",
+				p->aAttr[0].bType, p->aAttr[0].sValue,
+				p->aAttr[1].bType, p->aAttr[1].sValue,
+				p->aAttr[2].bType, p->aAttr[2].sValue,
+				p->aAttr[3].bType, p->aAttr[3].sValue,
+				p->aAttr[4].bType, p->aAttr[4].sValue,
+				p->aAttr[5].bType, p->aAttr[5].sValue,
+				p->aAttr[6].bType, p->aAttr[6].sValue);
 
 			iUpdateLen += snprintf(szUpdate + iUpdateLen, sizeof(szUpdate) - iUpdateLen,
-					", attrtype0=%d, attrvalue0=%d"
-					", attrtype1=%d, attrvalue1=%d"
-					", attrtype2=%d, attrvalue2=%d"
-					", attrtype3=%d, attrvalue3=%d"
-					", attrtype4=%d, attrvalue4=%d"
-					", attrtype5=%d, attrvalue5=%d"
-					", attrtype6=%d, attrvalue6=%d",
-					p->aAttr[0].bType, p->aAttr[0].sValue,
-					p->aAttr[1].bType, p->aAttr[1].sValue,
-					p->aAttr[2].bType, p->aAttr[2].sValue,
-					p->aAttr[3].bType, p->aAttr[3].sValue,
-					p->aAttr[4].bType, p->aAttr[4].sValue,
-					p->aAttr[5].bType, p->aAttr[5].sValue,
-					p->aAttr[6].bType, p->aAttr[6].sValue);
+				", attrtype0=%d, attrvalue0=%d"
+				", attrtype1=%d, attrvalue1=%d"
+				", attrtype2=%d, attrvalue2=%d"
+				", attrtype3=%d, attrvalue3=%d"
+				", attrtype4=%d, attrvalue4=%d"
+				", attrtype5=%d, attrvalue5=%d"
+				", attrtype6=%d, attrvalue6=%d",
+				p->aAttr[0].bType, p->aAttr[0].sValue,
+				p->aAttr[1].bType, p->aAttr[1].sValue,
+				p->aAttr[2].bType, p->aAttr[2].sValue,
+				p->aAttr[3].bType, p->aAttr[3].sValue,
+				p->aAttr[4].bType, p->aAttr[4].sValue,
+				p->aAttr[5].bType, p->aAttr[5].sValue,
+				p->aAttr[6].bType, p->aAttr[6].sValue);
 		}
 
 		char szItemQuery[QUERY_MAX_LEN + QUERY_MAX_LEN];
 		snprintf(szItemQuery, sizeof(szItemQuery), "REPLACE INTO item%s (%s) VALUES(%s)", GetTablePostfix(), szColumns, szValues);
 
-		if (g_test_server)	
+		if (g_test_server)
+		{
 			sys_log(0, "ItemCache::Flush :REPLACE  (%s)", szItemQuery);
+		}
 
 		CDBManager::instance().ReturnQuery(szItemQuery, QID_ITEM_SAVE, 0, NULL);
 
@@ -164,7 +176,9 @@ CPlayerTableCache::~CPlayerTableCache()
 void CPlayerTableCache::OnFlush()
 {
 	if (g_test_server)
+	{
 		sys_log(0, "PlayerTableCache::Flush : %s", m_data.name);
+	}
 
 	char szQuery[QUERY_MAX_LEN];
 	CreatePlayerSaveQuery(szQuery, sizeof(szQuery), &m_data);
@@ -194,16 +208,19 @@ void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList
 	for (uint idx = 0; idx < m_data.byCount; ++idx)
 	{
 		const TItemPriceInfo* pos = pUpdateList->aPriceInfo;
+
 		for (; pos != pUpdateList->aPriceInfo + pUpdateList->byCount && m_data.aPriceInfo[idx].dwVnum != pos->dwVnum; ++pos)
 			;
 
 		if (pos == pUpdateList->aPriceInfo + pUpdateList->byCount)
+		{
 			tmpvec.push_back(m_data.aPriceInfo[idx]);
+		}
 	}
 
 	//
 	// pUpdateList 를 m_data 에 복사하고 남은 공간을 tmpvec 의 앞에서 부터 남은 만큼 복사한다.
-	// 
+	//
 
 	if (pUpdateList->byCount > SHOP_PRICELIST_MAX_NUM)
 	{
@@ -222,21 +239,26 @@ void CItemPriceListTableCache::UpdateList(const TItemPriceListTable* pUpdateList
 		size_t sizeAddOldDataSize = SHOP_PRICELIST_MAX_NUM - pUpdateList->byCount;
 
 		if (tmpvec.size() < sizeAddOldDataSize)
+		{
 			sizeAddOldDataSize = tmpvec.size();
+		}
 
 		thecore_memcpy(m_data.aPriceInfo + pUpdateList->byCount, &tmpvec[0], sizeof(TItemPriceInfo) * sizeAddOldDataSize);
 		m_data.byCount += sizeAddOldDataSize;
 
 		nDeletedNum = tmpvec.size() - sizeAddOldDataSize;
 	}
+
 	else
+	{
 		nDeletedNum = tmpvec.size();
+	}
 
 	m_bNeedQuery = true;
 
-	sys_log(0, 
-			"ItemPriceListTableCache::UpdateList : OwnerID[%u] Update [%u] Items, Delete [%u] Items, Total [%u] Items", 
-			m_data.dwOwnerID, pUpdateList->byCount, nDeletedNum, m_data.byCount);
+	sys_log(0,
+		"ItemPriceListTableCache::UpdateList : OwnerID[%u] Update [%u] Items, Delete [%u] Items, Total [%u] Items",
+		m_data.dwOwnerID, pUpdateList->byCount, nDeletedNum, m_data.byCount);
 }
 
 void CItemPriceListTableCache::OnFlush()
@@ -257,14 +279,15 @@ void CItemPriceListTableCache::OnFlush()
 	for (int idx = 0; idx < m_data.byCount; ++idx)
 	{
 		snprintf(szQuery, sizeof(szQuery),
-				// "INSERT INTO myshop_pricelist%s(owner_id, item_vnum, price) VALUES(%u, %u, %u)", 
-				"REPLACE myshop_pricelist%s (owner_id, item_vnum, price) VALUES(%u, %u, %u)", 
-				GetTablePostfix(), m_data.dwOwnerID, m_data.aPriceInfo[idx].dwVnum, m_data.aPriceInfo[idx].dwPrice);
+			// "INSERT INTO myshop_pricelist%s(owner_id, item_vnum, price) VALUES(%u, %u, %u)",
+			"REPLACE myshop_pricelist%s (owner_id, item_vnum, price) VALUES(%u, %u, %u)",
+			GetTablePostfix(), m_data.dwOwnerID, m_data.aPriceInfo[idx].dwVnum, m_data.aPriceInfo[idx].dwPrice);
 		CDBManager::instance().ReturnQuery(szQuery, QID_ITEMPRICE_SAVE, 0, NULL);
 	}
 
 	sys_log(0, "ItemPriceListTableCache::Flush : OwnerID[%u] Update [%u]Items", m_data.dwOwnerID, m_data.byCount);
-	
+
 	m_bNeedQuery = false;
 }
+
 // END_OF_MYSHOP_PRICE_LIST

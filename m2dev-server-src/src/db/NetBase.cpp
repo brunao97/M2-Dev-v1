@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "NetBase.h"
 #include "Config.h"
 #include "ClientManager.h"
@@ -27,7 +27,9 @@ bool CNetPoller::Create()
 	sys_log(1, "NetPoller::Create()");
 
 	if (m_fdWatcher)
+	{
 		return true;
+	}
 
 	m_fdWatcher = fdwatch_new(512);
 

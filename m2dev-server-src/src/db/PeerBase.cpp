@@ -74,7 +74,9 @@ bool CPeerBase::Connect(const char* host, WORD port)
 	strlcpy(m_host, host, sizeof(m_host));
 
 	if ((m_fd = socket_connect(host, port)) == INVALID_SOCKET)
+	{
 		return false;
+	}
 
 	m_outBuffer = buffer_new(DEFAULT_PACKET_BUFFER_SIZE);
 
@@ -153,15 +155,18 @@ int CPeerBase::Recv()
 
 	buffer_adjust_size(m_inBuffer, MAX_INPUT_LEN >> 2);
 	int bytes_to_read = buffer_has_space(m_inBuffer);
-	ssize_t bytes_read = socket_read(m_fd, (char *) buffer_write_peek(m_inBuffer), bytes_to_read);
+	ssize_t bytes_read = socket_read(m_fd, (char*)buffer_write_peek(m_inBuffer), bytes_to_read);
 
 	if (bytes_read < 0)
 	{
 		sys_err("socket_read failed %s", strerror(errno));
 		return -1;
 	}
+
 	else if (bytes_read == 0)
+	{
 		return 0;
+	}
 
 	buffer_write_proceed(m_inBuffer, bytes_read);
 	m_BytesRemain = buffer_size(m_inBuffer);
@@ -179,7 +184,7 @@ int CPeerBase::GetRecvLength()
 	return m_BytesRemain;
 }
 
-const void * CPeerBase::GetRecvBuffer()
+const void* CPeerBase::GetRecvBuffer()
 {
 	return buffer_read_peek(m_inBuffer);
 }
@@ -192,22 +197,28 @@ int CPeerBase::GetSendLength()
 int CPeerBase::Send()
 {
 	if (buffer_size(m_outBuffer) <= 0)
+	{
 		return 0;
+	}
 
 	int iBufferLeft = fdwatch_get_buffer_size(m_fdWatcher, m_fd);
 	int iBytesToWrite = MIN(iBufferLeft, buffer_size(m_outBuffer));
 
 	if (iBytesToWrite == 0)
+	{
 		return 0;
+	}
 
-	int result = socket_write(m_fd, (const char *) buffer_read_peek(m_outBuffer), iBytesToWrite);
+	int result = socket_write(m_fd, (const char*)buffer_read_peek(m_outBuffer), iBytesToWrite);
 
 	if (result == 0)
 	{
 		buffer_read_proceed(m_outBuffer, iBytesToWrite);
 
 		if (buffer_size(m_outBuffer) != 0)
+		{
 			fdwatch_add_fd(m_fdWatcher, m_fd, this, FDW_WRITE, true);
+		}
 	}
 
 	return (result);

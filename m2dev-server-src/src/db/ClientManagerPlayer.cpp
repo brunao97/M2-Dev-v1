@@ -1,5 +1,4 @@
-﻿
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "ClientManager.h"
 
@@ -22,7 +21,7 @@ extern int g_log;
 //
 // Check all SELECT syntax on item table before change this function!!!
 //
-bool CreateItemTableFromRes(MYSQL_RES * res, std::vector<TPlayerItem> * pVec, DWORD dwPID)
+bool CreateItemTableFromRes(MYSQL_RES* res, std::vector<TPlayerItem>* pVec, DWORD dwPID)
 {
 	if (!res)
 	{
@@ -32,7 +31,7 @@ bool CreateItemTableFromRes(MYSQL_RES * res, std::vector<TPlayerItem> * pVec, DW
 
 	int rows;
 
-	if ((rows = mysql_num_rows(res)) <= 0)	// 데이터 없음
+	if ((rows = mysql_num_rows(res)) <= 0)
 	{
 		pVec->clear();
 		return true;
@@ -43,7 +42,7 @@ bool CreateItemTableFromRes(MYSQL_RES * res, std::vector<TPlayerItem> * pVec, DW
 	for (int i = 0; i < rows; ++i)
 	{
 		MYSQL_ROW row = mysql_fetch_row(res);
-		TPlayerItem & item = pVec->at(i);
+		TPlayerItem& item = pVec->at(i);
 
 		int cur = 0;
 
@@ -65,59 +64,59 @@ bool CreateItemTableFromRes(MYSQL_RES * res, std::vector<TPlayerItem> * pVec, DW
 			str_to_number(item.aAttr[j].sValue, row[cur++]);
 		}
 
-		item.owner		= dwPID;
+		item.owner = dwPID;
 	}
 
 	return true;
 }
 
-size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * pkTab)
+size_t CreatePlayerSaveQuery(char* pszQuery, size_t querySize, TPlayerTable* pkTab)
 {
 	size_t queryLen;
 
 	queryLen = snprintf(pszQuery, querySize,
-			"UPDATE player%s SET "
-			"job = %d, "
-			"voice = %d, "
-			"dir = %d, "
-			"x = %d, "
-			"y = %d, "
-			"z = %d, "
-			"map_index = %d, "
-			"exit_x = %ld, "
-			"exit_y = %ld, "
-			"exit_map_index = %ld, "
-			"hp = %d, "
-			"mp = %d, "
-			"stamina = %d, "
-			"random_hp = %d, "
-			"random_sp = %d, "
-			"playtime = %d, "
-			"level = %d, "
-			"level_step = %d, "
-			"st = %d, "
-			"ht = %d, "
-			"dx = %d, "
-			"iq = %d, "
-			"gold = %d, "
-			"exp = %u, "
-			"stat_point = %d, "
-			"skill_point = %d, "
-			"sub_skill_point = %d, "
-			"stat_reset_count = %d, "
-			"ip = '%s', "
-			"part_main = %d, "
-			"part_hair = %d, "
-			"last_play = NOW(), "
-			"skill_group = %d, "
-			"alignment = %ld, "
-			"horse_level = %d, "
-			"horse_riding = %d, "
-			"horse_hp = %d, "
-			"horse_hp_droptime = %u, "
-			"horse_stamina = %d, "
-			"horse_skill_point = %d, "
-			,
+		"UPDATE player%s SET "
+		"job = %d, "
+		"voice = %d, "
+		"dir = %d, "
+		"x = %d, "
+		"y = %d, "
+		"z = %d, "
+		"map_index = %d, "
+		"exit_x = %ld, "
+		"exit_y = %ld, "
+		"exit_map_index = %ld, "
+		"hp = %d, "
+		"mp = %d, "
+		"stamina = %d, "
+		"random_hp = %d, "
+		"random_sp = %d, "
+		"playtime = %d, "
+		"level = %d, "
+		"level_step = %d, "
+		"st = %d, "
+		"ht = %d, "
+		"dx = %d, "
+		"iq = %d, "
+		"gold = %d, "
+		"exp = %u, "
+		"stat_point = %d, "
+		"skill_point = %d, "
+		"sub_skill_point = %d, "
+		"stat_reset_count = %d, "
+		"ip = '%s', "
+		"part_main = %d, "
+		"part_hair = %d, "
+		"last_play = NOW(), "
+		"skill_group = %d, "
+		"alignment = %ld, "
+		"horse_level = %d, "
+		"horse_riding = %d, "
+		"horse_hp = %d, "
+		"horse_hp_droptime = %u, "
+		"horse_stamina = %d, "
+		"horse_skill_point = %d, "
+		,
 		GetTablePostfix(),
 		pkTab->job,
 		pkTab->voice,
@@ -126,9 +125,9 @@ size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * p
 		pkTab->y,
 		pkTab->z,
 		pkTab->lMapIndex,
-		static_cast<long>(pkTab->lExitX),
-		static_cast<long>(pkTab->lExitY),
-		static_cast<long>(pkTab->lExitMapIndex),
+		static_cast<long> (pkTab->lExitX),
+		static_cast<long> (pkTab->lExitY),
+		static_cast<long> (pkTab->lExitMapIndex),
 		pkTab->hp,
 		pkTab->sp,
 		pkTab->stamina,
@@ -151,7 +150,7 @@ size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * p
 		pkTab->parts[PART_MAIN],
 		pkTab->parts[PART_HAIR],
 		pkTab->skill_group,
-		static_cast<long>(pkTab->lAlignment),
+		static_cast<long> (pkTab->lAlignment),
 		pkTab->horse.bLevel,
 		pkTab->horse.bRiding,
 		pkTab->horse.sHealth,
@@ -172,21 +171,23 @@ size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * p
 	return queryLen;
 }
 
-CPlayerTableCache * CClientManager::GetPlayerCache(DWORD id)
+CPlayerTableCache* CClientManager::GetPlayerCache(DWORD id)
 {
 	TPlayerTableCacheMap::iterator it = m_map_playerCache.find(id);
 
 	if (it == m_map_playerCache.end())
+	{
 		return NULL;
+	}
 
 	TPlayerTable* pTable = it->second->Get(false);
 	pTable->logoff_interval = GetCurrentTime() - it->second->GetLastUpdateTime();
 	return it->second;
 }
 
-void CClientManager::PutPlayerCache(TPlayerTable * pNew)
+void CClientManager::PutPlayerCache(TPlayerTable* pNew)
 {
-	CPlayerTableCache * c;
+	CPlayerTableCache* c;
 
 	c = GetPlayerCache(pNew->id);
 
@@ -197,7 +198,9 @@ void CClientManager::PutPlayerCache(TPlayerTable * pNew)
 	}
 
 	if (g_bHotBackup)
+	{
 		PlayerHB::instance().Put(pNew->id);
+	}
 
 	c->Put(pNew);
 }
@@ -205,39 +208,37 @@ void CClientManager::PutPlayerCache(TPlayerTable * pNew)
 /*
  * PLAYER LOAD
  */
-void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoadPacket * packet)
+void CClientManager::QUERY_PLAYER_LOAD(CPeer* peer, DWORD dwHandle, TPlayerLoadPacket* packet)
 {
-	CPlayerTableCache * c;
-	TPlayerTable * pTab;
-	
-	//
-	// 한 계정에 속한 모든 캐릭터들 캐쉬처리
-	//
-	CLoginData * pLoginData = GetLoginDataByAID(packet->account_id);
+	CPlayerTableCache* c;
+	TPlayerTable* pTab;
+
+	CLoginData* pLoginData = GetLoginDataByAID(packet->account_id);
 
 	if (pLoginData)
 	{
 		for (int n = 0; n < PLAYER_PER_ACCOUNT; ++n)
 			if (pLoginData->GetAccountRef().players[n].dwID != 0)
+			{
 				DeleteLogoutPlayer(pLoginData->GetAccountRef().players[n].dwID);
+			}
 	}
 
 	//----------------------------------------------------------------
-	// 1. 유저정보가 DBCache 에 존재 : DBCache에서 
-	// 2. 유저정보가 DBCache 에 없음 : DB에서 
+
 	// ---------------------------------------------------------------
-	
+
 	//----------------------------------
-	// 1. 유저정보가 DBCache 에 존재 : DBCache에서 
+
 	//----------------------------------
 	if ((c = GetPlayerCache(packet->player_id)))
 	{
-		CLoginData * pkLD = GetLoginDataByAID(packet->account_id);
+		CLoginData* pkLD = GetLoginDataByAID(packet->account_id);
 
 		if (!pkLD || pkLD->IsPlay())
 		{
 			sys_log(0, "PLAYER_LOAD_ERROR: LoginData %p IsPlay %d", pkLD, pkLD ? pkLD->IsPlay() : 0);
-			peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, dwHandle, 0); 
+			peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, dwHandle, 0);
 			return;
 		}
 
@@ -254,23 +255,23 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 			TPacketNeedLoginLogInfo logInfo;
 			logInfo.dwPlayerID = packet->player_id;
 
-			pkLD->SetLastPlayerID( packet->player_id );
+			pkLD->SetLastPlayerID(packet->player_id);
 
-			peer->EncodeHeader( HEADER_DG_NEED_LOGIN_LOG, dwHandle, sizeof(TPacketNeedLoginLogInfo) );
-			peer->Encode( &logInfo, sizeof(TPacketNeedLoginLogInfo) );
+			peer->EncodeHeader(HEADER_DG_NEED_LOGIN_LOG, dwHandle, sizeof(TPacketNeedLoginLogInfo));
+			peer->Encode(&logInfo, sizeof(TPacketNeedLoginLogInfo));
 		}
 
 		char szQuery[1024] = { 0, };
 
-		TItemCacheSet * pSet = GetItemCacheSet(pTab->id);
+		TItemCacheSet* pSet = GetItemCacheSet(pTab->id);
 
 		sys_log(0, "[PLAYER_LOAD] ID %s pid %d gold %d ", pTab->name, pTab->id, pTab->gold);
 
 		//--------------------------------------------
-		// 아이템 & AFFECT & QUEST 로딩 : 
+		// 아이템 & AFFECT & QUEST 로딩 :
 		//--------------------------------------------
 		// 1) 아이템이 DBCache 에 존재 : DBCache 에서 가져옴
-		// 2) 아이템이 DBCache 에 없음 : DB 에서 가져옴 
+		// 2) 아이템이 DBCache 에 없음 : DB 에서 가져옴
 
 		/////////////////////////////////////////////
 		// 1) 아이템이 DBCache 에 존재 : DBCache 에서 가져옴
@@ -285,71 +286,80 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 
 			while (it != pSet->end())
 			{
-				CItemCache * c = *it++;
-				TPlayerItem * p = c->Get();
+				CItemCache* c = *it++;
+				TPlayerItem* p = c->Get();
 
 				if (p->vnum) // vnum이 없으면 삭제된 아이템이다.
+				{
 					thecore_memcpy(&s_items[dwCount++], p, sizeof(TPlayerItem));
+				}
 			}
 
 			if (g_test_server)
+			{
 				sys_log(0, "ITEM_CACHE: HIT! %s count: %u", pTab->name, dwCount);
+			}
 
 			peer->EncodeHeader(HEADER_DG_ITEM_LOAD, dwHandle, sizeof(DWORD) + sizeof(TPlayerItem) * dwCount);
 			peer->EncodeDWORD(dwCount);
 
 			if (dwCount)
+			{
 				peer->Encode(&s_items[0], sizeof(TPlayerItem) * dwCount);
+			}
 
 			// Quest
 			snprintf(szQuery, sizeof(szQuery),
-					"SELECT dwPID,szName,szState,lValue FROM quest%s WHERE dwPID=%d AND lValue<>0",
-					GetTablePostfix(), pTab->id);
-			
-			CDBManager::instance().ReturnQuery(szQuery, QID_QUEST, peer->GetHandle(), new ClientHandleInfo(dwHandle,0,packet->account_id));
+				"SELECT dwPID,szName,szState,lValue FROM quest%s WHERE dwPID=%d AND lValue<>0",
+				GetTablePostfix(), pTab->id);
+
+			CDBManager::instance().ReturnQuery(szQuery, QID_QUEST, peer->GetHandle(), new ClientHandleInfo(dwHandle, 0, packet->account_id));
 
 			// Affect
 			snprintf(szQuery, sizeof(szQuery),
-					"SELECT dwPID,bType,bApplyOn,lApplyValue,dwFlag,lDuration,lSPCost FROM affect%s WHERE dwPID=%d",
-					GetTablePostfix(), pTab->id);
+				"SELECT dwPID,bType,bApplyOn,lApplyValue,dwFlag,lDuration,lSPCost FROM affect%s WHERE dwPID=%d",
+				GetTablePostfix(), pTab->id);
 			CDBManager::instance().ReturnQuery(szQuery, QID_AFFECT, peer->GetHandle(), new ClientHandleInfo(dwHandle));
 		}
+
 		/////////////////////////////////////////////
-		// 2) 아이템이 DBCache 에 없음 : DB 에서 가져옴 
+		// 2) 아이템이 DBCache 에 없음 : DB 에서 가져옴
 		/////////////////////////////////////////////
 		else
 		{
-			snprintf(szQuery, sizeof(szQuery), 
-					"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
-					"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)",
-					GetTablePostfix(), pTab->id, SAFEBOX, DRAGON_SOUL_INVENTORY);
+			snprintf(szQuery, sizeof(szQuery),
+				"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
+				"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)",
+				GetTablePostfix(), pTab->id, SAFEBOX, DRAGON_SOUL_INVENTORY);
 
 			CDBManager::instance().ReturnQuery(szQuery,
-					QID_ITEM,
-					peer->GetHandle(),
-					new ClientHandleInfo(dwHandle, pTab->id));
-			snprintf(szQuery, sizeof(szQuery), 
-					"SELECT dwPID, szName, szState, lValue FROM quest%s WHERE dwPID=%d",
-					GetTablePostfix(), pTab->id);
+				QID_ITEM,
+				peer->GetHandle(),
+				new ClientHandleInfo(dwHandle, pTab->id));
+			snprintf(szQuery, sizeof(szQuery),
+				"SELECT dwPID, szName, szState, lValue FROM quest%s WHERE dwPID=%d",
+				GetTablePostfix(), pTab->id);
 
 			CDBManager::instance().ReturnQuery(szQuery,
-					QID_QUEST,
-					peer->GetHandle(),
-					new ClientHandleInfo(dwHandle, pTab->id));
-			snprintf(szQuery, sizeof(szQuery), 
-					"SELECT dwPID, bType, bApplyOn, lApplyValue, dwFlag, lDuration, lSPCost FROM affect%s WHERE dwPID=%d",
-					GetTablePostfix(), pTab->id);
+				QID_QUEST,
+				peer->GetHandle(),
+				new ClientHandleInfo(dwHandle, pTab->id));
+			snprintf(szQuery, sizeof(szQuery),
+				"SELECT dwPID, bType, bApplyOn, lApplyValue, dwFlag, lDuration, lSPCost FROM affect%s WHERE dwPID=%d",
+				GetTablePostfix(), pTab->id);
 
 			CDBManager::instance().ReturnQuery(szQuery,
-					QID_AFFECT,
-					peer->GetHandle(),
-					new ClientHandleInfo(dwHandle, pTab->id));
+				QID_AFFECT,
+				peer->GetHandle(),
+				new ClientHandleInfo(dwHandle, pTab->id));
 		}
+
 		//ljw
 		//return;
 	}
+
 	//----------------------------------
-	// 2. 유저정보가 DBCache 에 없음 : DB에서 
+	// 2. 유저정보가 DBCache 에 없음 : DB에서
 	//----------------------------------
 	else
 	{
@@ -358,77 +368,81 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		char queryStr[QUERY_MAX_LEN];
 
 		//--------------------------------------------------------------
-		// 캐릭터 정보 얻어오기 : 무조건 DB에서 
+		// 캐릭터 정보 얻어오기 : 무조건 DB에서
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
-				"SELECT "
-				"id,name,job,voice,dir,x,y,z,map_index,exit_x,exit_y,exit_map_index,hp,mp,stamina,random_hp,random_sp,playtime,"
-				"gold,level,level_step,st,ht,dx,iq,exp,"
-				"stat_point,skill_point,sub_skill_point,stat_reset_count,part_base,part_hair,"
-				"skill_level,quickslot,skill_group,alignment,mobile,horse_level,horse_riding,horse_hp,horse_hp_droptime,horse_stamina,"
-				"UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(last_play),horse_skill_point FROM player%s WHERE id=%d",
-				GetTablePostfix(), packet->player_id);
+			"SELECT "
+			"id,name,job,voice,dir,x,y,z,map_index,exit_x,exit_y,exit_map_index,hp,mp,stamina,random_hp,random_sp,playtime,"
+			"gold,level,level_step,st,ht,dx,iq,exp,"
+			"stat_point,skill_point,sub_skill_point,stat_reset_count,part_base,part_hair,"
+			"skill_level,quickslot,skill_group,alignment,mobile,horse_level,horse_riding,horse_hp,horse_hp_droptime,horse_stamina,"
+			"UNIX_TIMESTAMP(NOW())-UNIX_TIMESTAMP(last_play),horse_skill_point FROM player%s WHERE id=%d",
+			GetTablePostfix(), packet->player_id);
 
-		ClientHandleInfo * pkInfo = new ClientHandleInfo(dwHandle, packet->player_id);
+		ClientHandleInfo* pkInfo = new ClientHandleInfo(dwHandle, packet->player_id);
 		pkInfo->account_id = packet->account_id;
 		CDBManager::instance().ReturnQuery(queryStr, QID_PLAYER, peer->GetHandle(), pkInfo);
 
 		//--------------------------------------------------------------
-		// 아이템 가져오기 
+		// 아이템 가져오기
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
-				"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
-				"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)",
-				GetTablePostfix(), packet->player_id, SAFEBOX, DRAGON_SOUL_INVENTORY);
+			"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
+			"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)",
+			GetTablePostfix(), packet->player_id, SAFEBOX, DRAGON_SOUL_INVENTORY);
 		CDBManager::instance().ReturnQuery(queryStr, QID_ITEM, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id));
 
 		//--------------------------------------------------------------
-		// QUEST 가져오기 
+		// QUEST 가져오기
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
-				"SELECT dwPID,szName,szState,lValue FROM quest%s WHERE dwPID=%d",
-				GetTablePostfix(), packet->player_id);
-		CDBManager::instance().ReturnQuery(queryStr, QID_QUEST, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id,packet->account_id));
+			"SELECT dwPID,szName,szState,lValue FROM quest%s WHERE dwPID=%d",
+			GetTablePostfix(), packet->player_id);
+		CDBManager::instance().ReturnQuery(queryStr, QID_QUEST, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id, packet->account_id));
 		//독일 선물 기능에서 item_award테이블에서 login 정보를 얻기위해 account id도 넘겨준다
 		//--------------------------------------------------------------
-		// AFFECT 가져오기 
+		// AFFECT 가져오기
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
-				"SELECT dwPID,bType,bApplyOn,lApplyValue,dwFlag,lDuration,lSPCost FROM affect%s WHERE dwPID=%d",
-				GetTablePostfix(), packet->player_id);
+			"SELECT dwPID,bType,bApplyOn,lApplyValue,dwFlag,lDuration,lSPCost FROM affect%s WHERE dwPID=%d",
+			GetTablePostfix(), packet->player_id);
 		CDBManager::instance().ReturnQuery(queryStr, QID_AFFECT, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id));
 	}
-	
-	
 }
-void CClientManager::ItemAward(CPeer * peer,char* login)
+
+void CClientManager::ItemAward(CPeer* peer, char* login)
 {
 	char login_t[LOGIN_MAX_LEN + 1] = "";
-	strlcpy(login_t,login,LOGIN_MAX_LEN + 1);	
-	std::set<TItemAward *> * pSet = ItemAwardManager::instance().GetByLogin(login_t);	
-	if(pSet == NULL)
+	strlcpy(login_t, login, LOGIN_MAX_LEN + 1);
+	std::set<TItemAward*>* pSet = ItemAwardManager::instance().GetByLogin(login_t);
+
+	if (pSet == NULL)
+	{
 		return;
-	__typeof(pSet->begin()) it = pSet->begin();	//taken_time이 NULL인것들 읽어옴	
-	while(it != pSet->end() )
-	{				
-		TItemAward * pItemAward = *(it++);		
-		char* whyStr = pItemAward->szWhy;	//why 콜룸 읽기
-		char cmdStr[100] = "";	//why콜룸에서 읽은 값을 임시 문자열에 복사해둠
-		strcpy(cmdStr, whyStr);	//명령어 얻는 과정에서 토큰쓰면 원본도 토큰화 되기 때문
+	}
 
+	__typeof(pSet->begin()) it = pSet->begin();
+
+	while (it != pSet->end())
+	{
+		TItemAward* pItemAward = *(it++);
+		char* whyStr = pItemAward->szWhy;
+		char cmdStr[100] = "";
+		strcpy(cmdStr, whyStr);
 		char command[20] = "";
-		strcpy(command,GetCommand(cmdStr));	// command 얻기
+		strcpy(command, GetCommand(cmdStr));
 
-		if (!(strcmp(command,"GIFT")))	// command 가 GIFT이면
+		if (!(strcmp(command, "GIFT")))
 		{
 			TPacketItemAwardInfromer giftData;
-			strcpy(giftData.login, pItemAward->szLogin);	//로그인 아이디 복사
-			strcpy(giftData.command, command);					//명령어 복사
-			giftData.vnum = pItemAward->dwVnum;				//아이템 vnum도 복사
+			strcpy(giftData.login, pItemAward->szLogin);
+			strcpy(giftData.command, command);
+			giftData.vnum = pItemAward->dwVnum;
 			ForwardPacket(HEADER_DG_ITEMAWARD_INFORMER, &giftData, sizeof(TPacketItemAwardInfromer));
 		}
 	}
 }
+
 char* CClientManager::GetCommand(char* str)
 {
 	static char command[20] = "";
@@ -436,21 +450,24 @@ char* CClientManager::GetCommand(char* str)
 
 	if (str[0] == '[')
 	{
-		tok = strtok(str, "]");			
-		strlcpy(command, &tok[1], sizeof(command));		
+		tok = strtok(str, "]");
+		strlcpy(command, &tok[1], sizeof(command));
 	}
+
 	else
 	{
-		command[0] = '\0';	
+		command[0] = '\0';
 	}
 
 	return command;
 }
 
-bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
+bool CreatePlayerTableFromRes(MYSQL_RES* res, TPlayerTable* pkTab)
 {
 	if (mysql_num_rows(res) == 0)	// 데이터 없음
+	{
 		return false;
+	}
 
 	memset(pkTab, 0, sizeof(TPlayerTable));
 
@@ -473,7 +490,7 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 	str_to_number(pkTab->lMapIndex, row[col++]);
 	str_to_number(pkTab->lExitX, row[col++]);
 	str_to_number(pkTab->lExitY, row[col++]);
-	str_to_number(pkTab->lExitMapIndex,  row[col++]);
+	str_to_number(pkTab->lExitMapIndex, row[col++]);
 	str_to_number(pkTab->hp, row[col++]);
 	str_to_number(pkTab->sp, row[col++]);
 	str_to_number(pkTab->stamina, row[col++]);
@@ -496,16 +513,26 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 	str_to_number(pkTab->parts[PART_HAIR], row[col++]);
 
 	if (row[col])
+	{
 		thecore_memcpy(pkTab->skills, row[col], sizeof(pkTab->skills));
+	}
+
 	else
+	{
 		memset(&pkTab->skills, 0, sizeof(pkTab->skills));
+	}
 
 	col++;
 
 	if (row[col])
+	{
 		thecore_memcpy(pkTab->quickslot, row[col], sizeof(pkTab->quickslot));
+	}
+
 	else
+	{
 		memset(pkTab->quickslot, 0, sizeof(pkTab->quickslot));
+	}
 
 	col++;
 
@@ -535,7 +562,7 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 		{
 			int max_point = pkTab->level - 9;
 
-			int skill_point = 
+			int skill_point =
 				MIN(20, pkTab->skills[121].bLevel) +	// SKILL_LEADERSHIP			통솔력
 				MIN(20, pkTab->skills[124].bLevel) +	// SKILL_MINING				채광
 				MIN(10, pkTab->skills[131].bLevel) +	// SKILL_HORSE_SUMMON		말소환
@@ -544,19 +571,23 @@ bool CreatePlayerTableFromRes(MYSQL_RES * res, TPlayerTable * pkTab)
 
 			pkTab->sub_skill_point = max_point - skill_point;
 		}
+
 		else
+		{
 			pkTab->sub_skill_point = 0;
+		}
 	}
 
 	return true;
 }
 
-void CClientManager::RESULT_COMPOSITE_PLAYER(CPeer * peer, SQLMsg * pMsg, DWORD dwQID)
+void CClientManager::RESULT_COMPOSITE_PLAYER(CPeer* peer, SQLMsg* pMsg, DWORD dwQID)
 {
-	CQueryInfo * qi = (CQueryInfo *) pMsg->pvUserData;
-	std::unique_ptr<ClientHandleInfo> info((ClientHandleInfo *) qi->pvData);
-	
-	MYSQL_RES * pSQLResult = pMsg->Get()->pSQLResult;
+	CQueryInfo* qi = (CQueryInfo*)pMsg->pvUserData;
+	std::unique_ptr<ClientHandleInfo> info((ClientHandleInfo*)qi->pvData);
+
+	MYSQL_RES* pSQLResult = pMsg->Get()->pSQLResult;
+
 	if (!pSQLResult)
 	{
 		sys_err("null MYSQL_RES QID %u", dwQID);
@@ -565,96 +596,101 @@ void CClientManager::RESULT_COMPOSITE_PLAYER(CPeer * peer, SQLMsg * pMsg, DWORD 
 
 	switch (dwQID)
 	{
-		case QID_PLAYER:
-			sys_log(0, "QID_PLAYER %u %u", info->dwHandle, info->player_id);
-			RESULT_PLAYER_LOAD(peer, pSQLResult, info.get());
+	case QID_PLAYER:
+		sys_log(0, "QID_PLAYER %u %u", info->dwHandle, info->player_id);
+		RESULT_PLAYER_LOAD(peer, pSQLResult, info.get());
 
+		break;
+
+	case QID_ITEM:
+		sys_log(0, "QID_ITEM %u", info->dwHandle);
+		RESULT_ITEM_LOAD(peer, pSQLResult, info->dwHandle, info->player_id);
+		break;
+
+	case QID_QUEST:
+	{
+		sys_log(0, "QID_QUEST %u", info->dwHandle);
+		RESULT_QUEST_LOAD(peer, pSQLResult, info->dwHandle, info->player_id);
+		//aid얻기
+		ClientHandleInfo* temp1 = info.get();
+
+		if (temp1 == NULL)
+		{
 			break;
+		}
 
-		case QID_ITEM:
-			sys_log(0, "QID_ITEM %u", info->dwHandle);
-			RESULT_ITEM_LOAD(peer, pSQLResult, info->dwHandle, info->player_id);
+		CLoginData* pLoginData1 = GetLoginDataByAID(temp1->account_id);
+
+		if (pLoginData1 == NULL)
+		{
 			break;
+		}
 
-		case QID_QUEST:
-			{
-				sys_log(0, "QID_QUEST %u", info->dwHandle);
-				RESULT_QUEST_LOAD(peer, pSQLResult, info->dwHandle, info->player_id);
-				//aid얻기
-				ClientHandleInfo*  temp1 = info.get();
-				if (temp1 == NULL)
-					break;
-				
-				CLoginData* pLoginData1 = GetLoginDataByAID(temp1->account_id);
-
-				if (pLoginData1 == NULL)
-					break;
-
-				//독일 선물 기능
-				if (pLoginData1->GetAccountRef().login[0] == '\0')
-					break;
-
-				sys_log(0,"info of pLoginData1 before call ItemAwardfunction %d",pLoginData1);
-				ItemAward(peer,pLoginData1->GetAccountRef().login);
-			}
+		if (pLoginData1->GetAccountRef().login[0] == '\0')
+		{
 			break;
+		}
 
-		case QID_AFFECT:
-			sys_log(0, "QID_AFFECT %u", info->dwHandle);
-			RESULT_AFFECT_LOAD(peer, pSQLResult, info->dwHandle);
-			break;
-			/*
-			   case QID_PLAYER_ITEM_QUEST_AFFECT:
-			   sys_log(0, "QID_PLAYER_ITEM_QUEST_AFFECT %u", info->dwHandle);
-			   RESULT_PLAYER_LOAD(peer, pSQLResult, info->dwHandle);
-
-			   if (!pMsg->Next())
-			   {
-			   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: ITEM FAILED");
-			   return;
-			   }
-
-			   case QID_ITEM_QUEST_AFFECT:
-			   sys_log(0, "QID_ITEM_QUEST_AFFECT %u", info->dwHandle);
-			   RESULT_ITEM_LOAD(peer, pSQLResult, info->dwHandle, info->player_id);
-
-			   if (!pMsg->Next())
-			   {
-			   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: QUEST FAILED");
-			   return;
-			   }
-
-			   case QID_QUEST_AFFECT:
-			   sys_log(0, "QID_QUEST_AFFECT %u", info->dwHandle);
-			   RESULT_QUEST_LOAD(peer, pSQLResult, info->dwHandle);
-
-			   if (!pMsg->Next())
-			   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: AFFECT FAILED");
-			   else
-			   RESULT_AFFECT_LOAD(peer, pSQLResult, info->dwHandle);
-
-			   break;
-			   */
+		sys_log(0, "info of pLoginData1 before call ItemAwardfunction %d", pLoginData1);
+		ItemAward(peer, pLoginData1->GetAccountRef().login);
 	}
-	
+	break;
+
+	case QID_AFFECT:
+		sys_log(0, "QID_AFFECT %u", info->dwHandle);
+		RESULT_AFFECT_LOAD(peer, pSQLResult, info->dwHandle);
+		break;
+		/*
+		   case QID_PLAYER_ITEM_QUEST_AFFECT:
+		   sys_log(0, "QID_PLAYER_ITEM_QUEST_AFFECT %u", info->dwHandle);
+		   RESULT_PLAYER_LOAD(peer, pSQLResult, info->dwHandle);
+
+		   if (!pMsg->Next())
+		   {
+		   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: ITEM FAILED");
+		   return;
+		   }
+
+		   case QID_ITEM_QUEST_AFFECT:
+		   sys_log(0, "QID_ITEM_QUEST_AFFECT %u", info->dwHandle);
+		   RESULT_ITEM_LOAD(peer, pSQLResult, info->dwHandle, info->player_id);
+
+		   if (!pMsg->Next())
+		   {
+		   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: QUEST FAILED");
+		   return;
+		   }
+
+		   case QID_QUEST_AFFECT:
+		   sys_log(0, "QID_QUEST_AFFECT %u", info->dwHandle);
+		   RESULT_QUEST_LOAD(peer, pSQLResult, info->dwHandle);
+
+		   if (!pMsg->Next())
+		   sys_err("RESULT_COMPOSITE_PLAYER: QID_PLAYER_ITEM_QUEST_AFFECT: AFFECT FAILED");
+		   else
+		   RESULT_AFFECT_LOAD(peer, pSQLResult, info->dwHandle);
+
+		   break;
+		   */
+	}
 }
 
-void CClientManager::RESULT_PLAYER_LOAD(CPeer * peer, MYSQL_RES * pRes, ClientHandleInfo * pkInfo)
+void CClientManager::RESULT_PLAYER_LOAD(CPeer* peer, MYSQL_RES* pRes, ClientHandleInfo* pkInfo)
 {
 	TPlayerTable tab;
 
 	if (!CreatePlayerTableFromRes(pRes, &tab))
 	{
-		peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, pkInfo->dwHandle, 0); 
+		peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, pkInfo->dwHandle, 0);
 		return;
 	}
 
-	CLoginData * pkLD = GetLoginDataByAID(pkInfo->account_id);
-	
+	CLoginData* pkLD = GetLoginDataByAID(pkInfo->account_id);
+
 	if (!pkLD || pkLD->IsPlay())
 	{
 		sys_log(0, "PLAYER_LOAD_ERROR: LoginData %p IsPlay %d", pkLD, pkLD ? pkLD->IsPlay() : 0);
-		peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, pkInfo->dwHandle, 0); 
+		peer->EncodeHeader(HEADER_DG_PLAYER_LOAD_FAILED, pkInfo->dwHandle, 0);
 		return;
 	}
 
@@ -669,14 +705,14 @@ void CClientManager::RESULT_PLAYER_LOAD(CPeer * peer, MYSQL_RES * pRes, ClientHa
 		TPacketNeedLoginLogInfo logInfo;
 		logInfo.dwPlayerID = tab.id;
 
-		pkLD->SetLastPlayerID( tab.id );
+		pkLD->SetLastPlayerID(tab.id);
 
-		peer->EncodeHeader( HEADER_DG_NEED_LOGIN_LOG, pkInfo->dwHandle, sizeof(TPacketNeedLoginLogInfo) );
-		peer->Encode( &logInfo, sizeof(TPacketNeedLoginLogInfo) );
+		peer->EncodeHeader(HEADER_DG_NEED_LOGIN_LOG, pkInfo->dwHandle, sizeof(TPacketNeedLoginLogInfo));
+		peer->Encode(&logInfo, sizeof(TPacketNeedLoginLogInfo));
 	}
 }
 
-void CClientManager::RESULT_ITEM_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHandle, DWORD dwPID)
+void CClientManager::RESULT_ITEM_LOAD(CPeer* peer, MYSQL_RES* pRes, DWORD dwHandle, DWORD dwPID)
 {
 	static std::vector<TPlayerItem> s_items;
 	//DB에서 아이템 정보를 읽어온다.
@@ -686,7 +722,7 @@ void CClientManager::RESULT_ITEM_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHa
 	peer->EncodeHeader(HEADER_DG_ITEM_LOAD, dwHandle, sizeof(DWORD) + sizeof(TPlayerItem) * dwCount);
 	peer->EncodeDWORD(dwCount);
 
-	//CacheSet을 만든다  
+	//CacheSet을 만든다
 	CreateItemCacheSet(dwPID);
 
 	// ITEM_LOAD_LOG_ATTACH_PID
@@ -698,16 +734,20 @@ void CClientManager::RESULT_ITEM_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHa
 		peer->Encode(&s_items[0], sizeof(TPlayerItem) * dwCount);
 
 		for (DWORD i = 0; i < dwCount; ++i)
-			PutItemCache(&s_items[i], true); // 로드한 것은 따로 저장할 필요 없으므로, 인자 bSkipQuery에 true를 넣는다.
+		{
+			PutItemCache(&s_items[i], true);    // 로드한 것은 따로 저장할 필요 없으므로, 인자 bSkipQuery에 true를 넣는다.
+		}
 	}
 }
 
-void CClientManager::RESULT_AFFECT_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHandle)
+void CClientManager::RESULT_AFFECT_LOAD(CPeer* peer, MYSQL_RES* pRes, DWORD dwHandle)
 {
 	int iNumRows;
 
 	if ((iNumRows = mysql_num_rows(pRes)) == 0) // 데이터 없음
+	{
 		return;
+	}
 
 	static std::vector<TPacketAffectElement> s_elements;
 	s_elements.resize(iNumRows);
@@ -718,11 +758,13 @@ void CClientManager::RESULT_AFFECT_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dw
 
 	for (int i = 0; i < iNumRows; ++i)
 	{
-		TPacketAffectElement & r = s_elements[i];
+		TPacketAffectElement& r = s_elements[i];
 		row = mysql_fetch_row(pRes);
 
 		if (dwPID == 0)
+		{
 			str_to_number(dwPID, row[0]);
+		}
 
 		str_to_number(r.dwType, row[1]);
 		str_to_number(r.bApplyOn, row[2]);
@@ -742,13 +784,13 @@ void CClientManager::RESULT_AFFECT_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dw
 	peer->Encode(&s_elements[0], sizeof(TPacketAffectElement) * dwCount);
 }
 
-void CClientManager::RESULT_QUEST_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwHandle, DWORD pid)
+void CClientManager::RESULT_QUEST_LOAD(CPeer* peer, MYSQL_RES* pRes, DWORD dwHandle, DWORD pid)
 {
 	int iNumRows;
 
 	if ((iNumRows = mysql_num_rows(pRes)) == 0)
 	{
-		DWORD dwCount = 0; 
+		DWORD dwCount = 0;
 		peer->EncodeHeader(HEADER_DG_QUEST_LOAD, dwHandle, sizeof(DWORD));
 		peer->Encode(&dwCount, sizeof(DWORD));
 		return;
@@ -761,7 +803,7 @@ void CClientManager::RESULT_QUEST_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwH
 
 	for (int i = 0; i < iNumRows; ++i)
 	{
-		TQuestTable & r = s_table[i];
+		TQuestTable& r = s_table[i];
 
 		row = mysql_fetch_row(pRes);
 
@@ -783,10 +825,12 @@ void CClientManager::RESULT_QUEST_LOAD(CPeer * peer, MYSQL_RES * pRes, DWORD dwH
 /*
  * PLAYER SAVE
  */
-void CClientManager::QUERY_PLAYER_SAVE(CPeer * peer, DWORD dwHandle, TPlayerTable * pkTab)
+void CClientManager::QUERY_PLAYER_SAVE(CPeer* peer, DWORD dwHandle, TPlayerTable* pkTab)
 {
 	if (g_test_server)
+	{
 		sys_log(0, "PLAYER_SAVE: %s", pkTab->name);
+	}
 
 	PutPlayerCache(pkTab);
 }
@@ -797,7 +841,7 @@ static time_by_id_map_t s_createTimeByAccountID;
 /*
  * PLAYER CREATE
  */
-void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerCreatePacket* packet)
+void CClientManager::__QUERY_PLAYER_CREATE(CPeer* peer, DWORD dwHandle, TPlayerCreatePacket* packet)
 {
 	char	queryStr[QUERY_MAX_LEN];
 	int		queryLen;
@@ -817,8 +861,8 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 		}
 	}
 
-	queryLen = snprintf(queryStr, sizeof(queryStr), 
-			"SELECT pid%u FROM player_index%s WHERE id=%d", packet->account_index + 1, GetTablePostfix(), packet->account_id);
+	queryLen = snprintf(queryStr, sizeof(queryStr),
+		"SELECT pid%u FROM player_index%s WHERE id=%d", packet->account_index + 1, GetTablePostfix(), packet->account_id);
 
 	std::unique_ptr<SQLMsg> pMsg0(CDBManager::instance().DirectQuery(queryStr));
 
@@ -832,7 +876,9 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 
 		MYSQL_ROW row = mysql_fetch_row(pMsg0->Get()->pSQLResult);
 
-		DWORD dwPID = 0; str_to_number(dwPID, row[0]);
+		DWORD dwPID = 0;
+		str_to_number(dwPID, row[0]);
+
 		if (row[0] && dwPID > 0)
 		{
 			peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_ALREADY, dwHandle, 0);
@@ -840,6 +886,7 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 			return;
 		}
 	}
+
 	else
 	{
 		peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
@@ -848,10 +895,11 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 
 	if (g_stLocale == "sjis")
 		snprintf(queryStr, sizeof(queryStr),
-			"SELECT COUNT(*) as count FROM player%s WHERE name='%s' collate sjis_japanese_ci", 
-			GetTablePostfix(), packet->player_table.name);	
+			"SELECT COUNT(*) as count FROM player%s WHERE name='%s' collate sjis_japanese_ci",
+			GetTablePostfix(), packet->player_table.name);
+
 	else
-	snprintf(queryStr, sizeof(queryStr), 
+		snprintf(queryStr, sizeof(queryStr),
 			"SELECT COUNT(*) as count FROM player%s WHERE name='%s'", GetTablePostfix(), packet->player_table.name);
 
 	std::unique_ptr<SQLMsg> pMsg1(CDBManager::instance().DirectQuery(queryStr));
@@ -873,48 +921,55 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 			return;
 		}
 	}
+
 	else
 	{
 		peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_FAILED, dwHandle, 0);
 		return;
 	}
 
-	queryLen = snprintf(queryStr, sizeof(queryStr), 
-			"INSERT INTO player%s "
-			"(id, account_id, name, level, st, ht, dx, iq, "
-			"job, voice, dir, x, y, z, "
-			"hp, mp, random_hp, random_sp, stat_point, stamina, part_base, part_main, part_hair, gold, playtime, "
-			"skill_level, quickslot) "
-			"VALUES(0, %u, '%s', %d, %d, %d, %d, %d, "
-			"%d, %d, %d, %d, %d, %d, %d, "
-			"%d, %d, %d, %d, %d, %d, %d, 0, %d, 0, ",
-			GetTablePostfix(),
-			packet->account_id, packet->player_table.name, packet->player_table.level, packet->player_table.st, packet->player_table.ht, packet->player_table.dx, packet->player_table.iq,
-			packet->player_table.job, packet->player_table.voice, packet->player_table.dir, packet->player_table.x, packet->player_table.y, packet->player_table.z,
-			packet->player_table.hp, packet->player_table.sp, packet->player_table.sRandomHP, packet->player_table.sRandomSP, packet->player_table.stat_point, packet->player_table.stamina, packet->player_table.part_base, packet->player_table.part_base, packet->player_table.gold);
+	queryLen = snprintf(queryStr, sizeof(queryStr),
+		"INSERT INTO player%s "
+		"(id, account_id, name, level, st, ht, dx, iq, "
+		"job, voice, dir, x, y, z, "
+		"hp, mp, random_hp, random_sp, stat_point, stamina, part_base, part_main, part_hair, gold, playtime, "
+		"skill_level, quickslot) "
+		"VALUES(0, %u, '%s', %d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, %d, %d, "
+		"%d, %d, %d, %d, %d, %d, %d, 0, %d, 0, ",
+		GetTablePostfix(),
+		packet->account_id, packet->player_table.name, packet->player_table.level, packet->player_table.st, packet->player_table.ht, packet->player_table.dx, packet->player_table.iq,
+		packet->player_table.job, packet->player_table.voice, packet->player_table.dir, packet->player_table.x, packet->player_table.y, packet->player_table.z,
+		packet->player_table.hp, packet->player_table.sp, packet->player_table.sRandomHP, packet->player_table.sRandomSP, packet->player_table.stat_point, packet->player_table.stamina, packet->player_table.part_base, packet->player_table.part_base, packet->player_table.gold);
 
 	sys_log(0, "PlayerCreate accountid %d name %s level %d gold %d, st %d ht %d job %d",
-			packet->account_id, 
-			packet->player_table.name, 
-			packet->player_table.level, 
-			packet->player_table.gold, 
-			packet->player_table.st, 
-			packet->player_table.ht, 
-			packet->player_table.job);
+		packet->account_id,
+		packet->player_table.name,
+		packet->player_table.level,
+		packet->player_table.gold,
+		packet->player_table.st,
+		packet->player_table.ht,
+		packet->player_table.job);
 
 	static char text[8192 + 1];
 
 	CDBManager::instance().EscapeString(text, packet->player_table.skills, sizeof(packet->player_table.skills));
 	queryLen += snprintf(queryStr + queryLen, sizeof(queryStr) - queryLen, "'%s', ", text);
+
 	if (g_test_server)
+	{
 		sys_log(0, "Create_Player queryLen[%d] TEXT[%s]", queryLen, text);
+	}
 
 	CDBManager::instance().EscapeString(text, packet->player_table.quickslot, sizeof(packet->player_table.quickslot));
 	queryLen += snprintf(queryStr + queryLen, sizeof(queryStr) - queryLen, "'%s')", text);
 
 	std::unique_ptr<SQLMsg> pMsg2(CDBManager::instance().DirectQuery(queryStr));
+
 	if (g_test_server)
+	{
 		sys_log(0, "Create_Player queryLen[%d] TEXT[%s]", queryLen, text);
+	}
 
 	if (pMsg2->Get()->uiAffectedRows <= 0)
 	{
@@ -925,8 +980,8 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 
 	player_id = pMsg2->Get()->uiInsertID;
 
-	snprintf(queryStr, sizeof(queryStr), "UPDATE player_index%s SET pid%d=%d WHERE id=%d", 
-			GetTablePostfix(), packet->account_index + 1, player_id, packet->account_id);
+	snprintf(queryStr, sizeof(queryStr), "UPDATE player_index%s SET pid%d=%d WHERE id=%d",
+		GetTablePostfix(), packet->account_index + 1, player_id, packet->account_id);
 	std::unique_ptr<SQLMsg> pMsg3(CDBManager::instance().DirectQuery(queryStr));
 
 	if (pMsg3->Get()->uiAffectedRows <= 0)
@@ -945,18 +1000,18 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 
 	pack.bAccountCharacterIndex = packet->account_index;
 
-	pack.player.dwID			= player_id;
+	pack.player.dwID = player_id;
 	strlcpy(pack.player.szName, packet->player_table.name, sizeof(pack.player.szName));
-	pack.player.byJob			= packet->player_table.job;
-	pack.player.byLevel			= 1;
-	pack.player.dwPlayMinutes	= 0;
-	pack.player.byST			= packet->player_table.st;
-	pack.player.byHT			= packet->player_table.ht;
-	pack.player.byDX 			= packet->player_table.dx;
-	pack.player.byIQ			= packet->player_table.iq;
-	pack.player.wMainPart		= packet->player_table.part_base;
-	pack.player.x			= packet->player_table.x;
-	pack.player.y			= packet->player_table.y;
+	pack.player.byJob = packet->player_table.job;
+	pack.player.byLevel = 1;
+	pack.player.dwPlayMinutes = 0;
+	pack.player.byST = packet->player_table.st;
+	pack.player.byHT = packet->player_table.ht;
+	pack.player.byDX = packet->player_table.dx;
+	pack.player.byIQ = packet->player_table.iq;
+	pack.player.wMainPart = packet->player_table.part_base;
+	pack.player.x = packet->player_table.x;
+	pack.player.y = packet->player_table.y;
 
 	peer->EncodeHeader(HEADER_DG_PLAYER_CREATE_SUCCESS, dwHandle, sizeof(TPacketDGCreateSuccess));
 	peer->Encode(&pack, sizeof(TPacketDGCreateSuccess));
@@ -972,9 +1027,11 @@ void CClientManager::__QUERY_PLAYER_CREATE(CPeer *peer, DWORD dwHandle, TPlayerC
 void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerDeletePacket* packet)
 {
 	if (!packet->login[0] || !packet->player_id || packet->account_index >= PLAYER_PER_ACCOUNT)
+	{
 		return;
+	}
 
-	CLoginData * ld = GetLoginDataByLogin(packet->login);
+	CLoginData* ld = GetLoginDataByLogin(packet->login);
 
 	if (!ld)
 	{
@@ -983,9 +1040,9 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 		return;
 	}
 
-	TAccountTable & r = ld->GetAccountRef();
+	TAccountTable& r = ld->GetAccountRef();
 
-	// block for japan 
+	// block for japan
 	if (g_stLocale != "sjis")
 	{
 		if (!IsChinaEventServer())
@@ -998,10 +1055,11 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 				return;
 			}
 
-			CPlayerTableCache * pkPlayerCache = GetPlayerCache(packet->player_id);
+			CPlayerTableCache* pkPlayerCache = GetPlayerCache(packet->player_id);
+
 			if (pkPlayerCache)
 			{
-				TPlayerTable * pTab = pkPlayerCache->Get();
+				TPlayerTable* pTab = pkPlayerCache->Get();
 
 				if (pTab->level >= m_iPlayerDeleteLevelLimit)
 				{
@@ -1023,10 +1081,10 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 	}
 
 	char szQuery[128];
-	snprintf(szQuery, sizeof(szQuery), "SELECT p.id, p.level, p.name FROM player_index%s AS i, player%s AS p WHERE pid%u=%u AND pid%u=p.id", 
-			GetTablePostfix(), GetTablePostfix(), packet->account_index + 1, packet->player_id, packet->account_index + 1);
+	snprintf(szQuery, sizeof(szQuery), "SELECT p.id, p.level, p.name FROM player_index%s AS i, player%s AS p WHERE pid%u=%u AND pid%u=p.id",
+		GetTablePostfix(), GetTablePostfix(), packet->account_index + 1, packet->player_id, packet->account_index + 1);
 
-	ClientHandleInfo * pi = new ClientHandleInfo(dwHandle, packet->player_id);
+	ClientHandleInfo* pi = new ClientHandleInfo(dwHandle, packet->player_id);
 	pi->account_index = packet->account_index;
 
 	sys_log(0, "PLAYER_DELETE TRY: %s %d pid%d", packet->login, packet->player_id, packet->account_index + 1);
@@ -1036,10 +1094,10 @@ void CClientManager::__QUERY_PLAYER_DELETE(CPeer* peer, DWORD dwHandle, TPlayerD
 //
 // @version	05/06/10 Bang2ni - 플레이어 삭제시 가격정보 리스트 삭제 추가.
 //
-void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
+void CClientManager::__RESULT_PLAYER_DELETE(CPeer* peer, SQLMsg* msg)
 {
-	CQueryInfo * qi = (CQueryInfo *) msg->pvUserData;
-	ClientHandleInfo * pi = (ClientHandleInfo *) qi->pvData;
+	CQueryInfo* qi = (CQueryInfo*)msg->pvUserData;
+	ClientHandleInfo* pi = (ClientHandleInfo*)qi->pvData;
 
 	if (msg->Get() && msg->Get()->uiNumRows)
 	{
@@ -1072,8 +1130,8 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 
 		char queryStr[QUERY_MAX_LEN];
 
-		snprintf(queryStr, sizeof(queryStr), "INSERT INTO player%s_deleted SELECT * FROM player%s WHERE id=%d", 
-				GetTablePostfix(), GetTablePostfix(), pi->player_id);
+		snprintf(queryStr, sizeof(queryStr), "INSERT INTO player%s_deleted SELECT * FROM player%s WHERE id=%d",
+			GetTablePostfix(), GetTablePostfix(), pi->player_id);
 		std::unique_ptr<SQLMsg> pIns(CDBManager::instance().DirectQuery(queryStr));
 
 		if (pIns->Get()->uiAffectedRows == 0 || pIns->Get()->uiAffectedRows == (uint32_t)-1)
@@ -1093,7 +1151,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		snprintf(account_index_string, sizeof(account_index_string), "player_id%d", m_iPlayerIDStart + pi->account_index);
 
 		// 플레이어 테이블을 캐쉬에서 삭제한다.
-		CPlayerTableCache * pkPlayerCache = GetPlayerCache(pi->player_id);
+		CPlayerTableCache* pkPlayerCache = GetPlayerCache(pi->player_id);
 
 		if (pkPlayerCache)
 		{
@@ -1102,7 +1160,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		}
 
 		// 아이템들을 캐쉬에서 삭제한다.
-		TItemCacheSet * pSet = GetItemCacheSet(pi->player_id);
+		TItemCacheSet* pSet = GetItemCacheSet(pi->player_id);
 
 		if (pSet)
 		{
@@ -1110,7 +1168,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 
 			while (it != pSet->end())
 			{
-				CItemCache * pkItemCache = *it++;
+				CItemCache* pkItemCache = *it++;
 				DeleteItemCache(pkItemCache->Get()->id);
 			}
 
@@ -1120,11 +1178,11 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 			m_map_pkItemCacheSetPtr.erase(pi->player_id);
 		}
 
-		snprintf(queryStr, sizeof(queryStr), "UPDATE player_index%s SET pid%u=0 WHERE pid%u=%d", 
-				GetTablePostfix(), 
-				pi->account_index + 1, 
-				pi->account_index + 1, 
-				pi->player_id);
+		snprintf(queryStr, sizeof(queryStr), "UPDATE player_index%s SET pid%u=0 WHERE pid%u=%d",
+			GetTablePostfix(),
+			pi->account_index + 1,
+			pi->account_index + 1,
+			pi->player_id);
 
 		std::unique_ptr<SQLMsg> pMsg(CDBManager::instance().DirectQuery(queryStr));
 
@@ -1162,6 +1220,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		peer->EncodeHeader(HEADER_DG_PLAYER_DELETE_SUCCESS, pi->dwHandle, 1);
 		peer->EncodeBYTE(pi->account_index);
 	}
+
 	else
 	{
 		// 삭제 실패
@@ -1171,7 +1230,7 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 	}
 }
 
-void CClientManager::QUERY_ADD_AFFECT(CPeer * peer, TPacketGDAddAffect * p)
+void CClientManager::QUERY_ADD_AFFECT(CPeer* peer, TPacketGDAddAffect* p)
 {
 	char queryStr[QUERY_MAX_LEN];
 	/*
@@ -1193,40 +1252,39 @@ void CClientManager::QUERY_ADD_AFFECT(CPeer * peer, TPacketGDAddAffect * p)
 	   p->elem.lSPCost);
 	   */
 	snprintf(queryStr, sizeof(queryStr),
-			"REPLACE INTO affect%s (dwPID, bType, bApplyOn, lApplyValue, dwFlag, lDuration, lSPCost) "
-			"VALUES(%u, %u, %u, %ld, %u, %ld, %ld)",
-			GetTablePostfix(),
-			p->dwPID,
-			p->elem.dwType,
-			p->elem.bApplyOn,
-			static_cast<long>(p->elem.lApplyValue),
-			p->elem.dwFlag,
-			static_cast<long>(p->elem.lDuration),
-			static_cast<long>(p->elem.lSPCost));
+		"REPLACE INTO affect%s (dwPID, bType, bApplyOn, lApplyValue, dwFlag, lDuration, lSPCost) "
+		"VALUES(%u, %u, %u, %ld, %u, %ld, %ld)",
+		GetTablePostfix(),
+		p->dwPID,
+		p->elem.dwType,
+		p->elem.bApplyOn,
+		static_cast<long> (p->elem.lApplyValue),
+		p->elem.dwFlag,
+		static_cast<long> (p->elem.lDuration),
+		static_cast<long> (p->elem.lSPCost));
 
 	CDBManager::instance().AsyncQuery(queryStr);
 }
 
-void CClientManager::QUERY_REMOVE_AFFECT(CPeer * peer, TPacketGDRemoveAffect * p)
+void CClientManager::QUERY_REMOVE_AFFECT(CPeer* peer, TPacketGDRemoveAffect* p)
 {
 	char queryStr[QUERY_MAX_LEN];
 
 	snprintf(queryStr, sizeof(queryStr),
-			"DELETE FROM affect%s WHERE dwPID=%u AND bType=%u AND bApplyOn=%u",
-			GetTablePostfix(), p->dwPID, p->dwType, p->bApplyOn);
+		"DELETE FROM affect%s WHERE dwPID=%u AND bType=%u AND bApplyOn=%u",
+		GetTablePostfix(), p->dwPID, p->dwType, p->bApplyOn);
 
 	CDBManager::instance().AsyncQuery(queryStr);
 }
 
-
-void CClientManager::QUERY_HIGHSCORE_REGISTER(CPeer* peer, TPacketGDHighscore * data)
+void CClientManager::QUERY_HIGHSCORE_REGISTER(CPeer* peer, TPacketGDHighscore* data)
 {
 	char szQuery[128];
 	snprintf(szQuery, sizeof(szQuery), "SELECT value FROM highscore%s WHERE board='%s' AND pid = %u", GetTablePostfix(), data->szBoard, data->dwPID);
 
 	sys_log(0, "HEADER_GD_HIGHSCORE_REGISTER: PID %u", data->dwPID);
 
-	ClientHandleInfo * pi = new ClientHandleInfo(0);
+	ClientHandleInfo* pi = new ClientHandleInfo(0);
 	strlcpy(pi->login, data->szBoard, sizeof(pi->login));
 	pi->account_id = (DWORD)data->lValue;
 	pi->player_id = data->dwPID;
@@ -1235,17 +1293,17 @@ void CClientManager::QUERY_HIGHSCORE_REGISTER(CPeer* peer, TPacketGDHighscore * 
 	CDBManager::instance().ReturnQuery(szQuery, QID_HIGHSCORE_REGISTER, peer->GetHandle(), pi);
 }
 
-void CClientManager::RESULT_HIGHSCORE_REGISTER(CPeer * pkPeer, SQLMsg * msg)
+void CClientManager::RESULT_HIGHSCORE_REGISTER(CPeer* pkPeer, SQLMsg* msg)
 {
-	CQueryInfo * qi = (CQueryInfo *) msg->pvUserData;
-	ClientHandleInfo * pi = (ClientHandleInfo *) qi->pvData;
+	CQueryInfo* qi = (CQueryInfo*)msg->pvUserData;
+	ClientHandleInfo* pi = (ClientHandleInfo*)qi->pvData;
 	//DWORD dwHandle = pi->dwHandle;
 
 	char szBoard[21];
 	strlcpy(szBoard, pi->login, sizeof(szBoard));
 	int value = (int)pi->account_id;
 
-	SQLResult * res = msg->Get();
+	SQLResult* res = msg->Get();
 
 	if (res->uiNumRows == 0)
 	{
@@ -1254,6 +1312,7 @@ void CClientManager::RESULT_HIGHSCORE_REGISTER(CPeer * pkPeer, SQLMsg * msg)
 		snprintf(buf, sizeof(buf), "INSERT INTO highscore%s VALUES('%s', %u, %d)", GetTablePostfix(), szBoard, pi->player_id, value);
 		CDBManager::instance().AsyncQuery(buf);
 	}
+
 	else
 	{
 		if (!res->pSQLResult)
@@ -1263,13 +1322,17 @@ void CClientManager::RESULT_HIGHSCORE_REGISTER(CPeer * pkPeer, SQLMsg * msg)
 		}
 
 		MYSQL_ROW row = mysql_fetch_row(res->pSQLResult);
+
 		if (row && row[0])
 		{
-			int current_value = 0; str_to_number(current_value, row[0]);
+			int current_value = 0;
+			str_to_number(current_value, row[0]);
+
 			if (pi->account_index && current_value >= value || !pi->account_index && current_value <= value)
 			{
 				value = current_value;
 			}
+
 			else
 			{
 				char buf[256];
@@ -1277,6 +1340,7 @@ void CClientManager::RESULT_HIGHSCORE_REGISTER(CPeer * pkPeer, SQLMsg * msg)
 				CDBManager::instance().AsyncQuery(buf);
 			}
 		}
+
 		else
 		{
 			char buf[256];
@@ -1284,6 +1348,7 @@ void CClientManager::RESULT_HIGHSCORE_REGISTER(CPeer * pkPeer, SQLMsg * msg)
 			CDBManager::instance().AsyncQuery(buf);
 		}
 	}
+
 	// TODO: 이곳에서 하이스코어가 업데이트 되었는지 체크하여 공지를 뿌려야한다.
 	delete pi;
 }
@@ -1297,19 +1362,23 @@ void CClientManager::InsertLogoutPlayer(DWORD pid)
 	{
 		// 존재할경우 시간만 갱신
 		if (g_log)
+		{
 			sys_log(0, "LOGOUT: Update player time pid(%d)", pid);
+		}
 
 		it->second->time = time(0);
 		return;
 	}
-		
-	TLogoutPlayer * pLogout = new TLogoutPlayer;
+
+	TLogoutPlayer* pLogout = new TLogoutPlayer;
 	pLogout->pid = pid;
 	pLogout->time = time(0);
 	m_map_logout.insert(std::make_pair(pid, pLogout));
 
 	if (g_log)
+	{
 		sys_log(0, "LOGOUT: Insert player pid(%d)", pid);
+	}
 }
 
 void CClientManager::DeleteLogoutPlayer(DWORD pid)
@@ -1343,8 +1412,11 @@ void CClientManager::UpdateLogoutPlayer()
 			delete pLogout;
 			m_map_logout.erase(it++);
 		}
+
 		else
+		{
 			++it;
+		}
 	}
 }
 
@@ -1354,11 +1426,10 @@ void CClientManager::FlushPlayerCacheSet(DWORD pid)
 
 	if (it != m_map_playerCache.end())
 	{
-		CPlayerTableCache * c = it->second;
+		CPlayerTableCache* c = it->second;
 		m_map_playerCache.erase(it);
 
 		c->Flush();
-		delete c; 
+		delete c;
 	}
 }
-

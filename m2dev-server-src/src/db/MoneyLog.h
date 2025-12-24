@@ -1,4 +1,4 @@
-﻿// vim: ts=8 sw=4
+// vim: ts=8 sw=4
 #ifndef __INC_MONEY_LOG
 #define __INC_MONEY_LOG
 
@@ -6,14 +6,14 @@
 
 class CMoneyLog : public singleton<CMoneyLog>
 {
-    public:
+public:
 	CMoneyLog();
 	virtual ~CMoneyLog();
 
 	void Save();
 	void AddLog(BYTE bType, DWORD dwVnum, int iGold);
 
-    private:
+private:
 	std::map<DWORD, int> m_MoneyLogContainer[MONEY_LOG_TYPE_MAX_NUM];
 };
 

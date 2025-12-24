@@ -4,9 +4,9 @@
 
 class CGrid
 {
-    public:
+public:
 	CGrid(int w, int h);
-	CGrid(CGrid * pkGrid, int w, int h);
+	CGrid(CGrid* pkGrid, int w, int h);
 	~CGrid();
 
 	void		Clear();
@@ -17,11 +17,11 @@ class CGrid
 	void		Print();
 	unsigned int	GetSize();
 
-    protected:
+protected:
 	int	m_iWidth;
 	int	m_iHeight;
 
-	char *	m_pGrid;
+	char* m_pGrid;
 };
 
 #endif

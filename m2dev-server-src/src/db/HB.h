@@ -4,7 +4,7 @@
 
 class PlayerHB : public singleton<PlayerHB>
 {
-    public:
+public:
 	PlayerHB();
 	virtual ~PlayerHB();
 
@@ -12,7 +12,7 @@ class PlayerHB : public singleton<PlayerHB>
 
 	void	Put(DWORD id);
 
-    private:
+private:
 	bool	Query(DWORD id);
 
 	std::map<DWORD, time_t> m_map_data;

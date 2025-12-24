@@ -6,32 +6,35 @@
 
 class CPeerBase : public CNetBase
 {
-    public:
+public:
 	enum
-	{ 
-	    MAX_HOST_LENGTH		= 30,
-	    MAX_INPUT_LEN		= 1024 * 1024 * 2,
-	    DEFAULT_PACKET_BUFFER_SIZE	= 1024 * 1024 * 2
+	{
+		MAX_HOST_LENGTH = 30,
+		MAX_INPUT_LEN = 1024 * 1024 * 2,
+		DEFAULT_PACKET_BUFFER_SIZE = 1024 * 1024 * 2
 	};
 
-    protected:
+protected:
 	virtual void	OnAccept() = 0;
 	virtual void	OnConnect() = 0;
 	virtual void	OnClose() = 0;
 
-    public:
+public:
 	bool		Accept(socket_t accept_fd);
 	bool		Connect(const char* host, WORD port);
 	void		Close();
 
-    public:
+public:
 	CPeerBase();
 	virtual ~CPeerBase();
 
 	void		Disconnect();
 	void		Destroy();
 
-	socket_t	GetFd() { return m_fd; }
+	socket_t	GetFd()
+	{
+		return m_fd;
+	}
 
 	void		EncodeBYTE(uint8_t b);
 	void		EncodeWORD(uint16_t w);
@@ -42,17 +45,20 @@ class CPeerBase : public CNetBase
 	int		Recv();
 	void		RecvEnd(int proceed_bytes);
 	int		GetRecvLength();
-	const void *	GetRecvBuffer();
+	const void* GetRecvBuffer();
 
 	int		GetSendLength();
 
-	const char *	GetHost() { return m_host; }
+	const char* GetHost()
+	{
+		return m_host;
+	}
 
-    protected:
+protected:
 	char		m_host[MAX_HOST_LENGTH + 1];
 	socket_t	m_fd;
 
-    private:
+private:
 	int		m_BytesRemain;
 	LPBUFFER	m_outBuffer;
 	LPBUFFER	m_inBuffer;

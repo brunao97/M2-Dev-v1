@@ -17,7 +17,7 @@ CLoginData::CLoginData()
 	memset(&m_data, 0, sizeof(TAccountTable));
 }
 
-TAccountTable & CLoginData::GetAccountRef()
+TAccountTable& CLoginData::GetAccountRef()
 {
 	return m_data;
 }
@@ -27,7 +27,7 @@ void CLoginData::SetClientKey(const uint32_t* c_pdwClientKey)
 	thecore_memcpy(&m_adwClientKey, c_pdwClientKey, sizeof(uint32_t) * 4);
 }
 
-const uint32_t * CLoginData::GetClientKey()
+const uint32_t* CLoginData::GetClientKey()
 {
 	return &m_adwClientKey[0];
 }
@@ -62,12 +62,12 @@ DWORD CLoginData::GetLogonTime()
 	return m_dwLogonTime;
 }
 
-void CLoginData::SetIP(const char * c_pszIP)
+void CLoginData::SetIP(const char* c_pszIP)
 {
 	strlcpy(m_szIP, c_pszIP, sizeof(m_szIP));
 }
 
-const char * CLoginData::GetIP()
+const char* CLoginData::GetIP()
 {
 	return m_szIP;
 }
@@ -79,8 +79,11 @@ void CLoginData::SetPlay(bool bOn)
 		sys_log(0, "SetPlay on %lu %s", GetKey(), m_data.login);
 		SetLogonTime();
 	}
+
 	else
+	{
 		sys_log(0, "SetPlay off %lu %s", GetKey(), m_data.login);
+	}
 
 	m_bPlay = bOn;
 	m_lastPlayTime = CClientManager::instance().GetCurrentTime();
@@ -101,7 +104,7 @@ bool CLoginData::IsDeleted()
 	return m_bDeleted;
 }
 
-void CLoginData::SetPremium(int * paiPremiumTimes)
+void CLoginData::SetPremium(int* paiPremiumTimes)
 {
 	thecore_memcpy(m_aiPremiumTimes, paiPremiumTimes, sizeof(m_aiPremiumTimes));
 }
@@ -109,13 +112,14 @@ void CLoginData::SetPremium(int * paiPremiumTimes)
 int CLoginData::GetPremium(BYTE type)
 {
 	if (type >= PREMIUM_MAX_NUM)
+	{
 		return 0;
+	}
 
 	return m_aiPremiumTimes[type];
 }
 
-int * CLoginData::GetPremiumPtr()
+int* CLoginData::GetPremiumPtr()
 {
 	return &m_aiPremiumTimes[0];
 }
-

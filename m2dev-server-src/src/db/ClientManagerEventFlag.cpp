@@ -13,9 +13,11 @@ void CClientManager::LoadEventFlag()
 	std::unique_ptr<SQLMsg> pmsg(CDBManager::instance().DirectQuery(szQuery));
 
 	SQLResult* pRes = pmsg->Get();
+
 	if (pRes->uiNumRows)
 	{
 		MYSQL_ROW row;
+
 		while ((row = mysql_fetch_row(pRes->pSQLResult)))
 		{
 			TPacketSetEventFlag p;
@@ -35,11 +37,13 @@ void CClientManager::SetEventFlag(TPacketSetEventFlag* p)
 	bool bChanged = false;
 
 	__typeof(m_map_lEventFlag.begin()) it = m_map_lEventFlag.find(p->szFlagName);
+
 	if (it == m_map_lEventFlag.end())
 	{
 		bChanged = true;
 		m_map_lEventFlag.insert(std::make_pair(std::string(p->szFlagName), p->lValue));
 	}
+
 	else if (it->second != p->lValue)
 	{
 		bChanged = true;
@@ -50,8 +54,8 @@ void CClientManager::SetEventFlag(TPacketSetEventFlag* p)
 	{
 		char szQuery[1024];
 		snprintf(szQuery, sizeof(szQuery),
-				"REPLACE INTO quest%s (dwPID, szName, szState, lValue) VALUES(0, '%s', '', %ld)",
-				GetTablePostfix(), p->szFlagName, static_cast<long>(p->lValue));
+			"REPLACE INTO quest%s (dwPID, szName, szState, lValue) VALUES(0, '%s', '', %ld)",
+			GetTablePostfix(), p->szFlagName, static_cast<long> (p->lValue));
 		szQuery[1023] = '\0';
 
 		//CDBManager::instance().ReturnQuery(szQuery, QID_QUEST_SAVE, 0, NULL);
@@ -59,6 +63,7 @@ void CClientManager::SetEventFlag(TPacketSetEventFlag* p)
 		sys_log(0, "HEADER_GD_SET_EVENT_FLAG : Changed CClientmanager::SetEventFlag(%s %d) ", p->szFlagName, p->lValue);
 		return;
 	}
+
 	sys_log(0, "HEADER_GD_SET_EVENT_FLAG : No Changed CClientmanager::SetEventFlag(%s %d) ", p->szFlagName, p->lValue);
 }
 
@@ -73,4 +78,3 @@ void CClientManager::SendEventFlagsOnSetup(CPeer* peer)
 		peer->Encode(&p, sizeof(TPacketSetEventFlag));
 	}
 }
-
