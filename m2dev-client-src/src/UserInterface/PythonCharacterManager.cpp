@@ -178,15 +178,9 @@ bool CPythonCharacterManager::IsCacheMode()
 
 void CPythonCharacterManager::Update()
 {
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t1 = timeGetTime();
-#endif
 	CInstanceBase::ResetPerformanceCounter();
 
 	CInstanceBase* pkInstMain = GetMainInstancePtr();
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t2 = timeGetTime();
-#endif
 	DWORD dwDeadInstCount = 0;
 	DWORD dwForceVisibleInstCount = 0;
 
@@ -218,48 +212,11 @@ void CPythonCharacterManager::Update()
 		}
 	}
 
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t3 = timeGetTime();
-#endif
 	UpdateTransform();
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t4 = timeGetTime();
-#endif
 
 	UpdateDeleting();
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t5 = timeGetTime();
-#endif
 
 	__NEW_Pick();
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t6 = timeGetTime();
-#endif
-
-#ifdef __PERFORMANCE_CHECKER__
-	{
-		static FILE* fp = fopen("perf_chrmgr_update.txt", "w");
-
-		if (t6 - t1 > 1)
-		{
-			fprintf(fp, "CU.Total %d (Time %d, Alive %d, Dead %d)\n",
-				t6 - t1, ELTimer_GetMSec(),
-				m_kAliveInstMap.size(),
-				m_kDeadInstList.size());
-			fprintf(fp, "CU.Counter %d\n", t2 - t1);
-			fprintf(fp, "CU.ForEach %d\n", t3 - t2);
-			fprintf(fp, "CU.Trans %d\n", t4 - t3);
-			fprintf(fp, "CU.Del %d\n", t5 - t4);
-			fprintf(fp, "CU.Pick %d\n", t6 - t5);
-			fprintf(fp, "CU.AI %d\n", m_kAliveInstMap.size());
-			fprintf(fp, "CU.DI %d\n", dwDeadInstCount);
-			fprintf(fp, "CU.FVI %d\n", dwForceVisibleInstCount);
-			fprintf(fp, "-------------------------------- \n");
-			fflush(fp);
-		}
-	}
-
-#endif
 }
 
 void CPythonCharacterManager::ShowPointEffect(DWORD ePoint, DWORD dwVID)
@@ -298,11 +255,6 @@ bool CPythonCharacterManager::RegisterPointEffect(DWORD ePoint, const char* c_sz
 
 void CPythonCharacterManager::UpdateTransform()
 {
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t1 = timeGetTime();
-	DWORD t2 = timeGetTime();
-#endif
-
 	CInstanceBase* pMainInstance = GetMainInstancePtr();
 
 	if (pMainInstance)
@@ -323,10 +275,6 @@ void CPythonCharacterManager::UpdateTransform()
 			}
 		}
 
-#ifdef __PERFORMANCE_CHECKER__
-		t2 = timeGetTime();
-#endif
-
 #ifdef __MOVIE_MODE__
 
 		if (!m_pkInstMain->IsMovieMode())
@@ -339,10 +287,6 @@ void CPythonCharacterManager::UpdateTransform()
 #endif
 	}
 
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t3 = timeGetTime();
-#endif
-
 	{
 		for (TCharacterInstanceMap::iterator itor = m_kAliveInstMap.begin(); itor != m_kAliveInstMap.end(); ++itor)
 		{
@@ -350,33 +294,6 @@ void CPythonCharacterManager::UpdateTransform()
 			pInstance->Transform();
 		}
 	}
-
-#ifdef __PERFORMANCE_CHECKER__
-	DWORD t4 = timeGetTime();
-#endif
-
-#ifdef __PERFORMANCE_CHECKER__
-	{
-		static FILE* fp = fopen("perf_chrmgr_updatetransform.txt", "w");
-
-		if (t4 - t1 > 5)
-		{
-			fprintf(fp, "CUT.Total %d (Time %f, Alive %d, Dead %d)\n",
-				t4 - t1, ELTimer_GetMSec() / 1000.0f,
-				m_kAliveInstMap.size(),
-				m_kDeadInstList.size());
-			fprintf(fp, "CUT.ChkAdvInst %d\n", t2 - t1);
-			fprintf(fp, "CUT.ChkAdvBG %d\n", t3 - t2);
-			fprintf(fp, "CUT.Trans %d\n", t4 - t3);
-
-			fprintf(fp, "-------------------------------- \n");
-			fflush(fp);
-		}
-
-		fflush(fp);
-	}
-
-#endif
 }
 
 void CPythonCharacterManager::UpdateDeleting()
