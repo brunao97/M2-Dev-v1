@@ -176,17 +176,12 @@ bool CPythonLauncher::RunCompiledFile(const char* c_szFileName)
 	long magic;
 	long PyImport_GetMagicNumber(void);
 
-	magic = _PyMarshal_ReadLongFromFile(fp);
-
 	if (magic != PyImport_GetMagicNumber())
 	{
 		PyErr_SetString(PyExc_RuntimeError, "Bad magic number in .pyc file");
 		fclose(fp);
 		return false;
 	}
-
-	_PyMarshal_ReadLongFromFile(fp);
-	v = _PyMarshal_ReadLastObjectFromFile(fp);
 
 	fclose(fp);
 
@@ -199,8 +194,7 @@ bool CPythonLauncher::RunCompiledFile(const char* c_szFileName)
 
 	co = (PyCodeObject*)v;
 	v = PyEval_EvalCode(co, m_poDic, m_poDic);
-	/*	if (v && flags)
-			flags->cf_flags |= (co->co_flags & PyCF_MASK);*/
+
 	Py_DECREF(co);
 
 	if (!v)
@@ -245,7 +239,6 @@ bool CPythonLauncher::RunMemoryTextFile(const char* c_szFileName, UINT uFileSize
 	stConvFileData += "'exec'))";
 
 	const CHAR* c_pcConvFileData = stConvFileData.c_str();
-
 	return RunLine(c_pcConvFileData);
 }
 

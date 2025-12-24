@@ -1,7 +1,5 @@
 #include "StdAfx.h"
 
-extern IPythonExceptionSender* g_pkExceptionSender;
-
 PyObject* dbgLogBox(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szMsg;
@@ -64,23 +62,6 @@ PyObject* dbgTraceError(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
-PyObject* dbgRegisterExceptionString(PyObject* poSelf, PyObject* poArgs)
-{
-	char* szMsg;
-
-	if (!PyTuple_GetString(poArgs, 0, &szMsg))
-	{
-		return Py_BuildException();
-	}
-
-	if (g_pkExceptionSender)
-	{
-		g_pkExceptionSender->RegisterExceptionString(szMsg);
-	}
-
-	return Py_BuildNone();
-}
-
 void initdbg()
 {
 	static PyMethodDef s_methods[] =
@@ -89,7 +70,6 @@ void initdbg()
 		{ "Trace",						dbgTrace,					METH_VARARGS },
 		{ "Tracen",						dbgTracen,					METH_VARARGS },
 		{ "TraceError",					dbgTraceError,				METH_VARARGS },
-		{ "RegisterExceptionString",	dbgRegisterExceptionString,	METH_VARARGS },
 		{ NULL, NULL},
 	};
 

@@ -1,10 +1,7 @@
 #include "StdAfx.h"
 #include "PythonUtils.h"
-
 #define PyLong_AsLong PyLong_AsLongLong
 #define PyLong_AsUnsignedLong PyLong_AsUnsignedLongLong
-
-IPythonExceptionSender* g_pkExceptionSender = NULL;
 
 bool __PyCallClassMemberFunc_ByCString(PyObject* poClass, const char* c_szFunc, PyObject* poArgs, PyObject** poRet);
 bool __PyCallClassMemberFunc_ByPyString(PyObject* poClass, PyObject* poFuncName, PyObject* poArgs, PyObject** poRet);
@@ -280,7 +277,6 @@ bool PyCallClassMemberFunc(PyObject* poClass, PyObject* poFunc, PyObject* poArgs
 {
 	PyObject* poRet;
 
-	// NOTE : NULL 체크 추가.. - [levites]
 	if (!poClass)
 	{
 		Py_XDECREF(poArgs);
@@ -300,7 +296,6 @@ bool PyCallClassMemberFunc(PyObject* poClass, const char* c_szFunc, PyObject* po
 {
 	PyObject* poRet;
 
-	// NOTE : NULL 체크 추가.. - [levites]
 	if (!poClass)
 	{
 		Py_XDECREF(poArgs);
@@ -320,7 +315,6 @@ bool PyCallClassMemberFunc_ByPyString(PyObject* poClass, PyObject* poFuncName, P
 {
 	PyObject* poRet;
 
-	// NOTE : NULL 체크 추가.. - [levites]
 	if (!poClass)
 	{
 		Py_XDECREF(poArgs);
@@ -379,11 +373,6 @@ bool PyCallClassMemberFunc(PyObject* poClass, const char* c_szFunc, PyObject* po
 	return false;
 }
 
-/*
- *	이 함수를 직접 호출하지 않도록 한다.
- *	부득이 하게 직접 호출할 경우에는 반드시 false 가 리턴 됐을 때
- *	Py_DECREF(poArgs); 를 해준다.
- */
 bool __PyCallClassMemberFunc_ByCString(PyObject* poClass, const char* c_szFunc, PyObject* poArgs, PyObject** ppoRet)
 {
 	if (!poClass)
@@ -412,17 +401,7 @@ bool __PyCallClassMemberFunc_ByCString(PyObject* poClass, const char* c_szFunc, 
 
 	if (!poRet)
 	{
-		if (g_pkExceptionSender)
-		{
-			g_pkExceptionSender->Clear();
-		}
-
 		PyErr_Print();
-
-		if (g_pkExceptionSender)
-		{
-			g_pkExceptionSender->Send();
-		}
 
 		Py_DECREF(poFunc);
 		Py_XDECREF(poArgs);
@@ -464,17 +443,7 @@ bool __PyCallClassMemberFunc_ByPyString(PyObject* poClass, PyObject* poFuncName,
 
 	if (!poRet)
 	{
-		if (g_pkExceptionSender)
-		{
-			g_pkExceptionSender->Clear();
-		}
-
 		PyErr_Print();
-
-		if (g_pkExceptionSender)
-		{
-			g_pkExceptionSender->Send();
-		}
 
 		Py_DECREF(poFunc);
 		Py_XDECREF(poArgs);

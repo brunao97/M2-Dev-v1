@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "PythonApplication.h"
 #include "ProcessScanner.h"
-#include "PythonExceptionSender.h"
 #include "resource.h"
 #include "Version.h"
 
@@ -465,8 +464,6 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 	bool ret = false;
 	{
 		CPythonLauncher pyLauncher;
-		CPythonExceptionSender pyExceptionSender;
-		SetExceptionSender(&pyExceptionSender);
 
 		if (pyLauncher.Create())
 		{
