@@ -15,7 +15,7 @@
 
 class CInstanceBase;
 
-class CPythonBackground : public CMapManager, public CSingleton<CPythonBackground>  
+class CPythonBackground : public CMapManager, public CSingleton<CPythonBackground>
 {
 public:
 	enum
@@ -77,12 +77,12 @@ public:
 	float GetFarClip();
 
 	DWORD GetRenderShadowTime();
-	void GetDistanceSetInfo(int * peNum, float * pfStart, float * pfEnd, float * pfFarClip);
+	void GetDistanceSetInfo(int* peNum, float* pfStart, float* pfEnd, float* pfFarClip);
 
-	bool GetPickingPoint(D3DXVECTOR3 * v3IntersectPt);
-	bool GetPickingPointWithRay(const CRay & rRay, D3DXVECTOR3 * v3IntersectPt);
-	bool GetPickingPointWithRayOnlyTerrain(const CRay & rRay, D3DXVECTOR3 * v3IntersectPt);
-	BOOL GetLightDirection(D3DXVECTOR3 & rv3LightDirection);
+	bool GetPickingPoint(D3DXVECTOR3* v3IntersectPt);
+	bool GetPickingPointWithRay(const CRay& rRay, D3DXVECTOR3* v3IntersectPt);
+	bool GetPickingPointWithRayOnlyTerrain(const CRay& rRay, D3DXVECTOR3* v3IntersectPt);
+	BOOL GetLightDirection(D3DXVECTOR3& rv3LightDirection);
 
 	void Update(float fCenterX, float fCenterY, float fCenterZ);
 
@@ -100,7 +100,7 @@ public:
 	void RenderBeforeLensFlare();
 	void RenderAfterLensFlare();
 
-	bool CheckAdvancing(CInstanceBase * pInstance);
+	bool CheckAdvancing(CInstanceBase* pInstance);
 
 	void SetCharacterDirLight();
 	void SetBackgroundDirLight();
@@ -118,7 +118,7 @@ public:
 	void CreateTargetEffect(DWORD dwID, long lx, long ly);
 	void DeleteTargetEffect(DWORD dwID);
 
-	void CreateSpecialEffect(DWORD dwID, float fx, float fy, float fz, const char * c_szFileName);
+	void CreateSpecialEffect(DWORD dwID, float fx, float fy, float fz, const char* c_szFileName);
 	void DeleteSpecialEffect(DWORD dwID);
 
 	void Warp(DWORD dwX, DWORD dwY);
@@ -126,13 +126,13 @@ public:
 	void VisibleGuildArea();
 	void DisableGuildArea();
 
-	void RegisterDungeonMapName(const char * c_szMapName);
+	void RegisterDungeonMapName(const char* c_szMapName);
 	TMapInfo* GlobalPositionToMapInfo(DWORD dwGlobalX, DWORD dwGlobalY);
 	const char* GetWarpMapName();
 
 protected:
 	void __CreateProperty();
-	bool __IsSame(std::set<int> & rleft, std::set<int> & rright);
+	bool __IsSame(std::set<int>& rleft, std::set<int>& rright);
 
 protected:
 	std::string m_strMapName;
@@ -164,6 +164,7 @@ private:
 		int ilx;
 		int ily;
 	};
+
 	std::map<DWORD, SReserveTargetEffect> m_kMap_dwID_kReserveTargetEffect;
 
 	struct FFindWarpMapName
@@ -174,10 +175,14 @@ private:
 			m_dwX = dwX;
 			m_dwY = dwY;
 		}
-		bool operator() (TMapInfo & rMapInfo)
+
+		bool operator() (TMapInfo& rMapInfo)
 		{
 			if (m_dwX < rMapInfo.m_dwBaseX || m_dwX >= rMapInfo.m_dwEndX || m_dwY < rMapInfo.m_dwBaseY || m_dwY >= rMapInfo.m_dwEndY)
+			{
 				return false;
+			}
+
 			return true;
 		}
 	};

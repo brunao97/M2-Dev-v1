@@ -2,15 +2,15 @@
 #include "Timer.h"
 
 static LARGE_INTEGER gs_liTickCountPerSec;
-static DWORD gs_dwBaseTime=0;
-static DWORD gs_dwServerTime=0;
-static DWORD gs_dwClientTime=0;
-static DWORD gs_dwFrameTime=0;
+static DWORD gs_dwBaseTime = 0;
+static DWORD gs_dwServerTime = 0;
+static DWORD gs_dwClientTime = 0;
+static DWORD gs_dwFrameTime = 0;
 
 #pragma comment(lib, "winmm.lib")
 
 BOOL ELTimer_Init()
-{	
+{
 	/*
 	gs_liTickCountPerSec.QuadPart=0;
 
@@ -19,7 +19,7 @@ BOOL ELTimer_Init()
 
 	LARGE_INTEGER liTickCount;
 	QueryPerformanceCounter(&liTickCount);
-	gs_dwBaseTime= (liTickCount.QuadPart*1000  / gs_liTickCountPerSec.QuadPart);	
+	gs_dwBaseTime= (liTickCount.QuadPart*1000  / gs_liTickCountPerSec.QuadPart);
 	*/
 	gs_dwBaseTime = timeGetTime();
 	return 1;
@@ -30,17 +30,19 @@ DWORD ELTimer_GetMSec()
 	//assert(gs_dwBaseTime!=0 && "ELTimer_Init 를 먼저 실행하세요");
 	//LARGE_INTEGER liTickCount;
 	//QueryPerformanceCounter(&liTickCount);
-	return timeGetTime() - gs_dwBaseTime; //(liTickCount.QuadPart*1000  / gs_liTickCountPerSec.QuadPart)-gs_dwBaseTime;		
+	return timeGetTime() - gs_dwBaseTime; //(liTickCount.QuadPart*1000  / gs_liTickCountPerSec.QuadPart)-gs_dwBaseTime;
 }
 
 VOID	ELTimer_SetServerMSec(DWORD dwServerTime)
 {
 	NANOBEGIN
-	if (0 != dwServerTime) // nanomite를 위한 더미 if
-	{
-		gs_dwServerTime = dwServerTime;
-		gs_dwClientTime = CTimer::instance().GetCurrentMillisecond();
-	}
+
+		if (0 != dwServerTime) // nanomite를 위한 더미 if
+		{
+			gs_dwServerTime = dwServerTime;
+			gs_dwClientTime = CTimer::instance().GetCurrentMillisecond();
+		}
+
 	NANOEND
 }
 
@@ -70,16 +72,18 @@ CTimer::CTimer()
 	ELTimer_Init();
 
 	NANOBEGIN
-	if (this) // nanomite를 위한 더미 if
-	{
-		m_dwCurrentTime = 0;
-		m_bUseRealTime = true;
-		m_index = 0;
-	
-		m_dwElapsedTime = 0;
 
-		m_fCurrentTime = 0.0f;
-	}
+		if (this) // nanomite를 위한 더미 if
+		{
+			m_dwCurrentTime = 0;
+			m_bUseRealTime = true;
+			m_index = 0;
+
+			m_dwElapsedTime = 0;
+
+			m_fCurrentTime = 0.0f;
+		}
+
 	NANOEND
 }
 
@@ -99,17 +103,22 @@ void CTimer::Advance()
 		++m_index;
 
 		if (m_index == 1)
+		{
 			m_index = -1;
+		}
 
 		m_dwCurrentTime += 16 + (m_index & 1);
 		m_fCurrentTime = m_dwCurrentTime / 1000.0f;
 	}
+
 	else
 	{
 		DWORD currentTime = ELTimer_GetMSec();
 
 		if (m_dwCurrentTime == 0)
+		{
 			m_dwCurrentTime = currentTime;
+		}
 
 		m_dwElapsedTime = currentTime - m_dwCurrentTime;
 		m_dwCurrentTime = currentTime;
@@ -124,7 +133,9 @@ void CTimer::Adjust(int iTimeGap)
 float CTimer::GetCurrentSecond()
 {
 	if (m_bUseRealTime)
+	{
 		return ELTimer_GetMSec() / 1000.0f;
+	}
 
 	return m_fCurrentTime;
 }
@@ -132,7 +143,9 @@ float CTimer::GetCurrentSecond()
 DWORD CTimer::GetCurrentMillisecond()
 {
 	if (m_bUseRealTime)
+	{
 		return ELTimer_GetMSec();
+	}
 
 	return m_dwCurrentTime;
 }
@@ -145,7 +158,9 @@ float CTimer::GetElapsedSecond()
 DWORD CTimer::GetElapsedMilliecond()
 {
 	if (!m_bUseRealTime)
+	{
 		return 16 + (m_index & 1);
+	}
 
 	return m_dwElapsedTime;
 }

@@ -49,7 +49,9 @@ bool GrannyMeshIsTextureAnimation(granny_mesh* pgrnMesh)
 bool GrannyMeshIsDeform(granny_mesh* pgrnMesh)
 {
 	if (GrannyMeshIsRigid(pgrnMesh))
+	{
 		return false;
+	}
 
 	return true;
 }

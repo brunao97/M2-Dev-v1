@@ -3,7 +3,7 @@
 #include "EterBase/Timer.h"
 
 void CGraphicObjectInstance::OnInitialize()
-{	
+{
 	ZeroMemory(m_abyPortalID, sizeof(m_abyPortalID));
 }
 
@@ -45,7 +45,9 @@ bool CGraphicObjectInstance::Render()
 	}
 	//*/
 	if (!isShow())
+	{
 		return false;
+	}
 
 	OnRender();
 	return true;
@@ -54,7 +56,9 @@ bool CGraphicObjectInstance::Render()
 void CGraphicObjectInstance::BlendRender()
 {
 	if (!isShow())
+	{
 		return;
+	}
 
 	OnBlendRender();
 }
@@ -62,7 +66,9 @@ void CGraphicObjectInstance::BlendRender()
 void CGraphicObjectInstance::RenderToShadowMap()
 {
 	if (!isShow())
+	{
 		return;
+	}
 
 	OnRenderToShadowMap();
 }
@@ -70,7 +76,9 @@ void CGraphicObjectInstance::RenderToShadowMap()
 void CGraphicObjectInstance::RenderShadow()
 {
 	if (!isShow())
+	{
 		return;
+	}
 
 	OnRenderShadow();
 }
@@ -78,7 +86,9 @@ void CGraphicObjectInstance::RenderShadow()
 void CGraphicObjectInstance::RenderPCBlocker()
 {
 	if (!isShow())
+	{
 		return;
+	}
 
 	OnRenderPCBlocker();
 }
@@ -93,27 +103,28 @@ void CGraphicObjectInstance::Update()
 void CGraphicObjectInstance::Deform()
 {
 	if (!isShow())
+	{
 		return;
+	}
 
 	OnDeform();
 }
-
 
 void CGraphicObjectInstance::Transform()
 {
 	m_worldMatrix = m_mRotation;
 
-	m_worldMatrix._41	+= m_v3Position.x;
-	m_worldMatrix._42	+= m_v3Position.y;
-	m_worldMatrix._43	+= m_v3Position.z;	
+	m_worldMatrix._41 += m_v3Position.x;
+	m_worldMatrix._42 += m_v3Position.y;
+	m_worldMatrix._43 += m_v3Position.z;
 }
 
-const D3DXVECTOR3 & CGraphicObjectInstance::GetPosition() const
+const D3DXVECTOR3& CGraphicObjectInstance::GetPosition() const
 {
 	return m_v3Position;
 }
 
-const D3DXVECTOR3 & CGraphicObjectInstance::GetScale() const
+const D3DXVECTOR3& CGraphicObjectInstance::GetScale() const
 {
 	return m_v3Scale;
 }
@@ -138,17 +149,17 @@ float CGraphicObjectInstance::GetRoll()
 	return m_fRoll;
 }
 
-D3DXMATRIX & CGraphicObjectInstance::GetTransform()
+D3DXMATRIX& CGraphicObjectInstance::GetTransform()
 {
 	return m_worldMatrix;
 }
 
-void CGraphicObjectInstance::SetRotationQuaternion(const D3DXQUATERNION &q)
+void CGraphicObjectInstance::SetRotationQuaternion(const D3DXQUATERNION& q)
 {
 	D3DXMatrixRotationQuaternion(&m_mRotation, &q);
 }
 
-void CGraphicObjectInstance::SetRotationMatrix(const D3DXMATRIX & m)
+void CGraphicObjectInstance::SetRotationMatrix(const D3DXMATRIX& m)
 {
 	m_mRotation = m;
 }
@@ -176,10 +187,10 @@ void CGraphicObjectInstance::SetPosition(float x, float y, float z)
 {
 	m_v3Position.x = x;
 	m_v3Position.y = y;
-	m_v3Position.z = z;	
+	m_v3Position.z = z;
 }
 
-void CGraphicObjectInstance::SetPosition(const D3DXVECTOR3 & newposition)
+void CGraphicObjectInstance::SetPosition(const D3DXVECTOR3& newposition)
 {
 	m_v3Position = newposition;
 }
@@ -201,11 +212,13 @@ void CGraphicObjectInstance::Hide()
 	m_isVisible = false;
 }
 
-void CGraphicObjectInstance::ApplyAlwaysHidden() {
+void CGraphicObjectInstance::ApplyAlwaysHidden()
+{
 	m_isAlwaysHidden = true;
 }
 
-void CGraphicObjectInstance::ReleaseAlwaysHidden() {
+void CGraphicObjectInstance::ReleaseAlwaysHidden()
+{
 	m_isAlwaysHidden = false;
 }
 
@@ -214,16 +227,16 @@ bool CGraphicObjectInstance::isShow()
 	return m_isVisible && !m_isAlwaysHidden;
 }
 
-// 
+//
 
 //////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR4 & CGraphicObjectInstance::GetWTBBoxVertex(const unsigned char & c_rucNumTBBoxVertex)
+D3DXVECTOR4& CGraphicObjectInstance::GetWTBBoxVertex(const unsigned char& c_rucNumTBBoxVertex)
 {
 	return m_v4TBBox[c_rucNumTBBoxVertex];
 }
 
-bool CGraphicObjectInstance::isIntersect(const CRay & c_rRay, float * pu, float * pv, float * pt)
+bool CGraphicObjectInstance::isIntersect(const CRay& c_rRay, float* pu, float* pv, float* pt)
 {
 	D3DXVECTOR3 v3Start, v3Dir;
 	float fRayRange;
@@ -241,19 +254,20 @@ bool CGraphicObjectInstance::isIntersect(const CRay & c_rRay, float * pu, float 
 	posVertices[6] = TPosition(m_v3TBBoxMin.x, m_v3TBBoxMax.y, m_v3TBBoxMax.z);
 	posVertices[7] = TPosition(m_v3TBBoxMax.x, m_v3TBBoxMax.y, m_v3TBBoxMax.z);
 
-	TIndex Indices[36] = {0, 1, 2, 1, 3, 2,
-						  2, 0, 6, 0, 4, 6, 
+	TIndex Indices[36] = { 0, 1, 2, 1, 3, 2,
+						  2, 0, 6, 0, 4, 6,
 						  0, 1, 4, 1, 5, 4,
 						  1, 3, 5, 3, 7, 5,
 						  3, 2, 7, 2, 6, 7,
-						  4, 5, 6, 5, 7, 6};
+						  4, 5, 6, 5, 7, 6
+	};
 
 	int triCount = 12;
 	WORD* pcurIdx = (WORD*)Indices;
 
 	while (triCount--)
 	{
-		if (IntersectTriangle(v3Start, v3Dir, 
+		if (IntersectTriangle(v3Start, v3Dir,
 			posVertices[pcurIdx[0]],
 			posVertices[pcurIdx[1]],
 			posVertices[pcurIdx[2]],
@@ -261,10 +275,10 @@ bool CGraphicObjectInstance::isIntersect(const CRay & c_rRay, float * pu, float 
 		{
 			return true;
 		}
-		
+
 		pcurIdx += 3;
 	}
-	
+
 	return false;
 }
 
@@ -277,18 +291,20 @@ CGraphicObjectInstance::CGraphicObjectInstance()
 void CGraphicObjectInstance::Initialize()
 {
 	if (m_CullingHandle)
+	{
 		CCullingManager::Instance().Unregister(m_CullingHandle);
+	}
+
 	m_CullingHandle = 0;
 
 	m_pHeightAttributeInstance = NULL;
-	
-	m_isVisible = TRUE;	
+
+	m_isVisible = TRUE;
 
 	m_BlockCamera = false;
 
 	m_isAlwaysHidden = false;
 
-	
 	m_v3Position.x = m_v3Position.y = m_v3Position.z = 0.0f;
 	m_v3Scale.x = m_v3Scale.y = m_v3Scale.z = 1.0f;
 	m_fYaw = m_fPitch = m_fRoll = 0.0f;
@@ -302,7 +318,9 @@ void CGraphicObjectInstance::Initialize()
 	m_v3BBoxMax = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	for (int i = 0; i < 8; ++i)
+	{
 		m_v4TBBox[i] = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
 
 	memset(m_abyPortalID, 0, sizeof(m_abyPortalID));
 
@@ -321,23 +339,31 @@ void CGraphicObjectInstance::UpdateBoundingSphere()
 	{
 		Vector3d center;
 		float radius;
-		GetBoundingSphere(center,radius);
+		GetBoundingSphere(center, radius);
+
 		if (radius != m_CullingHandle->GetRadius())
-			m_CullingHandle->NewPosRadius(center,radius);
+		{
+			m_CullingHandle->NewPosRadius(center, radius);
+		}
+
 		else
+		{
 			m_CullingHandle->NewPos(center);
+		}
 	}
 }
 
 void CGraphicObjectInstance::RegisterBoundingSphere()
 {
 	if (m_CullingHandle)
+	{
 		CCullingManager::Instance().Unregister(m_CullingHandle);
+	}
 
 	m_CullingHandle = CCullingManager::Instance().Register(this);
 }
 
-void CGraphicObjectInstance::AddCollision(const CStaticCollisionData * pscd, const D3DXMATRIX* pMat)
+void CGraphicObjectInstance::AddCollision(const CStaticCollisionData* pscd, const D3DXMATRIX* pMat)
 {
 	m_StaticCollisionInstanceVector.push_back(CBaseCollisionInstance::BuildCollisionInstance(pscd, pMat));
 }
@@ -345,48 +371,61 @@ void CGraphicObjectInstance::AddCollision(const CStaticCollisionData * pscd, con
 void CGraphicObjectInstance::ClearCollision()
 {
 	CCollisionInstanceVector::iterator it;
-	for(it = m_StaticCollisionInstanceVector.begin();it!=m_StaticCollisionInstanceVector.end();++it)
+
+	for (it = m_StaticCollisionInstanceVector.begin(); it != m_StaticCollisionInstanceVector.end(); ++it)
 	{
 		(*it)->Destroy();
 	}
+
 	m_StaticCollisionInstanceVector.clear();
 }
 
-bool CGraphicObjectInstance::CollisionDynamicSphere(const CDynamicSphereInstance & s) const
+bool CGraphicObjectInstance::CollisionDynamicSphere(const CDynamicSphereInstance& s) const
 {
 	CCollisionInstanceVector::const_iterator it;
-	for(it = m_StaticCollisionInstanceVector.begin();it!=m_StaticCollisionInstanceVector.end();++it)
+
+	for (it = m_StaticCollisionInstanceVector.begin(); it != m_StaticCollisionInstanceVector.end(); ++it)
 	{
 		if ((*it)->CollisionDynamicSphere(s))
+		{
 			return true;
+		}
 	}
+
 	return false;
 }
 
-bool CGraphicObjectInstance::MovementCollisionDynamicSphere(const CDynamicSphereInstance & s) const
+bool CGraphicObjectInstance::MovementCollisionDynamicSphere(const CDynamicSphereInstance& s) const
 {
 	CCollisionInstanceVector::const_iterator it;
-	for(it = m_StaticCollisionInstanceVector.begin();it!=m_StaticCollisionInstanceVector.end();++it)
+
+	for (it = m_StaticCollisionInstanceVector.begin(); it != m_StaticCollisionInstanceVector.end(); ++it)
 	{
 		if ((*it)->MovementCollisionDynamicSphere(s))
+		{
 			return true;
+		}
 	}
+
 	return false;
 }
 
-D3DXVECTOR3 CGraphicObjectInstance::GetCollisionMovementAdjust(const CDynamicSphereInstance & s) const
+D3DXVECTOR3 CGraphicObjectInstance::GetCollisionMovementAdjust(const CDynamicSphereInstance& s) const
 {
 	CCollisionInstanceVector::const_iterator it;
-	for(it = m_StaticCollisionInstanceVector.begin();it!=m_StaticCollisionInstanceVector.end();++it)
+
+	for (it = m_StaticCollisionInstanceVector.begin(); it != m_StaticCollisionInstanceVector.end(); ++it)
 	{
 		if ((*it)->MovementCollisionDynamicSphere(s))
+		{
 			return (*it)->GetCollisionMovementAdjust(s);
+		}
 	}
-	
-	return D3DXVECTOR3(0.0f,0.0f,0.0f);
+
+	return D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
-void CGraphicObjectInstance::UpdateCollisionData(const CStaticCollisionDataVector * pscdVector)
+void CGraphicObjectInstance::UpdateCollisionData(const CStaticCollisionDataVector* pscdVector)
 {
 	ClearCollision();
 	OnUpdateCollisionData(pscdVector);
@@ -397,19 +436,20 @@ DWORD CGraphicObjectInstance::GetCollisionInstanceCount()
 	return m_StaticCollisionInstanceVector.size();
 }
 
-CBaseCollisionInstance * CGraphicObjectInstance::GetCollisionInstanceData(DWORD dwIndex)
+CBaseCollisionInstance* CGraphicObjectInstance::GetCollisionInstanceData(DWORD dwIndex)
 {
-	if (dwIndex>m_StaticCollisionInstanceVector.size())
+	if (dwIndex > m_StaticCollisionInstanceVector.size())
 	{
 		return 0;
 	}
+
 	return m_StaticCollisionInstanceVector[dwIndex];
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Height
 
-void CGraphicObjectInstance::SetHeightInstance(CAttributeInstance * pAttributeInstance)
+void CGraphicObjectInstance::SetHeightInstance(CAttributeInstance* pAttributeInstance)
 {
 	m_pHeightAttributeInstance = pAttributeInstance;
 }
@@ -419,7 +459,7 @@ void CGraphicObjectInstance::ClearHeightInstance()
 	m_pHeightAttributeInstance = NULL;
 }
 
-void CGraphicObjectInstance::UpdateHeightInstance(CAttributeInstance * pAttributeInstance)
+void CGraphicObjectInstance::UpdateHeightInstance(CAttributeInstance* pAttributeInstance)
 {
 	ClearHeightInstance();
 	OnUpdateHeighInstance(pAttributeInstance);
@@ -428,15 +468,19 @@ void CGraphicObjectInstance::UpdateHeightInstance(CAttributeInstance * pAttribut
 bool CGraphicObjectInstance::IsObjectHeight()
 {
 	if (m_pHeightAttributeInstance)
+	{
 		return true;
+	}
 
 	return false;
 }
 
-bool CGraphicObjectInstance::GetObjectHeight(float fX, float fY, float * pfHeight)
+bool CGraphicObjectInstance::GetObjectHeight(float fX, float fY, float* pfHeight)
 {
 	if (!m_pHeightAttributeInstance)
+	{
 		return false;
+	}
 
 	return OnGetObjectHeight(fX, fY, pfHeight);
 }

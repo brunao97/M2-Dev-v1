@@ -40,13 +40,13 @@ void CMonsterAreaInfo::SetSize(long lSizeX, long lSizeY)
 	SetLRTB();
 }
 
-void CMonsterAreaInfo::GetOrigin(long * plOriginX, long * plOriginY)
+void CMonsterAreaInfo::GetOrigin(long* plOriginX, long* plOriginY)
 {
 	*plOriginX = m_lOriginX;
 	*plOriginY = m_lOriginY;
 }
 
-void CMonsterAreaInfo::GetSize(long * plSizeX, long * plSizeY)
+void CMonsterAreaInfo::GetSize(long* plSizeX, long* plSizeY)
 {
 	*plSizeX = m_lSizeX;
 	*plSizeY = m_lSizeY;
@@ -65,7 +65,9 @@ void CMonsterAreaInfo::SetMonsterCount(DWORD dwCount)
 	m_dwMonsterCount = dwCount;
 
 	if (m_TempMonsterPosVector.size() == dwCount)
+	{
 		return;
+	}
 
 	m_TempMonsterPosVector.clear();
 	m_TempMonsterPosVector.resize(dwCount);
@@ -83,36 +85,46 @@ void CMonsterAreaInfo::SetMonsterDirection(EMonsterDir eMonsterDir)
 	D3DXMATRIX matRotation;
 	D3DXVECTOR3 v3Direction(0.0f, 1.0f, 0.0f);
 	float fDegree = 0.0f;
-	switch(m_eMonsterDir)
+
+	switch (m_eMonsterDir)
 	{
 	case DIR_RANDOM:
-		fDegree = (float) random_range(0, 7) * 45.0f;
+		fDegree = (float)random_range(0, 7) * 45.0f;
 		break;
+
 	case DIR_NORTH:
 		fDegree = 0.0f;
 		break;
+
 	case DIR_NORTHEAST:
 		fDegree = 45.0f;
 		break;
+
 	case DIR_EAST:
 		fDegree = 90.0f;
 		break;
+
 	case DIR_SOUTHEAST:
 		fDegree = 135.0f;
 		break;
+
 	case DIR_SOUTH:
 		fDegree = 180.0f;
 		break;
+
 	case DIR_SOUTHWEST:
 		fDegree = 225.0f;
 		break;
+
 	case DIR_WEST:
 		fDegree = 270.0f;
 		break;
+
 	case DIR_NORTHWEST:
 		fDegree = 315.0f;
 		break;
 	}
+
 	D3DXMatrixRotationZ(&matRotation, -D3DXToRadian(fDegree));
 	D3DXVec3TransformCoord(&v3Direction, &v3Direction, &matRotation);
 	m_v2Monsterdirection.x = v3Direction.x;
@@ -125,11 +137,11 @@ void CMonsterAreaInfo::RemoveAllMonsters()
 	SetMonsterAreaInfoType(MONSTERAREAINFOTYPE_INVALID);
 
 	SetMonsterGroupID(0);
-	
+
 	m_strGroupName.assign("이름없음");
 	m_strLeaderName.assign("이름없음");
 	SetMonsterGroupFollowerCount(0);
-	
+
 	SetMonsterVID(0);
 	m_strMonsterName.assign("이름없음");
 
@@ -142,7 +154,9 @@ void CMonsterAreaInfo::RemoveAllMonsters()
 D3DXVECTOR2 CMonsterAreaInfo::GetTempMonsterPos(DWORD dwIndex)
 {
 	if (dwIndex >= m_TempMonsterPosVector.size())
+	{
 		return D3DXVECTOR2(0.0f, 0.0f);
+	}
+
 	return m_TempMonsterPosVector[dwIndex];
 }
-

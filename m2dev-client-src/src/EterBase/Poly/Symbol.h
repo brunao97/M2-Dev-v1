@@ -20,12 +20,12 @@
 #define SY_OPEN		'('
 #define SY_CLOSE	')'
 
-class CSymbol : public CBase   
+class CSymbol : public CBase
 {
-    private:
+private:
 	int	iType;
 
-    public:
+public:
 	CSymbol();
 	virtual ~CSymbol();
 
@@ -36,4 +36,4 @@ class CSymbol : public CBase
 	bool		Less(CSymbol dif);
 };
 
-#endif 
+#endif

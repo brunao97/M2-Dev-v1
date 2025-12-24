@@ -10,8 +10,6 @@ struct SLightData
 	D3DLIGHT9 m_akD3DLight[8];
 } m_kLightData;
 
-
-
 void CStateManager::SetLight(DWORD index, CONST D3DLIGHT9* pLight)
 {
 	assert(index < 8);
@@ -51,7 +49,10 @@ bool CStateManager::BeginScene()
 	SetTransform(D3DTS_VIEW, &m4View);
 
 	if (FAILED(m_lpD3DDev->BeginScene()))
+	{
 		return false;
+	}
+
 	return true;
 }
 
@@ -68,7 +69,9 @@ CStateManager::CStateManager(LPDIRECT3DDEVICE9EX lpDevice) : m_lpD3DDev(NULL)
 	m_dwBestMagFilter = D3DTEXF_ANISOTROPIC;
 
 	for (int i = 0; i < STATEMANAGER_MAX_RENDERSTATES; i++)
+	{
 		lpDevice->GetRenderState((D3DRENDERSTATETYPE)i, &gs_DefaultRenderStates[i]);
+	}
 
 	SetDevice(lpDevice);
 
@@ -144,24 +147,36 @@ void CStateManager::SetDefaultState()
 	m_CurrentState_Copy.ResetState();
 
 	for (auto& stack : m_RenderStateStack)
+	{
 		stack.clear();
+	}
 
 	for (auto& stageStacks : m_SamplerStateStack)
 		for (auto& stack : stageStacks)
+		{
 			stack.clear();
+		}
 
 	for (auto& stageStacks : m_TextureStageStateStack)
 		for (auto& stack : stageStacks)
+		{
 			stack.clear();
+		}
 
 	for (auto& stack : m_TransformStack)
+	{
 		stack.clear();
+	}
 
 	for (auto& stack : m_TextureStack)
+	{
 		stack.clear();
+	}
 
 	for (auto& stack : m_StreamStack)
+	{
 		stack.clear();
+	}
 
 	m_MaterialStack.clear();
 	m_FVFStack.clear();
@@ -466,11 +481,13 @@ void CStateManager::SaveRenderState(D3DRENDERSTATETYPE Type, DWORD dwValue)
 void CStateManager::RestoreRenderState(D3DRENDERSTATETYPE Type)
 {
 #ifdef _DEBUG
+
 	if (m_RenderStateStack[Type].empty())
 	{
 		Tracef(" CStateManager::SaveRenderState - This render state was not saved [%d, %d]\n", Type);
 		StateManager_Assert(!" This render state was not saved!");
 	}
+
 #endif _DEBUG
 
 	SetRenderState(Type, m_RenderStateStack[Type].back());
@@ -480,7 +497,9 @@ void CStateManager::RestoreRenderState(D3DRENDERSTATETYPE Type)
 void CStateManager::SetRenderState(D3DRENDERSTATETYPE Type, DWORD Value)
 {
 	if (m_CurrentState.m_RenderStates[Type] == Value)
+	{
 		return;
+	}
 
 	m_lpD3DDev->SetRenderState(Type, Value);
 	m_CurrentState.m_RenderStates[Type] = Value;
@@ -507,7 +526,9 @@ void CStateManager::RestoreTexture(DWORD dwStage)
 void CStateManager::SetTexture(DWORD dwStage, LPDIRECT3DBASETEXTURE9 pTexture)
 {
 	if (pTexture == m_CurrentState.m_Textures[dwStage])
+	{
 		return;
+	}
 
 	m_lpD3DDev->SetTexture(dwStage, pTexture);
 	m_CurrentState.m_Textures[dwStage] = pTexture;
@@ -528,11 +549,13 @@ void CStateManager::SaveTextureStageState(DWORD dwStage, D3DTEXTURESTAGESTATETYP
 void CStateManager::RestoreTextureStageState(DWORD dwStage, D3DTEXTURESTAGESTATETYPE Type)
 {
 #ifdef _DEBUG
+
 	if (m_TextureStageStateStack[dwStage][Type].empty())
 	{
 		Tracef(" CStateManager::RestoreTextureStageState - This texture stage state was not saved [%d, %d]\n", dwStage, Type);
 		StateManager_Assert(!" This texture stage state was not saved!");
 	}
+
 #endif _DEBUG
 	SetTextureStageState(dwStage, Type, m_TextureStageStateStack[dwStage][Type].back());
 	m_TextureStageStateStack[dwStage][Type].pop_back();
@@ -541,7 +564,9 @@ void CStateManager::RestoreTextureStageState(DWORD dwStage, D3DTEXTURESTAGESTATE
 void CStateManager::SetTextureStageState(DWORD dwStage, D3DTEXTURESTAGESTATETYPE Type, DWORD dwValue)
 {
 	if (m_CurrentState.m_TextureStates[dwStage][Type] == dwValue)
+	{
 		return;
+	}
 
 	m_lpD3DDev->SetTextureStageState(dwStage, Type, dwValue);
 	m_CurrentState.m_TextureStates[dwStage][Type] = dwValue;
@@ -558,25 +583,33 @@ void CStateManager::SaveSamplerState(DWORD dwStage, D3DSAMPLERSTATETYPE Type, DW
 	m_SamplerStateStack[dwStage][Type].push_back(m_CurrentState.m_SamplerStates[dwStage][Type]);
 	SetSamplerState(dwStage, Type, dwValue);
 }
+
 void CStateManager::RestoreSamplerState(DWORD dwStage, D3DSAMPLERSTATETYPE Type)
 {
 #ifdef _DEBUG
+
 	if (m_SamplerStateStack[dwStage][Type].empty())
 	{
 		Tracenf(" CStateManager::RestoreTextureStageState - This texture stage state was not saved [%d, %d]\n", dwStage, Type);
 		StateManager_Assert(!" This texture stage state was not saved!");
 	}
+
 #endif _DEBUG
 	SetSamplerState(dwStage, Type, m_SamplerStateStack[dwStage][Type].back());
 	m_SamplerStateStack[dwStage][Type].pop_back();
 }
+
 void CStateManager::SetSamplerState(DWORD dwStage, D3DSAMPLERSTATETYPE Type, DWORD dwValue)
 {
 	if (m_CurrentState.m_SamplerStates[dwStage][Type] == dwValue)
+	{
 		return;
+	}
+
 	m_lpD3DDev->SetSamplerState(dwStage, Type, dwValue);
 	m_CurrentState.m_SamplerStates[dwStage][Type] = dwValue;
 }
+
 void CStateManager::GetSamplerState(DWORD dwStage, D3DSAMPLERSTATETYPE Type, DWORD* pdwValue)
 {
 	*pdwValue = m_CurrentState.m_SamplerStates[dwStage][Type];
@@ -598,7 +631,9 @@ void CStateManager::RestoreVertexShader()
 void CStateManager::SetVertexShader(LPDIRECT3DVERTEXSHADER9 dwShader)
 {
 	if (m_CurrentState.m_dwVertexShader == dwShader)
+	{
 		return;
+	}
 
 	m_lpD3DDev->SetVertexShader(dwShader);
 	m_CurrentState.m_dwVertexShader = dwShader;
@@ -616,42 +651,50 @@ void CStateManager::SaveVertexProcessing(BOOL IsON)
 	m_lpD3DDev->SetSoftwareVertexProcessing(IsON);
 	m_CurrentState.m_bVertexProcessing = IsON;
 }
+
 void CStateManager::RestoreVertexProcessing()
 {
 	m_lpD3DDev->SetSoftwareVertexProcessing(m_VertexProcessingStack.back());
 	m_VertexProcessingStack.pop_back();
 }
+
 // Vertex Declaration
 void CStateManager::SaveVertexDeclaration(LPDIRECT3DVERTEXDECLARATION9 dwShader)
 {
 	m_VertexDeclarationStack.push_back(m_CurrentState.m_dwVertexDeclaration);
 	SetVertexDeclaration(dwShader);
 }
+
 void CStateManager::RestoreVertexDeclaration()
 {
 	SetVertexDeclaration(m_VertexDeclarationStack.back());
 	m_VertexDeclarationStack.pop_back();
 }
+
 void CStateManager::SetVertexDeclaration(LPDIRECT3DVERTEXDECLARATION9 dwShader)
 {
 	m_lpD3DDev->SetVertexDeclaration(dwShader);
 	m_CurrentState.m_dwVertexDeclaration = dwShader;
 }
+
 void CStateManager::GetVertexDeclaration(LPDIRECT3DVERTEXDECLARATION9* pdwShader)
 {
 	*pdwShader = m_CurrentState.m_dwVertexDeclaration;
 }
+
 // FVF
 void CStateManager::SaveFVF(DWORD dwShader)
 {
 	m_FVFStack.push_back(m_CurrentState.m_dwFVF);
 	SetFVF(dwShader);
 }
+
 void CStateManager::RestoreFVF()
 {
 	SetFVF(m_FVFStack.back());
 	m_FVFStack.pop_back();
 }
+
 void CStateManager::SetFVF(DWORD dwShader)
 {
 	//if (m_CurrentState.m_dwFVF == dwShader)
@@ -659,6 +702,7 @@ void CStateManager::SetFVF(DWORD dwShader)
 	m_lpD3DDev->SetFVF(dwShader);
 	m_CurrentState.m_dwFVF = dwShader;
 }
+
 void CStateManager::GetFVF(DWORD* pdwShader)
 {
 	*pdwShader = m_CurrentState.m_dwFVF;
@@ -680,7 +724,9 @@ void CStateManager::RestorePixelShader()
 void CStateManager::SetPixelShader(LPDIRECT3DPIXELSHADER9 dwShader)
 {
 	if (m_CurrentState.m_dwPixelShader == dwShader)
+	{
 		return;
+	}
 
 	m_lpD3DDev->SetPixelShader(dwShader);
 	m_CurrentState.m_dwPixelShader = dwShader;
@@ -702,11 +748,13 @@ void CStateManager::SaveTransform(D3DTRANSFORMSTATETYPE Type, const D3DXMATRIX* 
 void CStateManager::RestoreTransform(D3DTRANSFORMSTATETYPE Type)
 {
 #ifdef _DEBUG
+
 	if (m_TransformStack[Type].empty())
 	{
 		Tracef(" CStateManager::RestoreTransform - This transform was not saved [%d]\n", Type);
 		StateManager_Assert(!" This render state was not saved!");
 	}
+
 #endif _DEBUG
 
 	SetTransform(Type, &m_TransformStack[Type].back());
@@ -719,9 +767,14 @@ void CStateManager::SetTransform(D3DTRANSFORMSTATETYPE Type, const D3DXMATRIX* p
 	m_CurrentState.m_Matrices[Type] = *pMatrix;
 
 	if (m_bScene)
+	{
 		m_lpD3DDev->SetTransform(Type, &m_CurrentState.m_Matrices[Type]);
+	}
+
 	else
+	{
 		assert(D3DTS_VIEW == Type || D3DTS_PROJECTION == Type || D3DTS_WORLD == Type);
+	}
 }
 
 void CStateManager::GetTransform(D3DTRANSFORMSTATETYPE Type, D3DXMATRIX* pMatrix)
@@ -757,8 +810,11 @@ void CStateManager::RestoreStreamSource(UINT StreamNumber)
 void CStateManager::SetStreamSource(UINT StreamNumber, LPDIRECT3DVERTEXBUFFER9 pStreamData, UINT Stride)
 {
 	CStreamData kStreamData(pStreamData, Stride);
+
 	if (m_CurrentState.m_StreamData[StreamNumber] == kStreamData)
+	{
 		return;
+	}
 
 	m_lpD3DDev->SetStreamSource(StreamNumber, pStreamData, 0, Stride);
 	m_CurrentState.m_StreamData[StreamNumber] = kStreamData;
@@ -782,7 +838,9 @@ void CStateManager::SetIndices(LPDIRECT3DINDEXBUFFER9 pIndexData, UINT BaseVerte
 	CIndexData kIndexData(pIndexData, BaseVertexIndex);
 
 	if (m_CurrentState.m_IndexData == kIndexData)
+	{
 		return;
+	}
 
 	m_lpD3DDev->SetIndices(pIndexData);
 	m_CurrentState.m_IndexData = kIndexData;
@@ -847,4 +905,5 @@ int CStateManager::GetDrawCallCount() const
 {
 	return m_iLastDrawCallCount;
 }
+
 #endif

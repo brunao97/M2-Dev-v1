@@ -12,146 +12,147 @@
 
 class CEffectMesh : public CResource
 {
-	public:
-		typedef struct SEffectFrameData
-		{
-			BYTE byChangedFrame;
-			float fVisibility;
-			DWORD dwVertexCount;
-			DWORD dwTextureVertexCount;
-			DWORD dwIndexCount;
-			std::vector<TPTVertex> PDTVertexVector;
-		} TEffectFrameData;
+public:
+	typedef struct SEffectFrameData
+	{
+		BYTE byChangedFrame;
+		float fVisibility;
+		DWORD dwVertexCount;
+		DWORD dwTextureVertexCount;
+		DWORD dwIndexCount;
+		std::vector<TPTVertex> PDTVertexVector;
+	} TEffectFrameData;
 
-		typedef struct SEffectMeshData
-		{
-			char szObjectName[32];
-			char szDiffuseMapFileName[128];
+	typedef struct SEffectMeshData
+	{
+		char szObjectName[32];
+		char szDiffuseMapFileName[128];
 
-			std::vector<TEffectFrameData> EffectFrameDataVector;
-			std::vector<CGraphicImage*> pImageVector;
+		std::vector<TEffectFrameData> EffectFrameDataVector;
+		std::vector<CGraphicImage*> pImageVector;
 
-			static SEffectMeshData* New();
-			static void Delete(SEffectMeshData* pkData);
-			
-			static void DestroySystem();
+		static SEffectMeshData* New();
+		static void Delete(SEffectMeshData* pkData);
 
-			static CDynamicPool<SEffectMeshData> ms_kPool;
-		} TEffectMeshData;
+		static void DestroySystem();
+
+		static CDynamicPool<SEffectMeshData> ms_kPool;
+	} TEffectMeshData;
 
 	// About Resource Code
-	public:
-		typedef CRef<CEffectMesh> TRef;
+public:
+	typedef CRef<CEffectMesh> TRef;
 
-	public:
-		static TType Type();
+public:
+	static TType Type();
 
-	public:
-		CEffectMesh(const char * c_szFileName);
-		virtual ~CEffectMesh();
+public:
+	CEffectMesh(const char* c_szFileName);
+	virtual ~CEffectMesh();
 
-		DWORD GetFrameCount();
-		DWORD GetMeshCount();
-		TEffectMeshData * GetMeshDataPointer(DWORD dwMeshIndex);
-		
-		std::vector<CGraphicImage*>* GetTextureVectorPointer(DWORD dwMeshIndex);
-		std::vector<CGraphicImage*>& GetTextureVectorReference(DWORD dwMeshIndex);
+	DWORD GetFrameCount();
+	DWORD GetMeshCount();
+	TEffectMeshData* GetMeshDataPointer(DWORD dwMeshIndex);
 
-		// Exceptional function for tool
-		BOOL GetMeshElementPointer(DWORD dwMeshIndex, TEffectMeshData ** ppMeshData);
+	std::vector<CGraphicImage*>* GetTextureVectorPointer(DWORD dwMeshIndex);
+	std::vector<CGraphicImage*>& GetTextureVectorReference(DWORD dwMeshIndex);
 
-	protected:
-		bool OnLoad(int iSize, const void * c_pvBuf);
+	// Exceptional function for tool
+	BOOL GetMeshElementPointer(DWORD dwMeshIndex, TEffectMeshData** ppMeshData);
 
-		void OnClear();	
-		bool OnIsEmpty() const;
-		bool OnIsType(TType type);		
+protected:
+	bool OnLoad(int iSize, const void* c_pvBuf);
 
-		BOOL __LoadData_Ver001(int iSize, const BYTE * c_pbBuf);
-		BOOL __LoadData_Ver002(int iSize, const BYTE * c_pbBuf);
+	void OnClear();
+	bool OnIsEmpty() const;
+	bool OnIsType(TType type);
 
-	protected:
-		int								m_iGeomCount;
-		int								m_iFrameCount;
-		std::vector<TEffectMeshData *>	m_pEffectMeshDataVector;
+	BOOL __LoadData_Ver001(int iSize, const BYTE* c_pbBuf);
+	BOOL __LoadData_Ver002(int iSize, const BYTE* c_pbBuf);
 
-		bool							m_isData;		
+protected:
+	int								m_iGeomCount;
+	int								m_iFrameCount;
+	std::vector<TEffectMeshData*>	m_pEffectMeshDataVector;
+
+	bool							m_isData;
 };
 
 class CEffectMeshScript : public CEffectElementBase
 {
-	public:
-		typedef struct SMeshData
+public:
+	typedef struct SMeshData
+	{
+		BYTE byBillboardType;
+
+		BOOL bBlendingEnable;
+		BYTE byBlendingSrcType;
+		BYTE byBlendingDestType;
+		BOOL bTextureAlphaEnable;
+
+		BYTE byColorOperationType;
+		D3DXCOLOR ColorFactor;
+
+		BOOL bTextureAnimationLoopEnable;
+		float fTextureAnimationFrameDelay;
+
+		DWORD dwTextureAnimationStartFrame;
+
+		TTimeEventTableFloat TimeEventAlpha;
+
+		SMeshData()
 		{
-			BYTE byBillboardType;
+			TimeEventAlpha.clear();
+		}
+	} TMeshData;
 
-			BOOL bBlendingEnable;
-			BYTE byBlendingSrcType;
-			BYTE byBlendingDestType;
-			BOOL bTextureAlphaEnable;
+	typedef std::vector<TMeshData> TMeshDataVector;
 
-			BYTE byColorOperationType;
-			D3DXCOLOR ColorFactor;
+public:
+	CEffectMeshScript();
+	virtual ~CEffectMeshScript();
 
-			BOOL bTextureAnimationLoopEnable;
-			float fTextureAnimationFrameDelay;
+	const char* GetMeshFileName();
 
-			DWORD dwTextureAnimationStartFrame;
-			
-			TTimeEventTableFloat TimeEventAlpha;
-			
-			SMeshData()
-			{
-				TimeEventAlpha.clear();
-			}
-		} TMeshData;
-		typedef std::vector<TMeshData> TMeshDataVector;
+	void ReserveMeshData(DWORD dwMeshCount);
+	bool CheckMeshIndex(DWORD dwMeshIndex);
+	bool GetMeshDataPointer(DWORD dwMeshIndex, TMeshData** ppMeshData);
+	int GetMeshDataCount();
 
-	public:
-		CEffectMeshScript();
-		virtual ~CEffectMeshScript();
+	int GetBillboardType(DWORD dwMeshIndex);
+	BOOL isBlendingEnable(DWORD dwMeshIndex);
+	BYTE GetBlendingSrcType(DWORD dwMeshIndex);
+	BYTE GetBlendingDestType(DWORD dwMeshIndex);
+	BOOL isTextureAlphaEnable(DWORD dwMeshIndex);
+	BOOL GetColorOperationType(DWORD dwMeshIndex, BYTE* pbyType);
+	BOOL GetColorFactor(DWORD dwMeshIndex, D3DXCOLOR* pColor);
+	BOOL GetTimeTableAlphaPointer(DWORD dwMeshIndex, TTimeEventTableFloat** pTimeEventAlpha);
 
-		const char * GetMeshFileName();
+	BOOL isMeshAnimationLoop();
+	BOOL GetMeshAnimationLoopCount();
+	float GetMeshAnimationFrameDelay();
+	BOOL isTextureAnimationLoop(DWORD dwMeshIndex);
+	float GetTextureAnimationFrameDelay(DWORD dwMeshIndex);
+	DWORD GetTextureAnimationStartFrame(DWORD dwMeshIndex);
 
-		void ReserveMeshData(DWORD dwMeshCount);
-		bool CheckMeshIndex(DWORD dwMeshIndex);
-		bool GetMeshDataPointer(DWORD dwMeshIndex, TMeshData ** ppMeshData);
-		int GetMeshDataCount();
+protected:
+	void OnClear();
+	bool OnIsData();
+	BOOL OnLoadScript(CTextFileLoader& rTextFileLoader);
 
-		int GetBillboardType(DWORD dwMeshIndex);
-		BOOL isBlendingEnable(DWORD dwMeshIndex);
-		BYTE GetBlendingSrcType(DWORD dwMeshIndex);
-		BYTE GetBlendingDestType(DWORD dwMeshIndex);
-		BOOL isTextureAlphaEnable(DWORD dwMeshIndex);
-		BOOL GetColorOperationType(DWORD dwMeshIndex, BYTE * pbyType);
-		BOOL GetColorFactor(DWORD dwMeshIndex, D3DXCOLOR * pColor);
-		BOOL GetTimeTableAlphaPointer(DWORD dwMeshIndex, TTimeEventTableFloat ** pTimeEventAlpha);
+protected:
+	BOOL m_isMeshAnimationLoop;
+	int m_iMeshAnimationLoopCount;
+	float m_fMeshAnimationFrameDelay;
+	TMeshDataVector m_MeshDataVector;
 
-		BOOL isMeshAnimationLoop();
-		BOOL GetMeshAnimationLoopCount();
-		float GetMeshAnimationFrameDelay();
-		BOOL isTextureAnimationLoop(DWORD dwMeshIndex);
-		float GetTextureAnimationFrameDelay(DWORD dwMeshIndex);
-		DWORD GetTextureAnimationStartFrame(DWORD dwMeshIndex);
+	std::string m_strMeshFileName;
 
-	protected:
-		void OnClear();
-		bool OnIsData();
-		BOOL OnLoadScript(CTextFileLoader & rTextFileLoader);
+public:
+	static void DestroySystem();
 
-	protected:
-		BOOL m_isMeshAnimationLoop;
-		int m_iMeshAnimationLoopCount;
-		float m_fMeshAnimationFrameDelay;
-		TMeshDataVector m_MeshDataVector;
+	static CEffectMeshScript* New();
+	static void Delete(CEffectMeshScript* pkData);
 
-		std::string m_strMeshFileName;
-
-	public:
-		static void DestroySystem();
-
-		static CEffectMeshScript* New();
-		static void Delete(CEffectMeshScript* pkData);
-
-		static CDynamicPool<CEffectMeshScript> ms_kPool;	
+	static CDynamicPool<CEffectMeshScript> ms_kPool;
 };

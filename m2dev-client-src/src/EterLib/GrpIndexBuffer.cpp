@@ -15,16 +15,19 @@ void CGraphicIndexBuffer::SetIndices(int startIndex) const
 	STATEMANAGER.SetIndices(m_lpd3dIdxBuf, startIndex);
 }
 
-
 bool CGraphicIndexBuffer::Lock(void** pretIndices) const
 {
 	assert(m_lpd3dIdxBuf != NULL);
 
 	if (!m_lpd3dIdxBuf)
+	{
 		return false;
+	}
 
 	if (FAILED(m_lpd3dIdxBuf->Lock(0, 0, pretIndices, 0)))
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -34,7 +37,9 @@ void CGraphicIndexBuffer::Unlock() const
 	assert(m_lpd3dIdxBuf != NULL);
 
 	if (!m_lpd3dIdxBuf)
+	{
 		return;
+	}
 
 	m_lpd3dIdxBuf->Unlock();
 }
@@ -44,10 +49,14 @@ bool CGraphicIndexBuffer::Lock(void** pretIndices)
 	assert(m_lpd3dIdxBuf != NULL);
 
 	if (!m_lpd3dIdxBuf)
+	{
 		return false;
+	}
 
 	if (FAILED(m_lpd3dIdxBuf->Lock(0, 0, pretIndices, 0)))
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -57,7 +66,9 @@ void CGraphicIndexBuffer::Unlock()
 	assert(m_lpd3dIdxBuf != NULL);
 
 	if (!m_lpd3dIdxBuf)
+	{
 		return;
+	}
 
 	m_lpd3dIdxBuf->Unlock();
 }
@@ -67,8 +78,11 @@ bool CGraphicIndexBuffer::Copy(int bufSize, const void* srcIndices)
 	assert(m_lpd3dIdxBuf != NULL);
 
 	BYTE* dstIndices;
+
 	if (FAILED(m_lpd3dIdxBuf->Lock(0, 0, (void**)&dstIndices, 0)))
+	{
 		return false;
+	}
 
 	memcpy(dstIndices, srcIndices, bufSize);
 
@@ -81,12 +95,18 @@ bool CGraphicIndexBuffer::Create(int faceCount, TFace* faces)
 {
 	int idxCount = faceCount * 3;
 	m_iidxCount = idxCount;
+
 	if (!Create(idxCount, D3DFMT_INDEX16))
+	{
 		return false;
+	}
 
 	WORD* dstIndices;
+
 	if (FAILED(m_lpd3dIdxBuf->Lock(0, 0, (void**)&dstIndices, 0)))
+	{
 		return false;
+	}
 
 	for (int i = 0; i < faceCount; ++i, dstIndices += 3)
 	{
@@ -110,7 +130,9 @@ bool CGraphicIndexBuffer::CreateDeviceObjects()
 		&m_lpd3dIdxBuf,
 		NULL)
 	))
+	{
 		return false;
+	}
 
 	return true;
 }

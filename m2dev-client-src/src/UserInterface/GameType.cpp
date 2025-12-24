@@ -22,17 +22,23 @@ void DefaultFont_Startup()
 void DefaultFont_Cleanup()
 {
 	if (gs_pkDefaultFont)
+	{
 		gs_pkDefaultFont->Release();
+	}
 }
 
-void DefaultFont_SetName(const char * c_szFontName)
+void DefaultFont_SetName(const char* c_szFontName)
 {
 	gs_strDefaultFontName = c_szFontName;
 	gs_strDefaultFontName += ".fnt";
 
 	gs_strDefaultItalicFontName = c_szFontName;
-	if(strchr(c_szFontName, ':'))
+
+	if (strchr(c_szFontName, ':'))
+	{
 		gs_strDefaultItalicFontName += "i";
+	}
+
 	gs_strDefaultItalicFontName += ".fnt";
 
 	gs_isReloadDefaultFont = true;
@@ -46,43 +52,57 @@ bool ReloadDefaultFonts()
 
 	CResource* pkNewFont = rkResMgr.GetResourcePointer(gs_strDefaultFontName.c_str());
 	pkNewFont->AddReference();
+
 	if (gs_pkDefaultFont)
+	{
 		gs_pkDefaultFont->Release();
+	}
+
 	gs_pkDefaultFont = pkNewFont;
 
 	CResource* pkNewItalicFont = rkResMgr.GetResourcePointer(gs_strDefaultItalicFontName.c_str());
 	pkNewItalicFont->AddReference();
+
 	if (gs_pkDefaultItalicFont)
+	{
 		gs_pkDefaultItalicFont->Release();
+	}
+
 	gs_pkDefaultItalicFont = pkNewItalicFont;
 
 	return true;
 }
 
 CResource* DefaultFont_GetResource()
-{	
+{
 	if (!gs_pkDefaultFont || gs_isReloadDefaultFont)
+	{
 		ReloadDefaultFonts();
+	}
+
 	return gs_pkDefaultFont;
 }
 
 CResource* DefaultItalicFont_GetResource()
-{	
+{
 	if (!gs_pkDefaultItalicFont || gs_isReloadDefaultFont)
+	{
 		ReloadDefaultFonts();
+	}
+
 	return gs_pkDefaultItalicFont;
 }
 
 // END_OF_DEFAULT_FONT
 
-void SetGuildSymbolPath(const char * c_szPathName)
+void SetGuildSymbolPath(const char* c_szPathName)
 {
 	g_strGuildSymbolPathName = "mark/";
 	g_strGuildSymbolPathName += c_szPathName;
 	g_strGuildSymbolPathName += "/";
 }
 
-const char * GetGuildSymbolFileName(DWORD dwGuildID)
+const char* GetGuildSymbolFileName(DWORD dwGuildID)
 {
 	return _getf("%s%03d.jpg", g_strGuildSymbolPathName.c_str(), dwGuildID);
 }
@@ -106,7 +126,12 @@ BYTE c_aSlotTypeToInvenType[SLOT_TYPE_MAX] =
 BYTE SlotTypeToInvenType(BYTE bSlotType)
 {
 	if (bSlotType >= SLOT_TYPE_MAX)
+	{
 		return RESERVED_WINDOW;
+	}
+
 	else
+	{
 		return c_aSlotTypeToInvenType[bSlotType];
+	}
 }

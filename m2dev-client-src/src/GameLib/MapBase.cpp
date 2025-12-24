@@ -31,13 +31,13 @@ bool CMapBase::Leave()
 	return true;
 }
 
-void CMapBase::SetEnvironmentDataPtr(const TEnvironmentData * c_pEnvironmentData)
+void CMapBase::SetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironmentData)
 {
 	mc_pEnvironmentData = c_pEnvironmentData;
 	OnSetEnvironmentDataPtr();
 }
 
-void CMapBase::ResetEnvironmentDataPtr(const TEnvironmentData * c_pEnvironmentData)
+void CMapBase::ResetEnvironmentDataPtr(const TEnvironmentData* c_pEnvironmentData)
 {
 	mc_pEnvironmentData = c_pEnvironmentData;
 	OnResetEnvironmentDataPtr();
@@ -46,7 +46,9 @@ void CMapBase::ResetEnvironmentDataPtr(const TEnvironmentData * c_pEnvironmentDa
 void CMapBase::Render()
 {
 	if (IsReady())
+	{
 		OnRender();
+	}
 }
 
 bool CMapBase::LoadProperty()
@@ -54,7 +56,7 @@ bool CMapBase::LoadProperty()
 	std::string strFileName = GetName() + "\\MapProperty.txt";
 
 	CTokenVectorMap stTokenVectorMap;
-	
+
 	if (!LoadMultipleTextData(strFileName.c_str(), stTokenVectorMap))
 	{
 		TraceError("CMapBase::LoadProperty(FileName=%s) - LoadMultipleTextData ERROR 파일이 없을 가능성이 많습니다.", strFileName.c_str());
@@ -81,9 +83,9 @@ bool CMapBase::LoadProperty()
 		m_strParentMapName = stTokenVectorMap["parentmapname"][0];
 	}
 
-	const std::string & c_rstrType = stTokenVectorMap["scripttype"][0];
-	const std::string & c_rstrMapType = stTokenVectorMap["maptype"][0];
-	
+	const std::string& c_rstrType = stTokenVectorMap["scripttype"][0];
+	const std::string& c_rstrMapType = stTokenVectorMap["maptype"][0];
+
 	if (0 != c_rstrType.compare("MapProperty"))
 	{
 		TraceError("CMapBase::LoadProperty(FileName=%s) - Resourse Type ERROR", strFileName.c_str());
@@ -91,11 +93,19 @@ bool CMapBase::LoadProperty()
 	}
 
 	if (0 == c_rstrMapType.compare("Indoor"))
+	{
 		SetType(MAPTYPE_INDOOR);
+	}
+
 	else if (0 == c_rstrMapType.compare("Outdoor"))
+	{
 		SetType(MAPTYPE_OUTDOOR);
+	}
+
 	else if (0 == c_rstrMapType.compare("Invalid"))
+	{
 		SetType(MAPTYPE_OUTDOOR);
+	}
 
 	return true;
 }

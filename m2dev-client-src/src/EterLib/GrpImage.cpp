@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 #include "GrpImage.h"
 
-CGraphicImage::CGraphicImage(const char * c_szFileName, DWORD dwFilter) : 
-CResource(c_szFileName),
-m_dwFilter(dwFilter)
+CGraphicImage::CGraphicImage(const char* c_szFileName, DWORD dwFilter) :
+	CResource(c_szFileName),
+	m_dwFilter(dwFilter)
 {
 	m_rect.bottom = m_rect.right = m_rect.top = m_rect.left = 0;
 }
@@ -31,7 +31,9 @@ CGraphicImage::TType CGraphicImage::Type()
 bool CGraphicImage::OnIsType(TType type)
 {
 	if (CGraphicImage::Type() == type)
+	{
 		return true;
+	}
 
 	return CResource::OnIsType(type);
 }
@@ -61,16 +63,20 @@ const RECT& CGraphicImage::GetRectReference() const
 	return m_rect;
 }
 
-bool CGraphicImage::OnLoad(int iSize, const void * c_pvBuf)
+bool CGraphicImage::OnLoad(int iSize, const void* c_pvBuf)
 {
 	if (!c_pvBuf)
+	{
 		return false;
+	}
 
 	m_imageTexture.SetFileName(CResource::GetFileName());
 
 	// 특정 컴퓨터에서 Unknown으로 '안'하면 튕기는 현상이 있음-_-; -비엽
 	if (!m_imageTexture.CreateFromMemoryFile(iSize, c_pvBuf, D3DFMT_UNKNOWN, m_dwFilter))
+	{
 		return false;
+	}
 
 	m_rect.left = 0;
 	m_rect.top = 0;
@@ -81,7 +87,7 @@ bool CGraphicImage::OnLoad(int iSize, const void * c_pvBuf)
 
 void CGraphicImage::OnClear()
 {
-//	Tracef("Image Destroy : %s\n", m_pszFileName);
+	//	Tracef("Image Destroy : %s\n", m_pszFileName);
 	m_imageTexture.Destroy();
 	memset(&m_rect, 0, sizeof(m_rect));
 }

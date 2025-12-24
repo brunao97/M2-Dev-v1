@@ -10,16 +10,15 @@
 #define MID_SQRT		MID_NUMBER + 2
 #define MID_FRACTION		MID_NUMBER + 3
 
-class CBase  
+class CBase
 {
-    public:
+public:
 	bool isSymbol();
 	bool isVar();
 	bool isNumber();
 	int id;
 	CBase();
 	virtual ~CBase();
-
 };
 
 #endif

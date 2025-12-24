@@ -16,11 +16,11 @@ extern void Tracef(const char* c_szFormat, ...);
 extern void TraceError(const char* c_szFormat, ...);
 extern void TraceErrorWithoutEnter(const char* c_szFormat, ...);
 
-extern void LogBox(const char* c_szMsg, const char * c_szCaption = NULL, HWND hWnd = NULL);
+extern void LogBox(const char* c_szMsg, const char* c_szCaption = NULL, HWND hWnd = NULL);
 extern void LogBoxf(const char* c_szMsg, ...);
 
 extern void LogFile(const char* c_szMsg);
-extern void LogFilef(const char * c_szMessage, ...);
+extern void LogFilef(const char* c_szMessage, ...);
 extern void OpenConsoleWindow(void);
 extern void CloseConsoleWindow();
 extern void SetupLog(void);

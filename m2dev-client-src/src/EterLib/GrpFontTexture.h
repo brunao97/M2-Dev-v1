@@ -10,7 +10,7 @@
 class CGraphicFontTexture : public CGraphicTexture
 {
 public:
-	typedef std::pair<WORD,wchar_t> TCharacterKey;
+	typedef std::pair<WORD, wchar_t> TCharacterKey;
 
 	typedef struct SCharacterInfomation
 	{
@@ -53,12 +53,12 @@ protected:
 
 	HFONT GetFont(WORD codePage);
 
-protected:		
+protected:
 	typedef std::vector<CGraphicImageTexture*>				TGraphicImageTexturePointerVector;
 	typedef std::map<TCharacterKey, TCharacterInfomation>	TCharacterInfomationMap;
 	typedef std::map<WORD, HFONT>							TFontMap;
 
-protected:		
+protected:
 	CGraphicDib	m_dib;
 
 	HFONT	m_hFontOld;
@@ -72,7 +72,7 @@ protected:
 
 	int m_x;
 	int m_y;
-	int m_step;		
+	int m_step;
 	bool m_isDirty;
 
 	TCHAR	m_fontName[LF_FACESIZE];

@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForestDirectX8 Class
 //
 //	(c) 2003 IDV, Inc.
@@ -42,32 +42,34 @@
 #include "SpeedTreeConfig.h"
 #include "VertexShaders.h"
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForestDirectX8::CSpeedTreeForestDirectX8
 
-CSpeedTreeForestDirectX8::CSpeedTreeForestDirectX8()  : m_dwBranchVertexShader(nullptr), m_pLeafVertexShaderDecl(nullptr), m_pLeafVertexShader(nullptr)
+CSpeedTreeForestDirectX8::CSpeedTreeForestDirectX8() : m_dwBranchVertexShader(nullptr), m_pLeafVertexShaderDecl(nullptr), m_pLeafVertexShader(nullptr)
 {
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForestDirectX8::~CSpeedTreeForestDirectX8
 
 CSpeedTreeForestDirectX8::~CSpeedTreeForestDirectX8()
 {
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForestDirectX8::InitVertexShaders
 bool CSpeedTreeForestDirectX8::InitVertexShaders(void)
 {
 	// load the vertex shaders
 	if (!m_dwBranchVertexShader)
+	{
 		m_dwBranchVertexShader = LoadBranchShader(m_pDx);
+	}
 
 	if (!m_pLeafVertexShaderDecl || !m_pLeafVertexShader)
+	{
 		LoadLeafShader(m_pDx, m_pLeafVertexShaderDecl, m_pLeafVertexShader);
+	}
 
 	if (m_dwBranchVertexShader && m_pLeafVertexShaderDecl && m_pLeafVertexShader)
 	{
@@ -83,7 +85,9 @@ bool CSpeedTreeForestDirectX8::SetRenderingDevice(LPDIRECT3DDEVICE9 lpDevice)
 	m_pDx = lpDevice;
 
 	if (!InitVertexShaders())
+	{
 		return false;
+	}
 
 	const float c_afLightPosition[4] = { -0.707f, -0.300f, 0.707f, 0.0f };
 	const float	c_afLightAmbient[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
@@ -102,12 +106,12 @@ bool CSpeedTreeForestDirectX8::SetRenderingDevice(LPDIRECT3DDEVICE9 lpDevice)
 
 	CSpeedTreeRT::SetNumWindMatrices(c_nNumWindMatrices);
 
-	CSpeedTreeRT::SetLightAttributes(0, afLight1);	
+	CSpeedTreeRT::SetLightAttributes(0, afLight1);
 	CSpeedTreeRT::SetLightState(0, true);
 	return true;
 }
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForestDirectX8::UploadWindMatrix
 
 void CSpeedTreeForestDirectX8::UploadWindMatrix(UINT uiLocation, const float* pMatrix) const
@@ -117,7 +121,7 @@ void CSpeedTreeForestDirectX8::UploadWindMatrix(UINT uiLocation, const float* pM
 
 void CSpeedTreeForestDirectX8::UpdateCompundMatrix(const D3DXVECTOR3& c_rEyeVec, const D3DXMATRIX& c_rmatView, const D3DXMATRIX& c_rmatProj)
 {
-    // setup composite matrix for shader
+	// setup composite matrix for shader
 	D3DXMATRIX matBlend;
 	D3DXMatrixIdentity(&matBlend);
 
@@ -134,7 +138,7 @@ void CSpeedTreeForestDirectX8::UpdateCompundMatrix(const D3DXVECTOR3& c_rEyeVec,
 	STATEMANAGER.SetVertexShaderConstant(c_nVertexShader_CompoundMatrix, &matBlendShader, 4);
 }
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForestDirectX8::Render
 
 void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
@@ -142,10 +146,14 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 	UpdateSystem(CTimer::Instance().GetCurrentSecond());
 
 	if (m_pMainTreeMap.empty())
+	{
 		return;
+	}
 
 	if (!(ulRenderBitVector & Forest_RenderToShadow) && !(ulRenderBitVector & Forest_RenderToMiniMap))
+	{
 		UpdateCompundMatrix(CCameraManager::Instance().GetCurrentCamera()->GetEye(), ms_matView, ms_matProj);
+	}
 
 	DWORD dwLightState = STATEMANAGER.GetRenderState(D3DRS_LIGHTING);
 	DWORD dwColorVertexState = STATEMANAGER.GetRenderState(D3DRS_COLORVERTEX);
@@ -160,7 +168,7 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 
 	TTreeMap::iterator itor;
 	UINT uiCount;
-	
+
 	itor = m_pMainTreeMap.begin();
 
 	while (itor != m_pMainTreeMap.end())
@@ -169,30 +177,33 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 		auto ppInstances = pMainTree->GetInstances(uiCount);
 
 		for (auto it : ppInstances)
+		{
 			it->Advance();
+		}
 	}
 
-	STATEMANAGER.SetVertexShaderConstant(c_nVertexShader_Light,	m_afLighting, 3);
+	STATEMANAGER.SetVertexShaderConstant(c_nVertexShader_Light, m_afLighting, 3);
 	STATEMANAGER.SetVertexShaderConstant(c_nVertexShader_Fog, m_afFog, 1);
 
 	if (ulRenderBitVector & Forest_RenderToShadow)
 	{
 		//STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP,	D3DTOP_DISABLE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1,	D3DTA_TEXTURE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG2,	D3DTA_DIFFUSE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP,	D3DTOP_MODULATE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	}
+
 	else
 	{
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1,	D3DTA_TEXTURE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG2,	D3DTA_DIFFUSE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP,	D3DTOP_MODULATE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1,	D3DTA_TEXTURE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG2,	D3DTA_DIFFUSE);
-		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP,	D3DTOP_MODULATE);
-		STATEMANAGER.SetSamplerState(0, D3DSAMP_MINFILTER,	D3DTEXF_LINEAR);
-		STATEMANAGER.SetSamplerState(0, D3DSAMP_MAGFILTER,	D3DTEXF_LINEAR);
-		STATEMANAGER.SetSamplerState(0, D3DSAMP_MIPFILTER,	D3DTEXF_LINEAR);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+		STATEMANAGER.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+		STATEMANAGER.SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+		STATEMANAGER.SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+		STATEMANAGER.SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
 
 		STATEMANAGER.SetTextureStageState(1, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 		STATEMANAGER.SetTextureStageState(1, D3DTSS_COLORARG2, D3DTA_CURRENT);
@@ -209,9 +220,9 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 	// set up fog if it is enabled
 	if (STATEMANAGER.GetRenderState(D3DRS_FOGENABLE))
 	{
-		#ifdef WRAPPER_USE_GPU_WIND
-			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_NONE); // GPU needs to work on all cards
-		#endif
+#ifdef WRAPPER_USE_GPU_WIND
+		STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_NONE); // GPU needs to work on all cards
+#endif
 	}
 
 	// choose fixed function pipeline or custom shader for fronds and branches
@@ -226,12 +237,14 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 		{
 			auto pMainTree = (itor++)->second;
 			auto ppInstances = pMainTree->GetInstances(uiCount);
-			
+
 			pMainTree->SetupBranchForTreeType();
 
 			for (UINT i = 0; i < uiCount; ++i)
 				if (ppInstances[i]->isShow())
+				{
 					ppInstances[i]->RenderBranches();
+				}
 		}
 	}
 
@@ -253,7 +266,9 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 			for (auto it : ppInstances)
 			{
 				if (it->isShow())
+				{
 					it->RenderFronds();
+				}
 			}
 		}
 	}
@@ -266,9 +281,9 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 
 		if (STATEMANAGER.GetRenderState(D3DRS_FOGENABLE))
 		{
-			#if defined WRAPPER_USE_GPU_WIND || defined WRAPPER_USE_GPU_LEAF_PLACEMENT
-				STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_NONE);
-			#endif
+#if defined WRAPPER_USE_GPU_WIND || defined WRAPPER_USE_GPU_LEAF_PLACEMENT
+			STATEMANAGER.SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_NONE);
+#endif
 		}
 
 		if (ulRenderBitVector & Forest_RenderToShadow || ulRenderBitVector & Forest_RenderToMiniMap)
@@ -289,45 +304,54 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 			for (auto it : ppInstances)
 			{
 				if (it->isShow())
+				{
 					it->RenderLeaves();
+				}
 			}
 		}
 
 		while (itor != m_pMainTreeMap.end())
+		{
 			(itor++)->second->EndLeafForTreeType();
+		}
 
 		if (ulRenderBitVector & Forest_RenderToShadow || ulRenderBitVector & Forest_RenderToMiniMap)
 		{
 			STATEMANAGER.SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
 			STATEMANAGER.RestoreRenderState(D3DRS_ALPHAREF);
 		}
+
 		STATEMANAGER.RestoreVertexShader();
 	}
 
 	// render billboards
-	#ifndef WRAPPER_NO_BILLBOARD_MODE
-		if (ulRenderBitVector & Forest_RenderBillboards)
+#ifndef WRAPPER_NO_BILLBOARD_MODE
+
+	if (ulRenderBitVector & Forest_RenderBillboards)
+	{
+		STATEMANAGER.SetRenderState(D3DRS_LIGHTING, FALSE);
+		STATEMANAGER.SetRenderState(D3DRS_COLORVERTEX, FALSE);
+
+		itor = m_pMainTreeMap.begin();
+
+		while (itor != m_pMainTreeMap.end())
 		{
-			STATEMANAGER.SetRenderState(D3DRS_LIGHTING, FALSE);
-			STATEMANAGER.SetRenderState(D3DRS_COLORVERTEX, FALSE);
+			auto pMainTree = (itor++)->second;
+			auto ppInstances = pMainTree->GetInstances(uiCount);
 
-			itor = m_pMainTreeMap.begin();
+			pMainTree->SetupLeafForTreeType();
 
-			while (itor != m_pMainTreeMap.end())
+			for (auto it : ppInstances)
 			{
-				auto pMainTree = (itor++)->second;
-				auto ppInstances = pMainTree->GetInstances(uiCount);
-
-				pMainTree->SetupLeafForTreeType();
-
-				for (auto it : ppInstances)
+				if (it->isShow())
 				{
-					if (it->isShow())
-						it->RenderBillboards();
+					it->RenderBillboards();
 				}
 			}
 		}
-	#endif
+	}
+
+#endif
 
 	STATEMANAGER.SetRenderState(D3DRS_LIGHTING, dwLightState);
 	STATEMANAGER.SetRenderState(D3DRS_COLORVERTEX, dwColorVertexState);
@@ -345,4 +369,3 @@ void CSpeedTreeForestDirectX8::Render(unsigned long ulRenderBitVector)
 	STATEMANAGER.RestoreRenderState(D3DRS_ALPHAFUNC);
 	STATEMANAGER.RestoreRenderState(D3DRS_CULLMODE);
 }
-

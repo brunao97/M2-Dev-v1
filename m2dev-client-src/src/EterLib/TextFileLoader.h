@@ -7,125 +7,127 @@
 
 class CTextFileLoader
 {
-	public:
-		typedef struct SGroupNode
-		{
-			static DWORD GenNameKey(const char* c_szGroupName, UINT uGroupNameLen);
+public:
+	typedef struct SGroupNode
+	{
+		static DWORD GenNameKey(const char* c_szGroupName, UINT uGroupNameLen);
 
-			void SetGroupName(const std::string& c_rstGroupName);
-			bool IsGroupNameKey(DWORD dwGroupNameKey);
+		void SetGroupName(const std::string& c_rstGroupName);
+		bool IsGroupNameKey(DWORD dwGroupNameKey);
 
-			const std::string& GetGroupName();
+		const std::string& GetGroupName();
 
-			CTokenVector* GetTokenVector(const std::string& c_rstGroupName);
-			bool IsExistTokenVector(const std::string& c_rstGroupName);
-			void InsertTokenVector(const std::string& c_rstGroupName, const CTokenVector& c_rkVct_stToken);
+		CTokenVector* GetTokenVector(const std::string& c_rstGroupName);
+		bool IsExistTokenVector(const std::string& c_rstGroupName);
+		void InsertTokenVector(const std::string& c_rstGroupName, const CTokenVector& c_rkVct_stToken);
 
-			DWORD m_dwGroupNameKey;
-			std::string m_strGroupName;
+		DWORD m_dwGroupNameKey;
+		std::string m_strGroupName;
 
-			std::map<DWORD, CTokenVector> m_kMap_dwKey_kVct_stToken;
+		std::map<DWORD, CTokenVector> m_kMap_dwKey_kVct_stToken;
 
-			SGroupNode * pParentNode;
-			std::vector<SGroupNode*> ChildNodeVector;
+		SGroupNode* pParentNode;
+		std::vector<SGroupNode*> ChildNodeVector;
 
-			static SGroupNode* New();
-			static void Delete(SGroupNode* pkNode);
+		static SGroupNode* New();
+		static void Delete(SGroupNode* pkNode);
 
-			static void DestroySystem();
-			static CDynamicPool<SGroupNode>	ms_kPool;
-		} TGroupNode;
-
-		typedef std::vector<TGroupNode*> TGroupNodeVector;
-
-		class CGotoChild
-		{
-		public:
-			CGotoChild(CTextFileLoader * pOwner, const char * c_szKey) : m_pOwner(pOwner)
-			{
-				m_pOwner->SetChildNode(c_szKey);
-			}
-			CGotoChild(CTextFileLoader * pOwner, DWORD dwIndex) : m_pOwner(pOwner)
-			{
-				m_pOwner->SetChildNode(dwIndex);
-			}
-			~CGotoChild()
-			{
-				m_pOwner->SetParentNode();
-			}
-
-			CTextFileLoader * m_pOwner;
-		};
-
-	public:
 		static void DestroySystem();
+		static CDynamicPool<SGroupNode>	ms_kPool;
+	} TGroupNode;
 
-		static void SetCacheMode();
+	typedef std::vector<TGroupNode*> TGroupNodeVector;
 
-		static CTextFileLoader* Cache(const char* c_szFileName);
-
+	class CGotoChild
+	{
 	public:
-		CTextFileLoader();
-		virtual ~CTextFileLoader();
+		CGotoChild(CTextFileLoader* pOwner, const char* c_szKey) : m_pOwner(pOwner)
+		{
+			m_pOwner->SetChildNode(c_szKey);
+		}
 
-		void Destroy();
+		CGotoChild(CTextFileLoader* pOwner, DWORD dwIndex) : m_pOwner(pOwner)
+		{
+			m_pOwner->SetChildNode(dwIndex);
+		}
 
-		bool Load(const char * c_szFileName);
-		const char * GetFileName();
+		~CGotoChild()
+		{
+			m_pOwner->SetParentNode();
+		}
 
-		bool IsEmpty();
+		CTextFileLoader* m_pOwner;
+	};
 
-		void SetTop();
-		DWORD GetChildNodeCount();
-		BOOL SetChildNode(const char * c_szKey);
-		BOOL SetChildNode(const std::string & c_rstrKeyHead, DWORD dwIndex);
-		BOOL SetChildNode(DWORD dwIndex);
-		BOOL SetParentNode();
-		BOOL GetCurrentNodeName(std::string * pstrName);
+public:
+	static void DestroySystem();
 
-		BOOL IsToken(const std::string & c_rstrKey);
-		BOOL GetTokenVector(const std::string & c_rstrKey, CTokenVector ** ppTokenVector);
-		BOOL GetTokenBoolean(const std::string & c_rstrKey, BOOL * pData);
-		BOOL GetTokenByte(const std::string & c_rstrKey, BYTE * pData);
-		BOOL GetTokenWord(const std::string & c_rstrKey, WORD * pData);
-		BOOL GetTokenInteger(const std::string & c_rstrKey, int * pData);
-		BOOL GetTokenDoubleWord(const std::string & c_rstrKey, DWORD * pData);
-		BOOL GetTokenFloat(const std::string & c_rstrKey, float * pData);
-		BOOL GetTokenVector2(const std::string & c_rstrKey, D3DXVECTOR2 * pVector2);
-		BOOL GetTokenVector3(const std::string & c_rstrKey, D3DXVECTOR3 * pVector3);
-		BOOL GetTokenVector4(const std::string & c_rstrKey, D3DXVECTOR4 * pVector4);
+	static void SetCacheMode();
 
-		BOOL GetTokenPosition(const std::string & c_rstrKey, D3DXVECTOR3 * pVector);
-		BOOL GetTokenQuaternion(const std::string & c_rstrKey, D3DXQUATERNION * pQ);
-		BOOL GetTokenDirection(const std::string & c_rstrKey, D3DVECTOR * pVector);
-		BOOL GetTokenColor(const std::string & c_rstrKey, D3DXCOLOR * pColor);
-		BOOL GetTokenColor(const std::string & c_rstrKey, D3DCOLORVALUE * pColor);
-		BOOL GetTokenString(const std::string & c_rstrKey, std::string * pString);
+	static CTextFileLoader* Cache(const char* c_szFileName);
 
-	protected:
-		void __DestroyGroupNodeVector();
+public:
+	CTextFileLoader();
+	virtual ~CTextFileLoader();
 
-		bool LoadGroup(TGroupNode * pGroupNode);
+	void Destroy();
 
-	protected:
-		std::string					m_strFileName;
+	bool Load(const char* c_szFileName);
+	const char* GetFileName();
 
-		char*						m_acBufData;
-		DWORD						m_dwBufSize;
-		DWORD						m_dwBufCapacity;
+	bool IsEmpty();
 
-		DWORD						m_dwcurLineIndex;
+	void SetTop();
+	DWORD GetChildNodeCount();
+	BOOL SetChildNode(const char* c_szKey);
+	BOOL SetChildNode(const std::string& c_rstrKeyHead, DWORD dwIndex);
+	BOOL SetChildNode(DWORD dwIndex);
+	BOOL SetParentNode();
+	BOOL GetCurrentNodeName(std::string* pstrName);
 
-		CMemoryTextFileLoader		m_textFileLoader;
+	BOOL IsToken(const std::string& c_rstrKey);
+	BOOL GetTokenVector(const std::string& c_rstrKey, CTokenVector** ppTokenVector);
+	BOOL GetTokenBoolean(const std::string& c_rstrKey, BOOL* pData);
+	BOOL GetTokenByte(const std::string& c_rstrKey, BYTE* pData);
+	BOOL GetTokenWord(const std::string& c_rstrKey, WORD* pData);
+	BOOL GetTokenInteger(const std::string& c_rstrKey, int* pData);
+	BOOL GetTokenDoubleWord(const std::string& c_rstrKey, DWORD* pData);
+	BOOL GetTokenFloat(const std::string& c_rstrKey, float* pData);
+	BOOL GetTokenVector2(const std::string& c_rstrKey, D3DXVECTOR2* pVector2);
+	BOOL GetTokenVector3(const std::string& c_rstrKey, D3DXVECTOR3* pVector3);
+	BOOL GetTokenVector4(const std::string& c_rstrKey, D3DXVECTOR4* pVector4);
 
-		TGroupNode					m_GlobalNode;
-		TGroupNode *				m_pcurNode;
+	BOOL GetTokenPosition(const std::string& c_rstrKey, D3DXVECTOR3* pVector);
+	BOOL GetTokenQuaternion(const std::string& c_rstrKey, D3DXQUATERNION* pQ);
+	BOOL GetTokenDirection(const std::string& c_rstrKey, D3DVECTOR* pVector);
+	BOOL GetTokenColor(const std::string& c_rstrKey, D3DXCOLOR* pColor);
+	BOOL GetTokenColor(const std::string& c_rstrKey, D3DCOLORVALUE* pColor);
+	BOOL GetTokenString(const std::string& c_rstrKey, std::string* pString);
 
-		std::vector<SGroupNode*>	m_kVct_pkNode;
+protected:
+	void __DestroyGroupNodeVector();
 
-	protected:
-		static std::map<DWORD, CTextFileLoader*> ms_kMap_dwNameKey_pkTextFileLoader;
-		static bool ms_isCacheMode;
+	bool LoadGroup(TGroupNode* pGroupNode);
+
+protected:
+	std::string					m_strFileName;
+
+	char* m_acBufData;
+	DWORD						m_dwBufSize;
+	DWORD						m_dwBufCapacity;
+
+	DWORD						m_dwcurLineIndex;
+
+	CMemoryTextFileLoader		m_textFileLoader;
+
+	TGroupNode					m_GlobalNode;
+	TGroupNode* m_pcurNode;
+
+	std::vector<SGroupNode*>	m_kVct_pkNode;
+
+protected:
+	static std::map<DWORD, CTextFileLoader*> ms_kMap_dwNameKey_pkTextFileLoader;
+	static bool ms_isCacheMode;
 };
 
 #endif

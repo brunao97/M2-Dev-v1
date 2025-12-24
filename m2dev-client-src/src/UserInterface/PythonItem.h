@@ -10,127 +10,128 @@ class CItemData;
 
 class CPythonItem : public CSingleton<CPythonItem>
 {
-	public:
-		enum
-		{
-			INVALID_ID = 0xffffffff,
-		};
+public:
+	enum
+	{
+		INVALID_ID = 0xffffffff,
+	};
 
-		enum
-		{
-			VNUM_MONEY = 1,
-		};
+	enum
+	{
+		VNUM_MONEY = 1,
+	};
 
-		enum
-		{
-			USESOUND_NONE,
-			USESOUND_DEFAULT,
-			USESOUND_ARMOR,
-			USESOUND_WEAPON,
-			USESOUND_BOW,
-			USESOUND_ACCESSORY,
-			USESOUND_POTION,
-			USESOUND_PORTAL,
-			USESOUND_NUM,
-		};
+	enum
+	{
+		USESOUND_NONE,
+		USESOUND_DEFAULT,
+		USESOUND_ARMOR,
+		USESOUND_WEAPON,
+		USESOUND_BOW,
+		USESOUND_ACCESSORY,
+		USESOUND_POTION,
+		USESOUND_PORTAL,
+		USESOUND_NUM,
+	};
 
-		enum
-		{
-			DROPSOUND_DEFAULT,
-			DROPSOUND_ARMOR,
-			DROPSOUND_WEAPON,
-			DROPSOUND_BOW,
-			DROPSOUND_ACCESSORY,
-			DROPSOUND_NUM
-		};
+	enum
+	{
+		DROPSOUND_DEFAULT,
+		DROPSOUND_ARMOR,
+		DROPSOUND_WEAPON,
+		DROPSOUND_BOW,
+		DROPSOUND_ACCESSORY,
+		DROPSOUND_NUM
+	};
 
-		typedef struct SGroundItemInstance
-		{
-			DWORD					dwVirtualNumber;
-			D3DXVECTOR3				v3EndPosition;
+	typedef struct SGroundItemInstance
+	{
+		DWORD					dwVirtualNumber;
+		D3DXVECTOR3				v3EndPosition;
 
-			D3DXVECTOR3				v3RotationAxis;
-			D3DXQUATERNION			qEnd;
-			D3DXVECTOR3				v3Center;
-			CGraphicThingInstance	ThingInstance;
-			DWORD					dwStartTime;
-			DWORD					dwEndTime;
+		D3DXVECTOR3				v3RotationAxis;
+		D3DXQUATERNION			qEnd;
+		D3DXVECTOR3				v3Center;
+		CGraphicThingInstance	ThingInstance;
+		DWORD					dwStartTime;
+		DWORD					dwEndTime;
 
-			DWORD					eDropSoundType;
+		DWORD					eDropSoundType;
 
-			bool					bAnimEnded;
-			bool Update();
-			void Clear();
+		bool					bAnimEnded;
+		bool Update();
+		void Clear();
 
-			DWORD					dwEffectInstanceIndex;
-			std::string				stOwnership;
+		DWORD					dwEffectInstanceIndex;
+		std::string				stOwnership;
 
-			static void	__PlayDropSound(DWORD eItemType, const D3DXVECTOR3& c_rv3Pos);
-			static std::string		ms_astDropSoundFileName[DROPSOUND_NUM];
+		static void	__PlayDropSound(DWORD eItemType, const D3DXVECTOR3& c_rv3Pos);
+		static std::string		ms_astDropSoundFileName[DROPSOUND_NUM];
 
-			SGroundItemInstance() {}
-			virtual ~SGroundItemInstance() {}
-		} TGroundItemInstance;
+		SGroundItemInstance() {}
 
-		typedef std::map<DWORD, TGroundItemInstance *>	TGroundItemInstanceMap;
+		virtual ~SGroundItemInstance() {}
+	} TGroundItemInstance;
 
-	public:
-		CPythonItem(void);
-		virtual ~CPythonItem(void);
+	typedef std::map<DWORD, TGroundItemInstance*>	TGroundItemInstanceMap;
 
-		// Initialize
-		void	Destroy();
-		void	Create();
+public:
+	CPythonItem(void);
+	virtual ~CPythonItem(void);
 
-		void	PlayUseSound(DWORD dwItemID);
-		void	PlayDropSound(DWORD dwItemID);
-		void	PlayUsePotionSound();
+	// Initialize
+	void	Destroy();
+	void	Create();
 
-		void	SetUseSoundFileName(DWORD eItemType, const std::string& c_rstFileName);
-		void	SetDropSoundFileName(DWORD eItemType, const std::string& c_rstFileName);
+	void	PlayUseSound(DWORD dwItemID);
+	void	PlayDropSound(DWORD dwItemID);
+	void	PlayUsePotionSound();
 
-		void	GetInfo(std::string* pstInfo);
+	void	SetUseSoundFileName(DWORD eItemType, const std::string& c_rstFileName);
+	void	SetDropSoundFileName(DWORD eItemType, const std::string& c_rstFileName);
 
-		void	DeleteAllItems();
+	void	GetInfo(std::string* pstInfo);
 
-		void	Render();
-		void	Update(const POINT& c_rkPtMouse);
+	void	DeleteAllItems();
 
-		void	CreateItem(DWORD dwVirtualID, DWORD dwVirtualNumber, float x, float y, float z, bool bDrop=true);
-		void	DeleteItem(DWORD dwVirtualID);		
-		void	SetOwnership(DWORD dwVID, const char * c_pszName);
-		bool	GetOwnership(DWORD dwVID, const char ** c_pszName);
+	void	Render();
+	void	Update(const POINT& c_rkPtMouse);
 
-		BOOL	GetGroundItemPosition(DWORD dwVirtualID, TPixelPosition * pPosition);
+	void	CreateItem(DWORD dwVirtualID, DWORD dwVirtualNumber, float x, float y, float z, bool bDrop = true);
+	void	DeleteItem(DWORD dwVirtualID);
+	void	SetOwnership(DWORD dwVID, const char* c_pszName);
+	bool	GetOwnership(DWORD dwVID, const char** c_pszName);
 
-		bool	GetPickedItemID(DWORD* pdwPickedItemID);
+	BOOL	GetGroundItemPosition(DWORD dwVirtualID, TPixelPosition* pPosition);
 
-		bool	GetCloseItem(const TPixelPosition & c_rPixelPosition, DWORD* pdwItemID, DWORD dwDistance=300);
-		bool	GetCloseMoney(const TPixelPosition & c_rPixelPosition, DWORD* dwItemID, DWORD dwDistance=300);
+	bool	GetPickedItemID(DWORD* pdwPickedItemID);
 
-		DWORD	GetVirtualNumberOfGroundItem(DWORD dwVID);
+	bool	GetCloseItem(const TPixelPosition& c_rPixelPosition, DWORD* pdwItemID, DWORD dwDistance = 300);
+	bool	GetCloseMoney(const TPixelPosition& c_rPixelPosition, DWORD* dwItemID, DWORD dwDistance = 300);
 
-		void	BuildNoGradeNameData(int iType);
-		DWORD	GetNoGradeNameDataCount();
-		CItemData * GetNoGradeNameDataPtr(DWORD dwIndex);
+	DWORD	GetVirtualNumberOfGroundItem(DWORD dwVID);
 
-	protected:
-		DWORD	__Pick(const POINT& c_rkPtMouse);
+	void	BuildNoGradeNameData(int iType);
+	DWORD	GetNoGradeNameDataCount();
+	CItemData* GetNoGradeNameDataPtr(DWORD dwIndex);
 
-		DWORD	__GetUseSoundType(const CItemData& c_rkItemData);
-		DWORD	__GetDropSoundType(const CItemData& c_rkItemData);
+protected:
+	DWORD	__Pick(const POINT& c_rkPtMouse);
 
-	protected:
-		TGroundItemInstanceMap				m_GroundItemInstanceMap;
-		CDynamicPool<TGroundItemInstance>	m_GroundItemInstancePool;
+	DWORD	__GetUseSoundType(const CItemData& c_rkItemData);
+	DWORD	__GetDropSoundType(const CItemData& c_rkItemData);
 
-		DWORD m_dwDropItemEffectID;
-		DWORD m_dwPickedItemID;
+protected:
+	TGroundItemInstanceMap				m_GroundItemInstanceMap;
+	CDynamicPool<TGroundItemInstance>	m_GroundItemInstancePool;
 
-		int m_nMouseX;
-		int m_nMouseY;
+	DWORD m_dwDropItemEffectID;
+	DWORD m_dwPickedItemID;
 
-		std::string m_astUseSoundFileName[USESOUND_NUM];
+	int m_nMouseX;
+	int m_nMouseY;
 
-		std::vector<CItemData *> m_NoGradeNameItemData;
+	std::string m_astUseSoundFileName[USESOUND_NUM];
+
+	std::vector<CItemData*> m_NoGradeNameItemData;
 };

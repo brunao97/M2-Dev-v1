@@ -27,7 +27,10 @@ public:
 
 	LPDIRECT3DINDEXBUFFER9 GetD3DIndexBuffer() const;
 
-	int GetIndexCount() const { return m_iidxCount; }
+	int GetIndexCount() const
+	{
+		return m_iidxCount;
+	}
 
 protected:
 	void Initialize();

@@ -10,7 +10,7 @@ class CPythonNetworkDatagram : public CSingleton<CPythonNetworkDatagram>
 	public:
 		CPythonNetworkDatagram();
 		virtual ~CPythonNetworkDatagram();
-		
+
 		void Destroy();
 
 		// With Server

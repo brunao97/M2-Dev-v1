@@ -1,7 +1,7 @@
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForest Class
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	Include Files
 #include "StdAfx.h"
 
@@ -15,7 +15,7 @@
 
 using namespace std;
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForest constructor
 
 CSpeedTreeForest::CSpeedTreeForest() :
@@ -23,8 +23,8 @@ CSpeedTreeForest::CSpeedTreeForest() :
 	m_afFog{ 0.0f, 0.0f, 0.0f, 0.0f },
 	m_fAccumTime(0.0f),
 	m_afLighting{ 0.0f, 0.0f, 0.0f, 1.0f,  // direction
-					0.2f, 0.2f, 0.2f, 1.0f,  // ambient
-					0.8f, 0.8f, 0.8f, 1.0f } // diffuse
+				  0.2f, 0.2f, 0.2f, 1.0f,  // ambient
+				  0.8f, 0.8f, 0.8f, 1.0f } // diffuse
 {
 	CSpeedTreeRT::SetNumWindMatrices(c_nNumWindMatrices);
 
@@ -32,8 +32,7 @@ CSpeedTreeForest::CSpeedTreeForest() :
 	m_afForestExtents[3] = m_afForestExtents[4] = m_afForestExtents[5] = -FLT_MAX;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForest destructor
 
 CSpeedTreeForest::~CSpeedTreeForest()
@@ -51,7 +50,9 @@ void CSpeedTreeForest::Clear()
 		auto ppInstances = pMainTree->GetInstances(uiCount);
 
 		for (auto it : ppInstances)
+		{
 			it->Clear();
+		}
 
 		pMainTree->Clear();
 	}
@@ -67,29 +68,36 @@ CSpeedTreeForest::SpeedTreeWrapperPtr CSpeedTreeForest::GetMainTree(DWORD dwCRC)
 	TTreeMap::iterator itor = m_pMainTreeMap.find(dwCRC);
 
 	if (itor == m_pMainTreeMap.end())
+	{
 		return NULL;
+	}
 
 	return itor->second;
 }
 
-BOOL CSpeedTreeForest::GetMainTree(DWORD dwCRC, SpeedTreeWrapperPtr &ppMainTree, const char * c_pszFileName)
+BOOL CSpeedTreeForest::GetMainTree(DWORD dwCRC, SpeedTreeWrapperPtr& ppMainTree, const char* c_pszFileName)
 {
 	TTreeMap::iterator itor = m_pMainTreeMap.find(dwCRC);
 
 	SpeedTreeWrapperPtr pTree;
 
 	if (itor != m_pMainTreeMap.end())
+	{
 		pTree = itor->second;
+	}
+
 	else
 	{
 		TPackFile file;
 
 		if (!CPackManager::Instance().GetFile(c_pszFileName, file))
+		{
 			return FALSE;
+		}
 
 		pTree = std::make_shared<CSpeedTreeWrapper>();
 
-		if (!pTree->LoadTree(c_pszFileName, (const BYTE *)file.data(), file.size()))
+		if (!pTree->LoadTree(c_pszFileName, (const BYTE*)file.data(), file.size()))
 		{
 			pTree.reset();
 			return FALSE;
@@ -105,6 +113,7 @@ BOOL CSpeedTreeForest::GetMainTree(DWORD dwCRC, SpeedTreeWrapperPtr &ppMainTree,
 CSpeedTreeForest::SpeedTreeWrapperPtr CSpeedTreeForest::CreateInstance(float x, float y, float z, DWORD dwTreeCRC, const char* c_szTreeName)
 {
 	SpeedTreeWrapperPtr pMainTree;
+
 	if (!GetMainTree(dwTreeCRC, pMainTree, c_szTreeName))
 	{
 		return NULL;
@@ -119,12 +128,16 @@ CSpeedTreeForest::SpeedTreeWrapperPtr CSpeedTreeForest::CreateInstance(float x, 
 void CSpeedTreeForest::DeleteInstance(SpeedTreeWrapperPtr pInstance)
 {
 	if (!pInstance)
+	{
 		return;
+	}
 
 	SpeedTreeWrapperPtr pParentTree = pInstance->InstanceOf();
 
 	if (!pParentTree)
+	{
 		return;
+	}
 
 	pParentTree->DeleteInstance(pInstance);
 }
@@ -136,31 +149,33 @@ void CSpeedTreeForest::UpdateSystem(float fCurrentTime)
 	float fElapsedTime = fCurrentTime - fLastTime;
 	CSpeedTreeRT::SetTime(fElapsedTime);
 
-	m_fAccumTime += fElapsedTime; 
+	m_fAccumTime += fElapsedTime;
 	SetupWindMatrices(m_fAccumTime);
 }
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForest::AdjustExtents
 void CSpeedTreeForest::AdjustExtents(float x, float y, float z)
 {
-    // min
-    m_afForestExtents[0] = __min(m_afForestExtents[0], x); 
-    m_afForestExtents[1] = __min(m_afForestExtents[1], y); 
-    m_afForestExtents[2] = __min(m_afForestExtents[2], z); 
+	// min
+	m_afForestExtents[0] = __min(m_afForestExtents[0], x);
+	m_afForestExtents[1] = __min(m_afForestExtents[1], y);
+	m_afForestExtents[2] = __min(m_afForestExtents[2], z);
 
-    // max
-    m_afForestExtents[3] = __max(m_afForestExtents[3], x); 
-    m_afForestExtents[4] = __max(m_afForestExtents[4], y); 
-    m_afForestExtents[5] = __max(m_afForestExtents[5], z);
+	// max
+	m_afForestExtents[3] = __max(m_afForestExtents[3], x);
+	m_afForestExtents[4] = __max(m_afForestExtents[4], y);
+	m_afForestExtents[5] = __max(m_afForestExtents[5], z);
 }
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForest::SetWindStrength
 void CSpeedTreeForest::SetWindStrength(float fStrength)
 {
 	if (m_fWindStrength == fStrength)
+	{
 		return;
+	}
 
 	m_fWindStrength = fStrength;
 
@@ -173,17 +188,19 @@ void CSpeedTreeForest::SetWindStrength(float fStrength)
 		auto ppInstances = pMainTree->GetInstances(uiCount);
 
 		for (auto it : ppInstances)
+		{
 			it->GetSpeedTree()->SetWindStrength(m_fWindStrength);
+		}
 	}
 }
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForest::SetupWindMatrices
 void CSpeedTreeForest::SetupWindMatrices(float fTimeInSecs)
 {
 	// matrix computational data
 	static float afMatrixTimes[c_nNumWindMatrices] = { 0.0f };
-	static float afFrequencies[c_nNumWindMatrices][2] = 
+	static float afFrequencies[c_nNumWindMatrices][2] =
 	{
 		{ 0.15f, 0.17f },
 		{ 0.25f, 0.15f },
@@ -201,7 +218,9 @@ void CSpeedTreeForest::SetupWindMatrices(float fTimeInSecs)
 
 	// increment matrix times
 	for (int i = 0; i < c_nNumWindMatrices; ++i)
+	{
 		afMatrixTimes[i] += fTimeSinceLastCall;
+	}
 
 	// compute maximum branch throw
 	float fBaseAngle = m_fWindStrength * 35.0f;
@@ -211,7 +230,9 @@ void CSpeedTreeForest::SetupWindMatrices(float fTimeInSecs)
 	{
 		// adjust time to prevent "jumping"
 		if (m_fWindStrength != 0.0f)
+		{
 			afMatrixTimes[j] = (afMatrixTimes[j] * fOldStrength) / m_fWindStrength;
+		}
 
 		// compute percentages for each axis
 		float fBaseFreq = m_fWindStrength * 20.0f;
@@ -220,38 +241,37 @@ void CSpeedTreeForest::SetupWindMatrices(float fTimeInSecs)
 
 		// build compound rotation matrix (rotate on 'x' then on 'y')
 		const float c_fDeg2Rad = 57.2957795f;
-        float fSinX = sinf(fBaseAngle * fXPercent / c_fDeg2Rad);
-        float fSinY = sinf(fBaseAngle * fYPercent / c_fDeg2Rad);
-        float fCosX = cosf(fBaseAngle * fXPercent / c_fDeg2Rad);
-        float fCosY = cosf(fBaseAngle * fYPercent / c_fDeg2Rad);
+		float fSinX = sinf(fBaseAngle * fXPercent / c_fDeg2Rad);
+		float fSinY = sinf(fBaseAngle * fYPercent / c_fDeg2Rad);
+		float fCosX = cosf(fBaseAngle * fXPercent / c_fDeg2Rad);
+		float fCosY = cosf(fBaseAngle * fYPercent / c_fDeg2Rad);
 
-        float afMatrix[16] = { 0.0f };
-        afMatrix[0] = fCosY;
-        afMatrix[2] = -fSinY;
-        afMatrix[4] = fSinX * fSinY;
-        afMatrix[5] = fCosX;
-        afMatrix[6] = fSinX * fCosY;
-        afMatrix[8] = fSinY * fCosX;
-        afMatrix[9] = -fSinX;
-        afMatrix[10] = fCosX * fCosY;
-        afMatrix[15] = 1.0f;
+		float afMatrix[16] = { 0.0f };
+		afMatrix[0] = fCosY;
+		afMatrix[2] = -fSinY;
+		afMatrix[4] = fSinX * fSinY;
+		afMatrix[5] = fCosX;
+		afMatrix[6] = fSinX * fCosY;
+		afMatrix[8] = fSinY * fCosX;
+		afMatrix[9] = -fSinX;
+		afMatrix[10] = fCosX * fCosY;
+		afMatrix[15] = 1.0f;
 
-		#ifdef WRAPPER_USE_CPU_WIND
-			CSpeedTreeRT::SetWindMatrix(j, afMatrix);
-		#endif
+#ifdef WRAPPER_USE_CPU_WIND
+		CSpeedTreeRT::SetWindMatrix(j, afMatrix);
+#endif
 
-		#ifdef WRAPPER_USE_GPU_WIND
-			// graphics API specific
-			UploadWindMatrix(c_nVertexShader_WindMatrices + j * 4, afMatrix);
-		#endif
+#ifdef WRAPPER_USE_GPU_WIND
+		// graphics API specific
+		UploadWindMatrix(c_nVertexShader_WindMatrices + j * 4, afMatrix);
+#endif
 	}
 
 	// track wind strength
 	fOldStrength = m_fWindStrength;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForest::SetLodLimits
 /*
 void CSpeedTreeForest::SetLodLimits(void)
@@ -292,7 +312,7 @@ void CSpeedTreeForest::SetLodLimits(void)
 	}
 }
 */
-void CSpeedTreeForest::SetLight(const float * afDirection, const float * afAmbient, const float * afDiffuse)
+void CSpeedTreeForest::SetLight(const float* afDirection, const float* afAmbient, const float* afDiffuse)
 {
 	m_afLighting[0] = afDirection[0];
 	m_afLighting[1] = afDirection[1];

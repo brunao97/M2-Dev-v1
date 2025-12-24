@@ -6,90 +6,89 @@ class CEmitterProperty
 {
 	friend class CParticleSystemData;
 	friend class CParticleSystemInstance;
-	public:
-		enum
-		{
-			EMITTER_SHAPE_POINT,
-			EMITTER_SHAPE_ELLIPSE,
-			EMITTER_SHAPE_SQUARE,
-			EMITTER_SHAPE_SPHERE,
-		};
+public:
+	enum
+	{
+		EMITTER_SHAPE_POINT,
+		EMITTER_SHAPE_ELLIPSE,
+		EMITTER_SHAPE_SQUARE,
+		EMITTER_SHAPE_SPHERE,
+	};
 
-		enum
-		{
-			EMITTER_ADVANCED_TYPE_FREE,
-			EMITTER_ADVANCED_TYPE_OUTER,
-			EMITTER_ADVANCED_TYPE_INNER,
-		};
+	enum
+	{
+		EMITTER_ADVANCED_TYPE_FREE,
+		EMITTER_ADVANCED_TYPE_OUTER,
+		EMITTER_ADVANCED_TYPE_INNER,
+	};
 
-	public:
-		CEmitterProperty();
-		virtual ~CEmitterProperty();
+public:
+	CEmitterProperty();
+	virtual ~CEmitterProperty();
 
-		void Clear();
+	void Clear();
 
-		DWORD GetMaxEmissionCount()
-		{
-			return m_dwMaxEmissionCount;
-		}
-		
-		float GetCycleLength()
-		{
-			return m_fCycleLength;
-		}
+	DWORD GetMaxEmissionCount()
+	{
+		return m_dwMaxEmissionCount;
+	}
 
-		BOOL isCycleLoop()
-		{
-			return m_bCycleLoopFlag;
-		}
-			
-		int	GetLoopCount()
-		{
-			return m_iLoopCount;
-		}
-			
+	float GetCycleLength()
+	{
+		return m_fCycleLength;
+	}
 
-		BYTE GetEmitterShape();
-		BYTE GetEmitterAdvancedType();
-		BOOL isEmitFromEdge();
+	BOOL isCycleLoop()
+	{
+		return m_bCycleLoopFlag;
+	}
 
-		void GetEmittingSize(float fTime, float * pfValue);
-		void GetEmittingAngularVelocity(float fTime, float * pfValue);
+	int	GetLoopCount()
+	{
+		return m_iLoopCount;
+	}
 
-		void GetEmittingDirectionX(float fTime, float * pfValue);
-		void GetEmittingDirectionY(float fTime, float * pfValue);
-		void GetEmittingDirectionZ(float fTime, float * pfValue);
-		void GetEmittingVelocity(float fTime, float * pfValue);
-		void GetEmissionCountPerSecond(float fTime, float * pfValue);
-		void GetParticleLifeTime(float fTime, float * pfValue);
-		void GetParticleSizeX(float fTime, float * pfValue);
-		void GetParticleSizeY(float fTime, float * pfValue);
+	BYTE GetEmitterShape();
+	BYTE GetEmitterAdvancedType();
+	BOOL isEmitFromEdge();
+
+	void GetEmittingSize(float fTime, float* pfValue);
+	void GetEmittingAngularVelocity(float fTime, float* pfValue);
+
+	void GetEmittingDirectionX(float fTime, float* pfValue);
+	void GetEmittingDirectionY(float fTime, float* pfValue);
+	void GetEmittingDirectionZ(float fTime, float* pfValue);
+	void GetEmittingVelocity(float fTime, float* pfValue);
+	void GetEmissionCountPerSecond(float fTime, float* pfValue);
+	void GetParticleLifeTime(float fTime, float* pfValue);
+	void GetParticleSizeX(float fTime, float* pfValue);
+	void GetParticleSizeY(float fTime, float* pfValue);
 
 	/////
 
-		DWORD m_dwMaxEmissionCount;
+	DWORD m_dwMaxEmissionCount;
 
-		float m_fCycleLength;
-		BOOL m_bCycleLoopFlag;
-		int	m_iLoopCount;
+	float m_fCycleLength;
+	BOOL m_bCycleLoopFlag;
+	int	m_iLoopCount;
 
-		BYTE m_byEmitterShape;
-		BYTE m_byEmitterAdvancedType;
-		BOOL m_bEmitFromEdgeFlag;
-		D3DXVECTOR3 m_v3EmittingSize;
-		float m_fEmittingRadius;
+	BYTE m_byEmitterShape;
+	BYTE m_byEmitterAdvancedType;
+	BOOL m_bEmitFromEdgeFlag;
+	D3DXVECTOR3 m_v3EmittingSize;
+	float m_fEmittingRadius;
 
-		D3DXVECTOR3 m_v3EmittingDirection;
+	D3DXVECTOR3 m_v3EmittingDirection;
 
-		//TTimeEventTableFloat m_TimeEventEmittingRadius;
-		TTimeEventTableFloat m_TimeEventEmittingSize;
-		TTimeEventTableFloat m_TimeEventEmittingAngularVelocity;
-		TTimeEventTableFloat m_TimeEventEmittingDirectionX;
-		TTimeEventTableFloat m_TimeEventEmittingDirectionY;
-		TTimeEventTableFloat m_TimeEventEmittingDirectionZ;
-		TTimeEventTableFloat m_TimeEventEmittingVelocity;
-		TTimeEventTableFloat m_TimeEventEmissionCountPerSecond;
-		TTimeEventTableFloat m_TimeEventLifeTime;
-		TTimeEventTableFloat m_TimeEventSizeX;
-		TTimeEventTableFloat m_TimeEventSizeY;
+	//TTimeEventTableFloat m_TimeEventEmittingRadius;
+	TTimeEventTableFloat m_TimeEventEmittingSize;
+	TTimeEventTableFloat m_TimeEventEmittingAngularVelocity;
+	TTimeEventTableFloat m_TimeEventEmittingDirectionX;
+	TTimeEventTableFloat m_TimeEventEmittingDirectionY;
+	TTimeEventTableFloat m_TimeEventEmittingDirectionZ;
+	TTimeEventTableFloat m_TimeEventEmittingVelocity;
+	TTimeEventTableFloat m_TimeEventEmissionCountPerSecond;
+	TTimeEventTableFloat m_TimeEventLifeTime;
+	TTimeEventTableFloat m_TimeEventSizeX;
+	TTimeEventTableFloat m_TimeEventSizeY;
 };

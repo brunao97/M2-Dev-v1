@@ -24,7 +24,7 @@ void CGraphicRatioInstance::Clear()
 
 void CGraphicRatioInstance::SetRatioReference(const float& c_rRatio)
 {
-	m_curRatio = c_rRatio;	
+	m_curRatio = c_rRatio;
 	m_srcRatio = m_curRatio;
 	m_dstRatio = m_curRatio;
 }
@@ -47,8 +47,9 @@ void CGraphicRatioInstance::Update()
 	{
 		float diff = m_dstRatio - m_srcRatio;
 		float rate = elapsedTime / float(m_blendTime);
-		m_curRatio = diff * rate + m_srcRatio;	
+		m_curRatio = diff * rate + m_srcRatio;
 	}
+
 	else
 	{
 		m_curRatio = m_dstRatio;
@@ -64,4 +65,3 @@ const float& CGraphicRatioInstance::GetCurrentRatioReference() const
 {
 	return m_curRatio;
 }
-

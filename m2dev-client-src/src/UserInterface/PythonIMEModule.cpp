@@ -29,8 +29,11 @@ PyObject* imeDisableCaptureInput(PyObject* poSelf, PyObject* poArgs)
 PyObject* imeSetMax(PyObject* poSelf, PyObject* poArgs)
 {
 	int iMax;
+
 	if (!PyTuple_GetInteger(poArgs, 0, &iMax))
+	{
 		return Py_BuildException();
+	}
 
 	CPythonIME::Instance().SetMax(iMax);
 	return Py_BuildNone();
@@ -39,8 +42,11 @@ PyObject* imeSetMax(PyObject* poSelf, PyObject* poArgs)
 PyObject* imeSetUserMax(PyObject* poSelf, PyObject* poArgs)
 {
 	int iMax;
+
 	if (!PyTuple_GetInteger(poArgs, 0, &iMax))
+	{
 		return Py_BuildException();
+	}
 
 	CPythonIME::Instance().SetUserMax(iMax);
 	return Py_BuildNone();
@@ -49,18 +55,24 @@ PyObject* imeSetUserMax(PyObject* poSelf, PyObject* poArgs)
 PyObject* imeSetText(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szText;
+
 	if (!PyTuple_GetString(poArgs, 0, &szText))
+	{
 		return Py_BuildException();
+	}
 
 	CPythonIME::Instance().SetText(szText, strlen(szText));
 	return Py_BuildNone();
 }
 
 PyObject* imeGetText(PyObject* poSelf, PyObject* poArgs)
-{	
+{
 	int bCodePage;
+
 	if (!PyTuple_GetInteger(poArgs, 0, &bCodePage))
+	{
 		bCodePage = 0;
+	}
 
 	std::string strText;
 	CPythonIME::Instance().GetText(strText, bCodePage ? true : false);
@@ -80,8 +92,11 @@ PyObject* imeGetCandidateCount(PyObject* poSelf, PyObject* poArgs)
 PyObject* imeGetCandidate(PyObject* poSelf, PyObject* poArgs)
 {
 	int index;
+
 	if (!PyTuple_GetInteger(poArgs, 0, &index))
+	{
 		return Py_BuildException();
+	}
 
 	std::string strText;
 	int iLength = CPythonIME::Instance().GetCandidate(index, strText);
@@ -94,7 +109,7 @@ PyObject* imeGetCandidateSelection(PyObject* poSelf, PyObject* poArgs)
 }
 
 PyObject* imeGetReading(PyObject* poSelf, PyObject* poArgs)
-{	
+{
 	std::string strText;
 	CPythonIME::Instance().GetReading(strText);
 	return Py_BuildValue("s", strText.c_str());
@@ -118,38 +133,44 @@ PyObject* imeDisableIME(PyObject* poSelf, PyObject* poArgs)
 }
 
 PyObject* imeSetInputMode(PyObject* poSelf, PyObject* poArgs)
-{	
+{
 	int	mode;
+
 	if (!PyTuple_GetInteger(poArgs, 0, &mode))
+	{
 		return Py_BuildException();
+	}
 
 	CPythonIME::Instance().SetInputMode(mode);
 	return Py_BuildNone();
 }
 
-PyObject * imeSetNumberMode(PyObject* poSelf, PyObject* poArgs)
+PyObject* imeSetNumberMode(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().SetNumberMode();
 	return Py_BuildNone();
 }
 
-PyObject * imeAddExceptKey(PyObject* poSelf, PyObject* poArgs)
+PyObject* imeAddExceptKey(PyObject* poSelf, PyObject* poArgs)
 {
 	int key;
+
 	if (!PyTuple_GetInteger(poArgs, 0, &key))
+	{
 		return Py_BuildException();
+	}
 
 	CPythonIME::Instance().AddExceptKey(key);
 	return Py_BuildNone();
 }
 
-PyObject * imeClearExceptKey(PyObject* poSelf, PyObject* poArgs)
+PyObject* imeClearExceptKey(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().ClearExceptKey();
 	return Py_BuildNone();
 }
 
-PyObject * imeSetStringMode(PyObject* poSelf, PyObject* poArgs)
+PyObject* imeSetStringMode(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().SetStringMode();
 	return Py_BuildNone();
@@ -166,6 +187,7 @@ PyObject* imeMoveLeft(PyObject* poSelf, PyObject* poArgs)
 
 	return Py_BuildNone();
 }
+
 PyObject* imeMoveRight(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().MoveRight();
@@ -179,6 +201,7 @@ PyObject* imeMoveHome(PyObject* poSelf, PyObject* poArgs)
 
 	return Py_BuildNone();
 }
+
 PyObject* imeMoveEnd(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().MoveEnd();
@@ -189,8 +212,11 @@ PyObject* imeMoveEnd(PyObject* poSelf, PyObject* poArgs)
 PyObject* imeSetCursorPosition(PyObject* poSelf, PyObject* poArgs)
 {
 	int	iPosition;
+
 	if (!PyTuple_GetInteger(poArgs, 0, &iPosition))
+	{
 		return Py_BuildException();
+	}
 
 	CPythonIME::Instance().SetCursorPosition(iPosition);
 
@@ -213,29 +239,36 @@ PyObject* imePasteTextFromClipBoard(PyObject* poSelf, PyObject* poArgs)
 PyObject* imeEnablePaste(PyObject* poSelf, PyObject* poArgs)
 {
 	int	iFlag;
+
 	if (!PyTuple_GetInteger(poArgs, 0, &iFlag))
+	{
 		return Py_BuildException();
+	}
 
 	CPythonIME::Instance().EnablePaste(iFlag ? true : false);
 	return Py_BuildNone();
 }
 
-PyObject* imePasteString(PyObject * poSelf, PyObject * poArgs)
+PyObject* imePasteString(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szText;
+
 	if (!PyTuple_GetString(poArgs, 0, &szText))
+	{
 		return Py_BuildException();
+	}
+
 	CPythonIME::Instance().PasteString(szText);
 	return Py_BuildNone();
 }
 
-PyObject* imePasteBackspace(PyObject * poSelf, PyObject * poArgs)
+PyObject* imePasteBackspace(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x08, NULL);
 	return Py_BuildNone();
 }
 
-PyObject* imePasteReturn(PyObject * poSelf, PyObject * poArgs)
+PyObject* imePasteReturn(PyObject* poSelf, PyObject* poArgs)
 {
 	CPythonIME::Instance().WMChar(NULL, WM_CHAR, 0x0D, NULL);
 	return Py_BuildNone();
@@ -269,7 +302,7 @@ void initime()
 		{ "SetStringMode",			imeSetStringMode,			METH_VARARGS },
 		{ "AddExceptKey",			imeAddExceptKey,			METH_VARARGS },
 		{ "ClearExceptKey",			imeClearExceptKey,			METH_VARARGS },
-		
+
 		{ "MoveLeft",				imeMoveLeft,				METH_VARARGS },
 		{ "MoveRight",				imeMoveRight,				METH_VARARGS },
 		{ "MoveHome",				imeMoveHome,				METH_VARARGS },
@@ -283,7 +316,7 @@ void initime()
 		{ "EnablePaste",			imeEnablePaste,				METH_VARARGS },
 
 		{ NULL,						NULL,						NULL		 },
-	};	
+	};
 
 	Py_InitModule("ime", s_methods);
 }

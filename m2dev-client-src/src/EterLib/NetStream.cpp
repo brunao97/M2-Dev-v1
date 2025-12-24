@@ -26,6 +26,7 @@ void CNetworkStream::SetSecurityMode(bool isSecurityMode, const char* c_szTeaEnc
 	memcpy(m_szEncryptKey, c_szTeaEncryptKey, TEA_KEY_LENGTH);
 	memcpy(m_szDecryptKey, c_szTeaDecryptKey, TEA_KEY_LENGTH);
 }
+
 #endif // _IMPROVED_PACKET_ENCRYPTION_
 
 bool CNetworkStream::IsSecurityMode()
@@ -41,17 +42,22 @@ void CNetworkStream::SetRecvBufferSize(int recvBufSize)
 {
 	if (m_recvBuf)
 	{
-		if (m_recvBufSize>recvBufSize)
+		if (m_recvBufSize > recvBufSize)
+		{
 			return;
+		}
 
-		delete [] m_recvBuf;
+		delete[] m_recvBuf;
 
 		if (m_recvTEABuf)
-			delete [] m_recvTEABuf;
+		{
+			delete[] m_recvTEABuf;
+		}
 	}
+
 	m_recvBufSize = recvBufSize;
-	m_recvBuf = new char[m_recvBufSize];	
-	m_recvTEABufSize = ((m_recvBufSize>>3)+1)<<3;
+	m_recvBuf = new char[m_recvBufSize];
+	m_recvTEABufSize = ((m_recvBufSize >> 3) + 1) << 3;
 	m_recvTEABuf = new char[m_recvTEABufSize];
 }
 
@@ -60,39 +66,45 @@ void CNetworkStream::SetSendBufferSize(int sendBufSize)
 	if (m_sendBuf)
 	{
 		if (m_sendBufSize > sendBufSize)
+		{
 			return;
+		}
 
-		delete [] m_sendBuf;
+		delete[] m_sendBuf;
 
 		if (m_sendTEABuf)
-			delete [] m_sendTEABuf;
+		{
+			delete[] m_sendTEABuf;
+		}
 	}
 
 	m_sendBufSize = sendBufSize;
 	m_sendBuf = new char[m_sendBufSize];
-	m_sendTEABufSize = ((m_sendBufSize>>3)+1)<<3;
+	m_sendTEABufSize = ((m_sendBufSize >> 3) + 1) << 3;
 	m_sendTEABuf = new char[m_sendTEABufSize];
 }
 
 bool CNetworkStream::__RecvInternalBuffer()
 {
-	if (m_recvBufOutputPos>0)
+	if (m_recvBufOutputPos > 0)
 	{
 		int recvBufDataSize = m_recvBufInputPos - m_recvBufOutputPos;
-		if (recvBufDataSize>0)
+
+		if (recvBufDataSize > 0)
 		{
 			memmove(m_recvBuf, m_recvBuf + m_recvBufOutputPos, recvBufDataSize);
 		}
-		
+
 		m_recvBufInputPos -= m_recvBufOutputPos;
 		m_recvBufOutputPos = 0;
 	}
 
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 	int restSize = m_recvBufSize - m_recvBufInputPos;
-	if (restSize>0)
-	{		
-		int recvSize = recv(m_sock, m_recvBuf + m_recvBufInputPos, m_recvBufSize - m_recvBufInputPos, 0);	
+
+	if (restSize > 0)
+	{
+		int recvSize = recv(m_sock, m_recvBuf + m_recvBufInputPos, m_recvBufSize - m_recvBufInputPos, 0);
 		//Tracenf("RECV %d %d(%d, %d)", recvSize, restSize, m_recvTEABufSize - m_recvTEABufInputPos, m_recvBufSize - m_recvBufInputPos);
 
 		if (recvSize < 0)
@@ -104,25 +116,29 @@ bool CNetworkStream::__RecvInternalBuffer()
 				return false;
 			}
 		}
+
 		else if (recvSize == 0)
 		{
 			return false;
 		}
 
-		if (IsSecurityMode()) {
+		if (IsSecurityMode())
+		{
 			m_cipher.Decrypt(m_recvBuf + m_recvBufInputPos, recvSize);
 		}
 
 		m_recvBufInputPos += recvSize;
 	}
+
 #else
+
 	if (IsSecurityMode())
-	{		
+	{
 		int restSize = std::min(m_recvTEABufSize - m_recvTEABufInputPos, m_recvBufSize - m_recvBufInputPos);
- 
+
 		if (restSize > 0)
 		{
-			int recvSize = recv(m_sock, m_recvTEABuf + m_recvTEABufInputPos, restSize, 0);	
+			int recvSize = recv(m_sock, m_recvTEABuf + m_recvTEABufInputPos, restSize, 0);
 			//Tracenf("RECV %d %d(%d, %d)", recvSize, restSize, m_recvTEABufSize - m_recvTEABufInputPos, m_recvBufSize - m_recvBufInputPos);
 
 			if (recvSize < 0)
@@ -134,6 +150,7 @@ bool CNetworkStream::__RecvInternalBuffer()
 					return false;
 				}
 			}
+
 			else if (recvSize == 0)
 			{
 				return false;
@@ -153,30 +170,33 @@ bool CNetworkStream::__RecvInternalBuffer()
 												 (const DWORD *) m_szDecryptKey,
 												 decodeSize);
 												 */
-				int decodeDstSize = tea_decrypt((DWORD *) (m_recvBuf + m_recvBufInputPos),
-												(DWORD *) m_recvTEABuf,
-												(const DWORD *) m_szDecryptKey,
-												decodeSize);
+				int decodeDstSize = tea_decrypt((DWORD*)(m_recvBuf + m_recvBufInputPos),
+					(DWORD*)m_recvTEABuf,
+					(const DWORD*)m_szDecryptKey,
+					decodeSize);
 
 				m_recvBufInputPos += decodeDstSize;
 
-				if (m_recvTEABufInputPos>decodeSize)
-					memmove(m_recvTEABuf, m_recvTEABuf+decodeSize, m_recvTEABufInputPos-decodeSize);
+				if (m_recvTEABufInputPos > decodeSize)
+				{
+					memmove(m_recvTEABuf, m_recvTEABuf + decodeSize, m_recvTEABufInputPos - decodeSize);
+				}
 
 				m_recvTEABufInputPos -= decodeSize;
-				
-				
-				//Tracenf("!!!!!! decrypt decodeSrcSize %d -> decodeDstSize %d (recvOutputPos %d, recvInputPos %d, teaInputPos %d)", 
+
+				//Tracenf("!!!!!! decrypt decodeSrcSize %d -> decodeDstSize %d (recvOutputPos %d, recvInputPos %d, teaInputPos %d)",
 				//		decodeSize, decodeDstSize, m_recvBufOutputPos, m_recvBufInputPos, m_recvTEABufInputPos);
 			}
 		}
 	}
+
 	else
 	{
 		int restSize = m_recvBufSize - m_recvBufInputPos;
-		if (restSize>0)
-		{		
-			int recvSize = recv(m_sock, m_recvBuf + m_recvBufInputPos, m_recvBufSize - m_recvBufInputPos, 0);	
+
+		if (restSize > 0)
+		{
+			int recvSize = recv(m_sock, m_recvBuf + m_recvBufInputPos, m_recvBufSize - m_recvBufInputPos, 0);
 			//Tracenf("RECV %d %d(%d, %d)", recvSize, restSize, m_recvTEABufSize - m_recvTEABufInputPos, m_recvBufSize - m_recvBufInputPos);
 
 			if (recvSize < 0)
@@ -188,6 +208,7 @@ bool CNetworkStream::__RecvInternalBuffer()
 					return false;
 				}
 			}
+
 			else if (recvSize == 0)
 			{
 				return false;
@@ -196,73 +217,97 @@ bool CNetworkStream::__RecvInternalBuffer()
 			m_recvBufInputPos += recvSize;
 		}
 	}
+
 #endif // _IMPROVED_PACKET_ENCRYPTION_
-		
-	//Tracef("recvSize: %d input pos %d output pos %d\n", recvSize, m_recvBufInputPos, m_recvBufOutputPos);			
+
+	//Tracef("recvSize: %d input pos %d output pos %d\n", recvSize, m_recvBufInputPos, m_recvBufOutputPos);
 
 	return true;
 }
 
-
 bool CNetworkStream::__SendInternalBuffer()
 {
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
-	int dataSize=__GetSendBufferSize();
-	if (dataSize<=0)
-		return true;
+	int dataSize = __GetSendBufferSize();
 
-	if (IsSecurityMode()) {
+	if (dataSize <= 0)
+	{
+		return true;
+	}
+
+	if (IsSecurityMode())
+	{
 		m_cipher.Encrypt(m_sendBuf + m_sendBufOutputPos, dataSize);
 	}
 
-	int sendSize = send(m_sock, m_sendBuf+m_sendBufOutputPos, dataSize, 0);	
-	if (sendSize < 0)
-		return false;
+	int sendSize = send(m_sock, m_sendBuf + m_sendBufOutputPos, dataSize, 0);
 
-	m_sendBufOutputPos+=sendSize;
+	if (sendSize < 0)
+	{
+		return false;
+	}
+
+	m_sendBufOutputPos += sendSize;
 
 	__PopSendBuffer();
 #else
+
 	if (IsSecurityMode())
 	{
-		int encodeSize=__GetSendBufferSize();
-		if (encodeSize<=0)
-			return true;
+		int encodeSize = __GetSendBufferSize();
 
-		m_sendTEABufInputPos += tea_encrypt((DWORD *) (m_sendTEABuf + m_sendTEABufInputPos),
-												 (DWORD *) (m_sendBuf + m_sendBufOutputPos),
-												 (const DWORD *) m_szEncryptKey,
-												 encodeSize);
+		if (encodeSize <= 0)
+		{
+			return true;
+		}
+
+		m_sendTEABufInputPos += tea_encrypt((DWORD*)(m_sendTEABuf + m_sendTEABufInputPos),
+			(DWORD*)(m_sendBuf + m_sendBufOutputPos),
+			(const DWORD*)m_szEncryptKey,
+			encodeSize);
 		m_sendBufOutputPos += encodeSize;
 
-		if (m_sendTEABufInputPos>0)
-		{	
-			int sendSize = send(m_sock, m_sendTEABuf, m_sendTEABufInputPos, 0);	
+		if (m_sendTEABufInputPos > 0)
+		{
+			int sendSize = send(m_sock, m_sendTEABuf, m_sendTEABufInputPos, 0);
+
 			if (sendSize < 0)
+			{
 				return false;
+			}
 
-			if (m_sendTEABufInputPos>sendSize)
-				memmove(m_sendTEABuf, m_sendTEABuf+sendSize, m_sendTEABufInputPos-sendSize);
+			if (m_sendTEABufInputPos > sendSize)
+			{
+				memmove(m_sendTEABuf, m_sendTEABuf + sendSize, m_sendTEABufInputPos - sendSize);
+			}
 
-			m_sendTEABufInputPos-=sendSize;			
+			m_sendTEABufInputPos -= sendSize;
 		}
 
 		__PopSendBuffer();
 	}
+
 	else
 	{
-		int dataSize=__GetSendBufferSize();
-		if (dataSize<=0)
+		int dataSize = __GetSendBufferSize();
+
+		if (dataSize <= 0)
+		{
 			return true;
+		}
 
-		int sendSize = send(m_sock, m_sendBuf+m_sendBufOutputPos, dataSize, 0);	
+		int sendSize = send(m_sock, m_sendBuf + m_sendBufOutputPos, dataSize, 0);
+
 		if (sendSize < 0)
+		{
 			return false;
+		}
 
-		m_sendBufOutputPos+=sendSize;
+		m_sendBufOutputPos += sendSize;
 
 		__PopSendBuffer();
 	}
+
 #endif // _IMPROVED_PACKET_ENCRYPTION_
 
 	return true;
@@ -270,18 +315,20 @@ bool CNetworkStream::__SendInternalBuffer()
 
 void CNetworkStream::__PopSendBuffer()
 {
-	if (m_sendBufOutputPos<=0)
+	if (m_sendBufOutputPos <= 0)
+	{
 		return;
-		
+	}
+
 	int sendBufDataSize = m_sendBufInputPos - m_sendBufOutputPos;
 
-	if (sendBufDataSize>0)
+	if (sendBufDataSize > 0)
 	{
-		memmove(m_sendBuf, m_sendBuf+m_sendBufOutputPos, sendBufDataSize);
+		memmove(m_sendBuf, m_sendBuf + m_sendBufOutputPos, sendBufDataSize);
 	}
 
 	m_sendBufInputPos = sendBufDataSize;
-	m_sendBufOutputPos = 0;	
+	m_sendBufOutputPos = 0;
 }
 
 #pragma warning(push)
@@ -289,7 +336,9 @@ void CNetworkStream::__PopSendBuffer()
 void CNetworkStream::Process()
 {
 	if (m_sock == INVALID_SOCKET)
+	{
 		return;
+	}
 
 	fd_set fdsRecv;
 	fd_set fdsSend;
@@ -304,9 +353,11 @@ void CNetworkStream::Process()
 
 	delay.tv_sec = 0;
 	delay.tv_usec = 0;
-	
+
 	if (select(0, &fdsRecv, &fdsSend, NULL, &delay) == SOCKET_ERROR)
+	{
 		return;
+	}
 
 	if (!m_isOnline)
 	{
@@ -315,6 +366,7 @@ void CNetworkStream::Process()
 			m_isOnline = true;
 			OnConnectSuccess();
 		}
+
 		else if (time(NULL) > m_connectLimitTime)
 		{
 			Clear();
@@ -355,12 +407,15 @@ void CNetworkStream::Process()
 		Clear();
 	}
 }
+
 #pragma warning(pop)
 
 void CNetworkStream::Disconnect()
 {
 	if (m_sock == INVALID_SOCKET)
+	{
 		return;
+	}
 
 	//OnDisconnect();
 
@@ -370,7 +425,9 @@ void CNetworkStream::Disconnect()
 void CNetworkStream::Clear()
 {
 	if (m_sock == INVALID_SOCKET)
+	{
 		return;
+	}
 
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 	m_cipher.CleanUp();
@@ -392,10 +449,10 @@ void CNetworkStream::Clear()
 	m_recvTEABufInputPos = 0;
 	m_sendTEABufInputPos = 0;
 
-	m_recvBufInputPos = 0;	
+	m_recvBufInputPos = 0;
 	m_recvBufOutputPos = 0;
-	
-	m_sendBufInputPos = 0;	
+
+	m_sendBufInputPos = 0;
 	m_sendBufOutputPos = 0;
 
 	m_SequenceGenerator.seed(SEQUENCE_SEED);
@@ -406,10 +463,10 @@ bool CNetworkStream::Connect(const CNetworkAddress& c_rkNetAddr, int limitSec)
 	Clear();
 
 	m_addr = c_rkNetAddr;
-	
+
 	m_sock = socket(AF_INET, SOCK_STREAM, 0);
 
-	if (m_sock == INVALID_SOCKET) 
+	if (m_sock == INVALID_SOCKET)
 	{
 		Clear();
 		OnConnectFailure();
@@ -433,7 +490,7 @@ bool CNetworkStream::Connect(const CNetworkAddress& c_rkNetAddr, int limitSec)
 	}
 
 	m_connectLimitTime = time(NULL) + limitSec;
-	return true;	
+	return true;
 }
 
 bool CNetworkStream::Connect(DWORD dwAddr, int port, int limitSec)
@@ -441,10 +498,14 @@ bool CNetworkStream::Connect(DWORD dwAddr, int port, int limitSec)
 	char szAddr[256];
 	{
 		BYTE ip[4];
-		ip[0]=dwAddr&0xff;dwAddr>>=8;
-		ip[1]=dwAddr&0xff;dwAddr>>=8;
-		ip[2]=dwAddr&0xff;dwAddr>>=8;
-		ip[3]=dwAddr&0xff;dwAddr>>=8;
+		ip[0] = dwAddr & 0xff;
+		dwAddr >>= 8;
+		ip[1] = dwAddr & 0xff;
+		dwAddr >>= 8;
+		ip[2] = dwAddr & 0xff;
+		dwAddr >>= 8;
+		ip[3] = dwAddr & 0xff;
+		dwAddr >>= 8;
 
 		sprintf(szAddr, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
 	}
@@ -462,7 +523,7 @@ bool CNetworkStream::Connect(const char* c_szAddr, int port, int /*limitSec*/)
 
 void CNetworkStream::ClearRecvBuffer()
 {
-	m_recvBufOutputPos = m_recvBufInputPos = 0;	 
+	m_recvBufOutputPos = m_recvBufInputPos = 0;
 }
 
 int CNetworkStream::GetRecvBufferSize()
@@ -473,34 +534,39 @@ int CNetworkStream::GetRecvBufferSize()
 bool CNetworkStream::Peek(int size)
 {
 	if (GetRecvBufferSize() < size)
+	{
 		return false;
+	}
 
 	return true;
 }
 
-bool CNetworkStream::Peek(int size, char * pDestBuf)
+bool CNetworkStream::Peek(int size, char* pDestBuf)
 {
 	if (GetRecvBufferSize() < size)
+	{
 		return false;
+	}
 
 	memcpy(pDestBuf, m_recvBuf + m_recvBufOutputPos, size);
 	return true;
 }
 
-
 #ifdef _PACKETDUMP
-const char * GetSendHeaderName(BYTE header)
+const char* GetSendHeaderName(BYTE header)
 {
 	static bool b = false;
-	static std::string stringList[UCHAR_MAX+1];
-	if (b==false)
+	static std::string stringList[UCHAR_MAX + 1];
+
+	if (b == false)
 	{
-		for (DWORD i = 0; i < UCHAR_MAX+1; i++)
+		for (DWORD i = 0; i < UCHAR_MAX + 1; i++)
 		{
 			char buf[10];
-			sprintf(buf,"%d",i);
+			sprintf(buf, "%d", i);
 			stringList[i] = buf;
 		}
+
 		stringList[1] = "HEADER_CG_LOGIN";
 		stringList[2] = "HEADER_CG_ATTACK";
 		stringList[3] = "HEADER_CG_CHAT";
@@ -576,21 +642,24 @@ const char * GetSendHeaderName(BYTE header)
 		stringList[0xfe] = "HEADER_CG_PONG";
 		stringList[0xff] = "HEADER_CG_HANDSHAKE";
 	}
+
 	return stringList[header].c_str();
 }
 
-const char * GetRecvHeaderName(BYTE header)
+const char* GetRecvHeaderName(BYTE header)
 {
 	static bool b = false;
-	static std::string stringList[UCHAR_MAX+1];
-	if (b==false)
+	static std::string stringList[UCHAR_MAX + 1];
+
+	if (b == false)
 	{
-		for (DWORD i = 0; i < UCHAR_MAX+1; i++)
+		for (DWORD i = 0; i < UCHAR_MAX + 1; i++)
 		{
 			char buf[10];
-			sprintf(buf,"%d",i);
+			sprintf(buf, "%d", i);
 			stringList[i] = buf;
 		}
+
 		stringList[1] = "HEADER_GC_CHARACTER_ADD";
 		stringList[2] = "HEADER_GC_CHARACTER_DEL";
 		stringList[3] = "HEADER_GC_CHARACTER_MOVE";
@@ -635,9 +704,9 @@ const char * GetRecvHeaderName(BYTE header)
 		stringList[46] = "HEADER_GC_QUEST_CONFIRM";
 
 		stringList[61] = "HEADER_GC_MOUNT";
-		stringList[62] = "HEADER_GC_OWNERSHIP"; 
+		stringList[62] = "HEADER_GC_OWNERSHIP";
 		stringList[63] = "HEADER_GC_TARGET";
-		stringList[65] = "HEADER_GC_WARP"; 
+		stringList[65] = "HEADER_GC_WARP";
 		stringList[69] = "HEADER_GC_ADD_FLY_TARGETING";
 
 		stringList[70] = "HEADER_GC_CREATE_FLY";
@@ -675,7 +744,7 @@ const char * GetRecvHeaderName(BYTE header)
 		stringList[106] = "HEADER_GC_TIME";
 		stringList[107] = "HEADER_GC_CHANGE_NAME";
 		stringList[110] = "HEADER_GC_DUNGEON";
-		stringList[111] = "HEADER_GC_WALK_MODE"; 
+		stringList[111] = "HEADER_GC_WALK_MODE";
 		stringList[112] = "HEADER_GC_CHANGE_SKILL_GROUP";
 		stringList[113] = "HEADER_GC_MAIN_CHARACTER_NEW";
 		stringList[114] = "HEADER_GC_USE_POTION";
@@ -711,6 +780,7 @@ const char * GetRecvHeaderName(BYTE header)
 		stringList[0xfe] = "HEADER_GC_BINDUDP";
 		stringList[0xff] = "HEADER_GC_HANDSHAKE";
 	}
+
 	return stringList[header].c_str();
 }
 
@@ -719,7 +789,9 @@ const char * GetRecvHeaderName(BYTE header)
 bool CNetworkStream::Recv(int size)
 {
 	if (!Peek(size))
+	{
 		return false;
+	}
 
 	m_recvBufOutputPos += size;
 	return true;
@@ -733,29 +805,36 @@ static std::string dump_hex(const uint8_t* ptr, const std::size_t length)
 	std::stringstream ss;
 
 	std::vector <uint8_t> buffer(length);
+
 	memcpy(&buffer[0], ptr, length);
 
 	for (size_t i = 0; i < length; ++i)
+	{
 		ss << std::hex << std::setfill('0') << std::setw(2) << (int)buffer.at(i) << ", ";
+	}
 
 	const auto str = ss.str();
 	return str.substr(0, str.size() - 2);
 }
 
-bool CNetworkStream::Recv(int size, char * pDestBuf)
+bool CNetworkStream::Recv(int size, char* pDestBuf)
 {
-	if (!Peek(size, pDestBuf)) 
+	if (!Peek(size, pDestBuf))
+	{
 		return false;
-	
+	}
+
 #ifdef _PACKETDUMP
+
 	if (*pDestBuf != 0)
 	{
 		const auto kHeader = *pDestBuf;
 		TraceError("RECV< %s %u(0x%X) (%d)", GetRecvHeaderName(kHeader), kHeader, kHeader, size);
 
-		const auto contents = dump_hex(reinterpret_cast<const uint8_t*>(pDestBuf), size);
+		const auto contents = dump_hex(reinterpret_cast<const uint8_t*> (pDestBuf), size);
 		TraceError("%s", contents.c_str());
 	}
+
 #endif
 
 	m_recvBufOutputPos += size;
@@ -764,28 +843,32 @@ bool CNetworkStream::Recv(int size, char * pDestBuf)
 
 int CNetworkStream::__GetSendBufferSize()
 {
-	return m_sendBufInputPos-m_sendBufOutputPos;
+	return m_sendBufInputPos - m_sendBufOutputPos;
 }
 
-
-bool CNetworkStream::Send(int size, const char * pSrcBuf)
+bool CNetworkStream::Send(int size, const char* pSrcBuf)
 {
 	int sendBufRestSize = m_sendBufSize - m_sendBufInputPos;
+
 	if ((size + 1) > sendBufRestSize)
+	{
 		return false;
+	}
 
 	memcpy(m_sendBuf + m_sendBufInputPos, pSrcBuf, size);
 	m_sendBufInputPos += size;
 
 #ifdef _PACKETDUMP
+
 	if (*pSrcBuf != 0)
 	{
 		const auto kHeader = *pSrcBuf;
 		TraceError("SEND> %s %u(0x%X) (%d)", GetSendHeaderName(kHeader), kHeader, kHeader, size);
 
-		const auto contents = dump_hex(reinterpret_cast<const uint8_t*>(pSrcBuf), size);
+		const auto contents = dump_hex(reinterpret_cast<const uint8_t*> (pSrcBuf), size);
 		TraceError("%s", contents.c_str());
 	}
+
 #endif
 
 	return true;
@@ -821,7 +904,9 @@ bool CNetworkStream::Recv(int len, void* pDestBuf)
 bool CNetworkStream::SendFlush(int len, const void* pSrcBuf)
 {
 	if (!Send(len, pSrcBuf))
+	{
 		return false;
+	}
 
 	return __SendInternalBuffer();
 }
@@ -844,7 +929,9 @@ void CNetworkStream::SetPacketSequenceMode(bool isOn)
 bool CNetworkStream::SendSequence()
 {
 	if (!m_bUseSequence)
+	{
 		return true;
+	}
 
 	BYTE bSeq = m_SequenceGenerator(UINT8_MAX + 1);
 	return Send(sizeof(BYTE), &bSeq);
@@ -894,18 +981,18 @@ CNetworkStream::CNetworkStream()
 	m_recvTEABuf = NULL;
 	m_recvTEABufSize = 0;
 	m_recvTEABufInputPos = 0;
-	
-	m_recvBuf = NULL;	
-	m_recvBufSize = 0;	
+
+	m_recvBuf = NULL;
+	m_recvBufSize = 0;
 	m_recvBufOutputPos = 0;
-	m_recvBufInputPos = 0;	
+	m_recvBufInputPos = 0;
 
 	m_sendTEABuf = NULL;
 	m_sendTEABuf = 0;
 	m_sendTEABufInputPos = 0;
 
-	m_sendBuf = NULL;	
-	m_sendBufSize = 0;	
+	m_sendBuf = NULL;
+	m_sendBufSize = 0;
 	m_sendBufOutputPos = 0;
 	m_sendBufInputPos = 0;
 
@@ -919,26 +1006,26 @@ CNetworkStream::~CNetworkStream()
 
 	if (m_sendTEABuf)
 	{
-		delete [] m_sendTEABuf;
-		m_sendTEABuf=NULL;
+		delete[] m_sendTEABuf;
+		m_sendTEABuf = NULL;
 	}
 
 	if (m_recvTEABuf)
 	{
-		delete [] m_recvTEABuf;
-		m_recvTEABuf=NULL;
+		delete[] m_recvTEABuf;
+		m_recvTEABuf = NULL;
 	}
 
 	if (m_recvBuf)
 	{
-		delete [] m_recvBuf;
-		m_recvBuf=NULL;
+		delete[] m_recvBuf;
+		m_recvBuf = NULL;
 	}
 
 	if (m_sendBuf)
 	{
-		delete [] m_sendBuf;
-		m_sendBuf=NULL;
+		delete[] m_sendBuf;
+		m_sendBuf = NULL;
 	}
 }
 
@@ -962,12 +1049,18 @@ void CNetworkStream::ActivateCipher()
 void CNetworkStream::DecryptAlreadyReceivedData()
 {
 	if (!IsSecurityMode())
+	{
 		return;
+	}
 
 	const int unreadSize = m_recvBufInputPos - m_recvBufOutputPos;
+
 	if (unreadSize <= 0)
+	{
 		return;
+	}
 
 	m_cipher.Decrypt(m_recvBuf + m_recvBufOutputPos, unreadSize);
 }
+
 #endif // _IMPROVED_PACKET_ENCRYPTION_

@@ -78,7 +78,7 @@ namespace NRaceData
 
 		THitTimePositionMap mapHitPosition;
 
-		bool Load(CTextFileLoader & rTextFileLoader);
+		bool Load(CTextFileLoader& rTextFileLoader);
 	} THitData;
 
 	typedef std::vector<THitData> THitDataContainer;
@@ -106,13 +106,14 @@ namespace NRaceData
 		COLLISION_SHAPE_SPHERE,
 		COLLISION_SHAPE_CYLINDER,
 	};
-	
+
 	typedef struct SCollisionData
 	{
 		int					iCollisionType;
 		CSphereCollisionInstanceVector	SphereDataVector;
 
 		SCollisionData() {}
+
 		virtual ~SCollisionData() {}
 	} TCollisionData;
 
@@ -123,6 +124,7 @@ namespace NRaceData
 		D3DXVECTOR3			v3Rotation;
 
 		SAttachingEffectData() {}
+
 		virtual ~SAttachingEffectData() {}
 	} TAttachingEffectData;
 
@@ -131,6 +133,7 @@ namespace NRaceData
 		std::string			strFileName;
 
 		SAttachingObjectData() {}
+
 		virtual ~SAttachingObjectData() {}
 	} TAttachingObjectData;
 
@@ -138,17 +141,17 @@ namespace NRaceData
 
 	void DestroySystem();
 
-	void SaveAttackData(FILE * File, int iTabCount, const TAttackData & c_rData);
-	void SaveMotionAttackData(FILE * File, int iTabCount, const TMotionAttackData & c_rData);
-	void SaveCollisionData(FILE * File, int iTabCount, const TCollisionData & c_rCollisionData);
-	void SaveEffectData(FILE * File, int iTabCount, const TAttachingEffectData & c_rEffectData);
-	void SaveObjectData(FILE * File, int iTabCount, const TAttachingObjectData & c_rObjectData);
+	void SaveAttackData(FILE* File, int iTabCount, const TAttackData& c_rData);
+	void SaveMotionAttackData(FILE* File, int iTabCount, const TMotionAttackData& c_rData);
+	void SaveCollisionData(FILE* File, int iTabCount, const TCollisionData& c_rCollisionData);
+	void SaveEffectData(FILE* File, int iTabCount, const TAttachingEffectData& c_rEffectData);
+	void SaveObjectData(FILE* File, int iTabCount, const TAttachingObjectData& c_rObjectData);
 
-	BOOL LoadAttackData(CTextFileLoader & rTextFileLoader, TAttackData * pData);
-	BOOL LoadMotionAttackData(CTextFileLoader & rTextFileLoader, TMotionAttackData * pData);
-	BOOL LoadCollisionData(CTextFileLoader & rTextFileLoader, TCollisionData * pCollisionData);
-	BOOL LoadEffectData(CTextFileLoader & rTextFileLoader, TAttachingEffectData * pEffectData);
-	BOOL LoadObjectData(CTextFileLoader & rTextFileLoader, TAttachingObjectData * pObjectData);
+	BOOL LoadAttackData(CTextFileLoader& rTextFileLoader, TAttackData* pData);
+	BOOL LoadMotionAttackData(CTextFileLoader& rTextFileLoader, TMotionAttackData* pData);
+	BOOL LoadCollisionData(CTextFileLoader& rTextFileLoader, TCollisionData* pCollisionData);
+	BOOL LoadEffectData(CTextFileLoader& rTextFileLoader, TAttachingEffectData* pEffectData);
+	BOOL LoadObjectData(CTextFileLoader& rTextFileLoader, TAttachingObjectData* pObjectData);
 
 	/////////////////////////////////////////////////////////////////////////////////
 	// Attaching Data
@@ -165,29 +168,31 @@ namespace NRaceData
 
 	typedef struct SAttachingData
 	{
-		SAttachingData() 
+		SAttachingData()
 			: dwType(0)
 			, isAttaching(false)
 			, dwAttachingModelIndex(0)
 			, pCollisionData(NULL)
 			, pEffectData(NULL)
 			, pObjectData(NULL)
-		{}
+		{
+		}
+
 		DWORD dwType;
 
 		BOOL isAttaching;
 		DWORD dwAttachingModelIndex;
 		std::string strAttachingBoneName;
 
-		TCollisionData * pCollisionData;
-		TAttachingEffectData * pEffectData;
-		TAttachingObjectData * pObjectData;
+		TCollisionData* pCollisionData;
+		TAttachingEffectData* pEffectData;
+		TAttachingObjectData* pObjectData;
 	} TAttachingData;
 
 	typedef std::vector<TAttachingData> TAttachingDataVector;
 
-	void SaveAttachingData(FILE * File, int iTabCount, const TAttachingDataVector & c_rAttachingDataVector);
-	BOOL LoadAttachingData(CTextFileLoader & rTextFileLoader, TAttachingDataVector * pAttachingDataVector);
+	void SaveAttachingData(FILE* File, int iTabCount, const TAttachingDataVector& c_rAttachingDataVector);
+	BOOL LoadAttachingData(CTextFileLoader& rTextFileLoader, TAttachingDataVector* pAttachingDataVector);
 
 	extern CDynamicPool<TCollisionData>			g_CollisionDataPool;
 	extern CDynamicPool<TAttachingEffectData>	g_EffectDataPool;

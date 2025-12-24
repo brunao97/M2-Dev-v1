@@ -12,11 +12,13 @@ namespace NSound
 		float fTime;
 		std::string strSoundFileName;
 	} TSoundData;
+
 	typedef struct SSoundInstance
 	{
 		uint32_t dwFrame;
 		std::string strSoundFileName;
 	} TSoundInstance;
+
 	typedef std::vector<TSoundData> TSoundDataVector;
 	typedef std::vector<TSoundInstance> TSoundInstanceVector;
 

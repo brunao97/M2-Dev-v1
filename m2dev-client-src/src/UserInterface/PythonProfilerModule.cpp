@@ -1,20 +1,26 @@
 #include "StdAfx.h"
 #include "EterLib/Profiler.h"
 
-PyObject * profilerPush(PyObject * poSelf, PyObject * poArgs)
+PyObject* profilerPush(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
+
 	if (!PyTuple_GetString(poArgs, 0, &szName))
+	{
 		return Py_BuildException();
+	}
 
 	return Py_BuildNone();
 }
 
-PyObject * profilerPop(PyObject * poSelf, PyObject * poArgs)
+PyObject* profilerPop(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szName;
+	char* szName;
+
 	if (!PyTuple_GetString(poArgs, 0, &szName))
+	{
 		return Py_BuildException();
+	}
 
 	return Py_BuildNone();
 }

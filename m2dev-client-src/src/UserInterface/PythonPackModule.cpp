@@ -8,16 +8,17 @@ DWORD g_adwDecryptKey[4];
 
 #include "AccountConnector.h"
 
-inline const BYTE* GetKey_20050304Myevan() 
+inline const BYTE* GetKey_20050304Myevan()
 {
 	volatile static DWORD s_adwKey[1938];
 
-	volatile DWORD seed=1491971513;
-	for (UINT i=0; i<BYTE(seed); i++)
+	volatile DWORD seed = 1491971513;
+
+	for (UINT i = 0; i < BYTE(seed); i++)
 	{
-		seed^=2148941891;
-		seed+=3592385981;
-		s_adwKey[i]=seed;
+		seed ^= 2148941891;
+		seed += 3592385981;
+		s_adwKey[i] = seed;
 	}
 
 	return (const BYTE*)s_adwKey;
@@ -27,36 +28,44 @@ inline const BYTE* GetKey_20050304Myevan()
 
 void CAccountConnector::__BuildClientKey_20050304Myevan()
 {
-	const BYTE * c_pszKey = GetKey_20050304Myevan();
-	memcpy(g_adwEncryptKey, c_pszKey+157, 16);
+	const BYTE* c_pszKey = GetKey_20050304Myevan();
+	memcpy(g_adwEncryptKey, c_pszKey + 157, 16);
 
 	for (DWORD i = 0; i < 4; ++i)
+	{
 		g_adwEncryptKey[i] = random();
+	}
 
-	tea_encrypt((DWORD *) g_adwDecryptKey, (const DWORD *) g_adwEncryptKey, (const DWORD *) (c_pszKey+37), 16);
-//	TEA_Encrypt((DWORD *) g_adwDecryptKey, (const DWORD *) g_adwEncryptKey, (const DWORD *) (c_pszKey+37), 16);
+	tea_encrypt((DWORD*)g_adwDecryptKey, (const DWORD*)g_adwEncryptKey, (const DWORD*)(c_pszKey + 37), 16);
+	//	TEA_Encrypt((DWORD *) g_adwDecryptKey, (const DWORD *) g_adwEncryptKey, (const DWORD *) (c_pszKey+37), 16);
 }
+
 // END_OF_CHINA_CRYPT_KEY
 
-PyObject * packExist(PyObject * poSelf, PyObject * poArgs)
+PyObject* packExist(PyObject* poSelf, PyObject* poArgs)
 {
-	char * strFileName;
+	char* strFileName;
 
 	if (!PyTuple_GetString(poArgs, 0, &strFileName))
+	{
 		return Py_BuildException();
+	}
 
 	return Py_BuildValue("i", CPackManager::Instance().IsExist(strFileName) ? 1 : 0);
 }
 
-PyObject * packGet(PyObject * poSelf, PyObject * poArgs)
+PyObject* packGet(PyObject* poSelf, PyObject* poArgs)
 {
-	char * strFileName;
-	
+	char* strFileName;
+
 	if (!PyTuple_GetString(poArgs, 0, &strFileName))
+	{
 		return Py_BuildException();
+	}
 
 	// 파이썬에서 읽어드리는 패킹 파일은 python 파일과 txt 파일에 한정한다
 	const char* pcExt = strrchr(strFileName, '.');
+
 	if (pcExt) // 확장자가 있고
 	{
 		if ((stricmp(pcExt, ".py") == 0) ||
@@ -64,8 +73,11 @@ PyObject * packGet(PyObject * poSelf, PyObject * poArgs)
 			(stricmp(pcExt, ".txt") == 0))
 		{
 			TPackFile file;
+
 			if (CPackManager::Instance().GetFile(strFileName, file))
-				return Py_BuildValue("s#",file.data(), file.size());
+			{
+				return Py_BuildValue("s#", file.data(), file.size());
+			}
 		}
 	}
 
@@ -78,8 +90,8 @@ void initpack()
 	{
 		{ "Exist",		packExist,		METH_VARARGS },
 		{ "Get",		packGet,		METH_VARARGS },
-		{ NULL, NULL },		
+		{ NULL, NULL },
 	};
-	
+
 	Py_InitModule("pack", s_methods);
 }

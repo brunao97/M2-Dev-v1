@@ -6,55 +6,62 @@
 #include "Mutex.h"
 #include "PackLib/PackManager.h"
 
-class CFileLoaderThread 
+class CFileLoaderThread
 {
-	public:
-		typedef struct SData
-		{
-			std::string	stFileName;
-			TPackFile	File;
-		} TData;
+public:
+	typedef struct SData
+	{
+		std::string	stFileName;
+		TPackFile	File;
+	} TData;
 
-	public:
-		CFileLoaderThread();
-		~CFileLoaderThread();
+public:
+	CFileLoaderThread();
+	~CFileLoaderThread();
 
-		int Create(void * arg);
-	
-	public:
-		void	Request(std::string & c_rstFileName);
-		bool	Fetch(TData ** ppData);
-		void	Shutdown();
+	int Create(void* arg);
 
-	protected:
-		static UINT CALLBACK	EntryPoint(void * pThis);
-		UINT					Run(void * arg);
+public:
+	void	Request(std::string& c_rstFileName);
+	bool	Fetch(TData** ppData);
+	void	Shutdown();
 
-		void *					Arg() const		{ return m_pArg; }
-		void					Arg(void * arg) { m_pArg = arg; }
-		
-		HANDLE					m_hThread;
+protected:
+	static UINT CALLBACK	EntryPoint(void* pThis);
+	UINT					Run(void* arg);
 
-	private:
-		void *					m_pArg;
-		unsigned				m_uThreadID;
+	void* Arg() const
+	{
+		return m_pArg;
+	}
 
-	protected:
-		UINT					Setup();
-		UINT					Execute(void * pvArg);
-		void					Destroy();
-		void					Process();
+	void					Arg(void* arg)
+	{
+		m_pArg = arg;
+	}
 
-	private:
-		std::deque<TData *>		m_pRequestDeque;
-		Mutex					m_RequestMutex;
+	HANDLE					m_hThread;
 
-		std::deque<TData *>		m_pCompleteDeque;
-		Mutex					m_CompleteMutex;
+private:
+	void* m_pArg;
+	unsigned				m_uThreadID;
 
-		HANDLE					m_hSemaphore;
-		int						m_iRestSemCount;
-		bool					m_bShutdowned;
+protected:
+	UINT					Setup();
+	UINT					Execute(void* pvArg);
+	void					Destroy();
+	void					Process();
+
+private:
+	std::deque<TData*>		m_pRequestDeque;
+	Mutex					m_RequestMutex;
+
+	std::deque<TData*>		m_pCompleteDeque;
+	Mutex					m_CompleteMutex;
+
+	HANDLE					m_hSemaphore;
+	int						m_iRestSemCount;
+	bool					m_bShutdowned;
 };
 
 #endif

@@ -3,9 +3,9 @@
 
 #include <string>
 
-class CSymTable  
+class CSymTable
 {
-    public:
+public:
 	CSymTable(int aTok, std::string aStr);
 	virtual ~CSymTable();
 
@@ -14,4 +14,4 @@ class CSymTable
 	std::string	strlex;
 };
 
-#endif 
+#endif

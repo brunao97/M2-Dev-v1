@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForestOpenGL Class
 //
 //	(c) 2003 IDV, Inc.
@@ -29,8 +29,7 @@
 
 #pragma once
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	Include Files
 
 //#include <map>
@@ -39,28 +38,28 @@
 #include "SpeedTreeForest.h"
 #include "SpeedTreeMaterial.h"
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	class CSpeedTreeForestDirectX8 declaration
 class CSpeedTreeForestDirectX8 : public CSpeedTreeForest, public CGraphicBase, public CSingleton<CSpeedTreeForestDirectX8>
 {
-	public:
-		CSpeedTreeForestDirectX8();
-		virtual ~CSpeedTreeForestDirectX8();
+public:
+	CSpeedTreeForestDirectX8();
+	virtual ~CSpeedTreeForestDirectX8();
 
-		void			UploadWindMatrix(unsigned int uiLocation, const float* pMatrix) const;
-		void			UpdateCompundMatrix(const D3DXVECTOR3 & c_rEyeVec, const D3DXMATRIX & c_rmatView, const D3DXMATRIX& c_rmatProj);
+	void			UploadWindMatrix(unsigned int uiLocation, const float* pMatrix) const;
+	void			UpdateCompundMatrix(const D3DXVECTOR3& c_rEyeVec, const D3DXMATRIX& c_rmatView, const D3DXMATRIX& c_rmatProj);
 
-		void			Render(unsigned long ulRenderBitVector = Forest_RenderAll);
-		bool			SetRenderingDevice(LPDIRECT3DDEVICE9 pDevice);
-		
-	private:
-		bool			InitVertexShaders();
-		
-	private:
-		LPDIRECT3DDEVICE9		m_pDx;							// the rendering context
+	void			Render(unsigned long ulRenderBitVector = Forest_RenderAll);
+	bool			SetRenderingDevice(LPDIRECT3DDEVICE9 pDevice);
 
-		LPDIRECT3DVERTEXDECLARATION9 m_dwBranchVertexShader;			// branch/frond vertex shaders	
+private:
+	bool			InitVertexShaders();
 
-		LPDIRECT3DVERTEXDECLARATION9	m_pLeafVertexShaderDecl;			// leaf vertex shader declaration
-		LPDIRECT3DVERTEXSHADER9			m_pLeafVertexShader;				// leaf vertex shader
+private:
+	LPDIRECT3DDEVICE9		m_pDx;							// the rendering context
+
+	LPDIRECT3DVERTEXDECLARATION9 m_dwBranchVertexShader;			// branch/frond vertex shaders
+
+	LPDIRECT3DVERTEXDECLARATION9	m_pLeafVertexShaderDecl;			// leaf vertex shader declaration
+	LPDIRECT3DVERTEXSHADER9			m_pLeafVertexShader;				// leaf vertex shader
 };

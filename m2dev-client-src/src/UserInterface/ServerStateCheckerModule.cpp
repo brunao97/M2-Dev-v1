@@ -1,47 +1,59 @@
 #include "StdAfx.h"
 #include "ServerStateChecker.h"
 
-PyObject * ServerStateCheckerCreate(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerCreate(PyObject* poSelf, PyObject* poArgs)
 {
-	PyObject * poWnd;
+	PyObject* poWnd;
+
 	if (!PyTuple_GetObject(poArgs, 0, &poWnd))
+	{
 		return Py_BadArgument();
+	}
 
 	CServerStateChecker::Instance().Create(poWnd);
 	return Py_BuildNone();
 }
 
-PyObject * ServerStateCheckerUpdate(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerUpdate(PyObject* poSelf, PyObject* poArgs)
 {
 	CServerStateChecker::Instance().Update();
 	return Py_BuildNone();
 }
 
-PyObject * ServerStateCheckerRequest(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerRequest(PyObject* poSelf, PyObject* poArgs)
 {
 	CServerStateChecker::Instance().Request();
 	return Py_BuildNone();
 }
 
-PyObject * ServerStateCheckerAddChannel(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerAddChannel(PyObject* poSelf, PyObject* poArgs)
 {
 	int nServerIndex;
-	if (!PyTuple_GetInteger(poArgs, 0, &nServerIndex))
-		return Py_BuildException();
 
-	char * szAddr;
-	if (!PyTuple_GetString(poArgs, 1, &szAddr))
+	if (!PyTuple_GetInteger(poArgs, 0, &nServerIndex))
+	{
 		return Py_BuildException();
+	}
+
+	char* szAddr;
+
+	if (!PyTuple_GetString(poArgs, 1, &szAddr))
+	{
+		return Py_BuildException();
+	}
 
 	int nPort;
+
 	if (!PyTuple_GetInteger(poArgs, 2, &nPort))
+	{
 		return Py_BuildException();
+	}
 
 	CServerStateChecker::Instance().AddChannel(nServerIndex, szAddr, nPort);
 	return Py_BuildNone();
 }
 
-PyObject * ServerStateCheckerInitialize(PyObject* poSelf, PyObject* poArgs)
+PyObject* ServerStateCheckerInitialize(PyObject* poSelf, PyObject* poArgs)
 {
 	CServerStateChecker::Instance().Initialize();
 	return Py_BuildNone();

@@ -26,7 +26,7 @@ inline void _TraceForImage(const char* c_szFormat, ...)
 {
 	va_list args;
 	va_start(args, c_szFormat);
-	
+
 	static char szBuf[1024];
 	_vsnprintf(szBuf, sizeof(szBuf), c_szFormat, args);
 #ifdef _DEBUG

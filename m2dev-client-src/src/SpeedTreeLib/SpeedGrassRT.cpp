@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT Class
 //
 //	(c) 2003 IDV, Inc.
@@ -20,7 +20,6 @@
 //		Fax:   (803) 931-0320
 //		Web:   http://www.idvinc.com
 
-
 #include "StdAfx.h"
 #include "BoundaryShapeManager.h"
 
@@ -28,7 +27,7 @@
 
 inline float VecInterpolate(float fStart, float fEnd, float fPercent)
 {
-    return fStart + (fEnd - fStart) * fPercent;
+	return fStart + (fEnd - fStart) * fPercent;
 }
 
 #define VectorSinD(x)       sinf((x) / 57.29578f)
@@ -38,10 +37,10 @@ using namespace std;
 
 // macros
 #ifndef max
-#define max(a, b)  (((a) > (b)) ? (a) : (b)) 
+#define max(a, b)  (((a) > (b)) ? (a) : (b))
 #endif
 #ifndef min
-#define min(a, b)  (((a) < (b)) ? (a) : (b)) 
+#define min(a, b)  (((a) < (b)) ? (a) : (b))
 #endif
 
 // static variables
@@ -64,11 +63,10 @@ float CSpeedGrassRT::m_afFrustumMin[2] = { FLT_MAX, FLT_MAX };
 float CSpeedGrassRT::m_afFrustumMax[2] = { -FLT_MAX, -FLT_MAX };
 float CSpeedGrassRT::m_afFrustumPlanes[5][4] = { 0.0f };
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::SBlade::SBlade
 
-CSpeedGrassRT::SBlade::SBlade( ) :
+CSpeedGrassRT::SBlade::SBlade() :
 	m_fSize(1.0f),
 	m_fNoise(0.0f),
 	m_fThrow(0.0f),
@@ -78,11 +76,10 @@ CSpeedGrassRT::SBlade::SBlade( ) :
 	m_afTopColor[0] = m_afTopColor[1] = m_afTopColor[2] = 1.0f;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::SRegion::SRegion
 
-CSpeedGrassRT::SRegion::SRegion( ) :
+CSpeedGrassRT::SRegion::SRegion() :
 	m_bCulled(false),
 	m_fCullingRadius(1.0f)
 {
@@ -92,11 +89,10 @@ CSpeedGrassRT::SRegion::SRegion( ) :
 	m_VertexBuffer.Destroy();
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::CSpeedGrassRT
 
-CSpeedGrassRT::CSpeedGrassRT( ) :
+CSpeedGrassRT::CSpeedGrassRT() :
 	m_nNumRegions(0),
 	m_nNumRegionCols(0),
 	m_nNumRegionRows(0),
@@ -107,16 +103,14 @@ CSpeedGrassRT::CSpeedGrassRT( ) :
 	m_afBoundingBox[3] = m_afBoundingBox[4] = m_afBoundingBox[5] = 1.0f;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::~CSpeedGrassRT
 
-CSpeedGrassRT::~CSpeedGrassRT( )
+CSpeedGrassRT::~CSpeedGrassRT()
 {
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::DeleteRegions
 
 void CSpeedGrassRT::DeleteRegions(void)
@@ -126,8 +120,7 @@ void CSpeedGrassRT::DeleteRegions(void)
 	m_nNumRegions = 0;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::GetRegions
 
 const CSpeedGrassRT::SRegion* CSpeedGrassRT::GetRegions(unsigned int& uiNumRegions)
@@ -137,7 +130,7 @@ const CSpeedGrassRT::SRegion* CSpeedGrassRT::GetRegions(unsigned int& uiNumRegio
 	return m_pRegions;
 }
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::ParseBsfFile
 
 bool CSpeedGrassRT::ParseBsfFile(const char* pFilename, unsigned int nNumBlades, unsigned int uiRows, unsigned int uiCols, float fCollisionDistance)
@@ -166,10 +159,10 @@ bool CSpeedGrassRT::ParseBsfFile(const char* pFilename, unsigned int nNumBlades,
 			{
 				sBlade.m_afPos[2] = Height(sBlade.m_afPos[0], sBlade.m_afPos[1], sBlade.m_afNormal);
 
-//				CVec3 cNormal(sBlade.m_afNormal[0], sBlade.m_afNormal[1], sBlade.m_afNormal[2]);
-//				cNormal.Normalize( );
-//				cNormal[2] = -cNormal[2];
-//				memcpy(sBlade.m_afNormal, cNormal, 3 * sizeof(float));
+				//				CVec3 cNormal(sBlade.m_afNormal[0], sBlade.m_afNormal[1], sBlade.m_afNormal[2]);
+				//				cNormal.Normalize( );
+				//				cNormal[2] = -cNormal[2];
+				//				memcpy(sBlade.m_afNormal, cNormal, 3 * sizeof(float));
 				D3DXVECTOR3 v3Normal(sBlade.m_afNormal[0], sBlade.m_afNormal[1], sBlade.m_afNormal[2]);
 				D3DXVec3Normalize(&v3Normal, &v3Normal);
 				v3Normal.z = -v3Normal.z;
@@ -202,17 +195,21 @@ bool CSpeedGrassRT::ParseBsfFile(const char* pFilename, unsigned int nNumBlades,
 
 		bSuccess = true;
 	}
+
 	else
-		fprintf(stderr, "%s\n", cManager.GetCurrentError( ).c_str( ));
+	{
+		fprintf(stderr, "%s\n", cManager.GetCurrentError().c_str());
+	}
 
 	if (bSuccess)
+	{
 		CreateRegions(vSceneBlades, fCollisionDistance);
+	}
 
 	return bSuccess;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::CustomPlacement
 //
 //	Use this function to perform custom grass blade placement.  Feel free
@@ -273,18 +270,16 @@ bool CSpeedGrassRT::CustomPlacement(unsigned int uiRows, unsigned int uiCols)
 	return true;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::GetLodParams
- 
+
 void CSpeedGrassRT::GetLodParams(float& fFarDistance, float& fTransitionLength)
 {
 	fFarDistance = m_fLodFarDistance;
 	fTransitionLength = m_fLodTransitionLength;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::SetLodParams
 
 void CSpeedGrassRT::SetLodParams(float fFarDistance, float fTransitionLength)
@@ -293,8 +288,7 @@ void CSpeedGrassRT::SetLodParams(float fFarDistance, float fTransitionLength)
 	m_fLodTransitionLength = fTransitionLength;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::Cull
 //
 //	Using a two-dimensional projection, determine which regions
@@ -309,8 +303,10 @@ void CSpeedGrassRT::Cull(void)
 
 	// set all regions to culled, modify later
 	for (int i = 0; i < m_nNumRegions; ++i)
+	{
 		m_pRegions[i].m_bCulled = true;
-	
+	}
+
 	int nRegionsDrawn = 0;
 
 	// is the entire set of regions culled?
@@ -318,7 +314,10 @@ void CSpeedGrassRT::Cull(void)
 		(anFrustumCellsMin[0] >= m_nNumRegionCols && anFrustumCellsMax[0] >= m_nNumRegionCols) ||
 		(anFrustumCellsMin[1] < 0 && anFrustumCellsMax[1] < 0) ||
 		(anFrustumCellsMin[1] >= m_nNumRegionRows && anFrustumCellsMax[1] >= m_nNumRegionRows))
+	{
 		m_bAllRegionsCulled = true;
+	}
+
 	else
 	{
 		// clip cell values
@@ -338,8 +337,7 @@ void CSpeedGrassRT::Cull(void)
 	}
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::SetWindDirection
 
 void CSpeedGrassRT::SetWindDirection(const float* pWindDir)
@@ -348,8 +346,7 @@ void CSpeedGrassRT::SetWindDirection(const float* pWindDir)
 	m_afWindDir[3] = 0.0f;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::GetWindDirection
 
 const float* CSpeedGrassRT::GetWindDirection(void)
@@ -357,8 +354,7 @@ const float* CSpeedGrassRT::GetWindDirection(void)
 	return m_afWindDir;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::GetCameraPos
 
 const float* CSpeedGrassRT::GetCameraPos(void)
@@ -366,8 +362,7 @@ const float* CSpeedGrassRT::GetCameraPos(void)
 	return m_afCameraPos;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::SetCamera
 
 void CSpeedGrassRT::SetCamera(const float* pPosition, const double* pModelviewMatrix)
@@ -390,14 +385,13 @@ void CSpeedGrassRT::SetCamera(const float* pPosition, const double* pModelviewMa
 	m_afCameraOut[2] = pModelviewMatrix[10];
 
 	// with direction changed, billboard turns
-	ComputeUnitBillboard( );
+	ComputeUnitBillboard();
 
 	// compute new frustum box
-	ComputeFrustum( );
+	ComputeFrustum();
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::SetPerspective
 
 void CSpeedGrassRT::SetPerspective(float fAspectRatio, float fFieldOfView)
@@ -406,14 +400,13 @@ void CSpeedGrassRT::SetPerspective(float fAspectRatio, float fFieldOfView)
 	m_fFieldOfView = D3DXToRadian(fAspectRatio * fFieldOfView);
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::CreateRegions
 
 void CSpeedGrassRT::CreateRegions(const vector<SBlade>& vSceneBlades, float fCollisionDistance)
 {
 	// create regions based on overall extents
-	DeleteRegions( );
+	DeleteRegions();
 	m_nNumRegions = int(m_nNumRegionRows * m_nNumRegionCols);
 	m_pRegions = new SRegion[m_nNumRegions];
 
@@ -422,9 +415,11 @@ void CSpeedGrassRT::CreateRegions(const vector<SBlade>& vSceneBlades, float fCol
 	float fCellHeight = (m_afBoundingBox[4] - m_afBoundingBox[1]) / m_nNumRegionRows;
 
 	float fY = m_afBoundingBox[1];
+
 	for (int nRow = 0; nRow < m_nNumRegionRows; ++nRow)
 	{
 		float fX = m_afBoundingBox[0];
+
 		for (int nCol = 0; nCol < m_nNumRegionCols; ++nCol)
 		{
 			SRegion* pRegion = m_pRegions + GetRegionIndex(nRow, nCol);
@@ -434,7 +429,7 @@ void CSpeedGrassRT::CreateRegions(const vector<SBlade>& vSceneBlades, float fCol
 			pRegion->m_afMax[0] = fX + fCellWidth;
 			pRegion->m_afMin[1] = fY;
 			pRegion->m_afMax[1] = fY + fCellHeight;
-		
+
 			// compute center
 			pRegion->m_afCenter[0] = 0.5f * (pRegion->m_afMin[0] + pRegion->m_afMax[0]);
 			pRegion->m_afCenter[1] = 0.5f * (pRegion->m_afMin[1] + pRegion->m_afMax[1]);
@@ -443,7 +438,7 @@ void CSpeedGrassRT::CreateRegions(const vector<SBlade>& vSceneBlades, float fCol
 			pRegion->m_fCullingRadius = 1.1f * sqrt(
 				((pRegion->m_afMax[0] - pRegion->m_afCenter[0]) * (pRegion->m_afMax[0] - pRegion->m_afCenter[0])) +
 				((pRegion->m_afMax[1] - pRegion->m_afCenter[1]) * (pRegion->m_afMax[1] - pRegion->m_afCenter[1]))
-				);
+			);
 
 			fX += fCellWidth;
 		}
@@ -452,7 +447,7 @@ void CSpeedGrassRT::CreateRegions(const vector<SBlade>& vSceneBlades, float fCol
 	}
 
 	// assign each blade of grass to its particular region
-	for (vector<SBlade>::const_iterator iBlade = vSceneBlades.begin( ); iBlade != vSceneBlades.end( ); ++iBlade)
+	for (vector<SBlade>::const_iterator iBlade = vSceneBlades.begin(); iBlade != vSceneBlades.end(); ++iBlade)
 	{
 		// convert position to row/col index
 		float fPercentAlongX = (iBlade->m_afPos[0] - m_afBoundingBox[0]) / (m_afBoundingBox[3] - m_afBoundingBox[0]);
@@ -472,7 +467,8 @@ void CSpeedGrassRT::CreateRegions(const vector<SBlade>& vSceneBlades, float fCol
 
 		pRegion->m_afMin[2] = FLT_MAX;
 		pRegion->m_afMax[2] = -FLT_MAX;
-		for (vector<SBlade>::iterator iBlade = pRegion->m_vBlades.begin( ); iBlade != pRegion->m_vBlades.end( ); ++iBlade)
+
+		for (vector<SBlade>::iterator iBlade = pRegion->m_vBlades.begin(); iBlade != pRegion->m_vBlades.end(); ++iBlade)
 		{
 			pRegion->m_afMin[2] = min(pRegion->m_afMin[2], iBlade->m_afPos[2]);
 			pRegion->m_afMax[2] = max(pRegion->m_afMax[2], iBlade->m_afPos[2] + iBlade->m_fSize);
@@ -486,40 +482,48 @@ void CSpeedGrassRT::CreateRegions(const vector<SBlade>& vSceneBlades, float fCol
 		pRegion->m_fCullingRadius = 1.1f * sqrt(
 			((pRegion->m_afMax[0] - pRegion->m_afCenter[0]) * (pRegion->m_afMax[0] - pRegion->m_afCenter[0])) +
 			((pRegion->m_afMax[1] - pRegion->m_afCenter[1]) * (pRegion->m_afMax[1] - pRegion->m_afCenter[1])) +
-			((pRegion->m_afMax[2] - pRegion->m_afCenter[2]) * (pRegion->m_afMax[2] - pRegion->m_afCenter[2])) 
-			);
+			((pRegion->m_afMax[2] - pRegion->m_afCenter[2]) * (pRegion->m_afMax[2] - pRegion->m_afCenter[2]))
+		);
 	}
 
 	// collision detection
 	if (fCollisionDistance > 0.0f)
 	{
 		fCollisionDistance *= fCollisionDistance;
+
 		for (int nRow = 0; nRow < m_nNumRegionRows; ++nRow)
 		{
 			float fX = m_afBoundingBox[0];
+
 			for (int nCol = 0; nCol < m_nNumRegionCols; ++nCol)
 			{
 				SRegion* pRegion = m_pRegions + GetRegionIndex(nRow, nCol);
 
 				// check each blade against all other blades in the region
-				for (DWORD i = 0; i < pRegion->m_vBlades.size( ); ++i)
+				for (DWORD i = 0; i < pRegion->m_vBlades.size(); ++i)
 				{
 					float fX = pRegion->m_vBlades[i].m_afPos[0];
 					float fY = pRegion->m_vBlades[i].m_afPos[1];
 					bool bCollision = false;
-					for (DWORD j = 0; j < pRegion->m_vBlades.size( ) && !bCollision; ++j)
+
+					for (DWORD j = 0; j < pRegion->m_vBlades.size() && !bCollision; ++j)
 					{
 						if (i != j)
 						{
 							float fDistance = (fX - pRegion->m_vBlades[j].m_afPos[0]) * (fX - pRegion->m_vBlades[j].m_afPos[0]) + (fY - pRegion->m_vBlades[j].m_afPos[1]) * (fY - pRegion->m_vBlades[j].m_afPos[1]);
+
 							if (fDistance < fCollisionDistance)
+							{
 								bCollision = true;
+							}
 						}
 					}
-					
+
 					// delete the blade if necessary and adjust the main loop counter to compensate
 					if (bCollision)
-						pRegion->m_vBlades.erase(pRegion->m_vBlades.begin( ) + i--);
+					{
+						pRegion->m_vBlades.erase(pRegion->m_vBlades.begin() + i--);
+					}
 				}
 			}
 		}
@@ -529,39 +533,38 @@ void CSpeedGrassRT::CreateRegions(const vector<SBlade>& vSceneBlades, float fCol
 //////////////////////////////////////////////////////////////////////////
 // CSpeedGrassRT::RotateAxisFromIdentity
 
-__forceinline void CSpeedGrassRT::RotateAxisFromIdentity(D3DXMATRIX * pMat, const float & c_fAngle, const D3DXVECTOR3 & c_rv3Axis)
+__forceinline void CSpeedGrassRT::RotateAxisFromIdentity(D3DXMATRIX* pMat, const float& c_fAngle, const D3DXVECTOR3& c_rv3Axis)
 {
-    float s = VectorSinD(c_fAngle);
-    float c = VectorCosD(c_fAngle);
-    float t = 1.0 - c;
-	
-    float x = c_rv3Axis.x;
-    float y = c_rv3Axis.y;
-    float z = c_rv3Axis.z;
-	
-    pMat->_11 = t * x * x + c;
-    pMat->_12 = t * x * y + s * z;
-    pMat->_13 = t * x * z - s * y;
-    pMat->_21 = t * x * y - s * z;
-    pMat->_22 = t * y * y + c;
-    pMat->_23 = t * y * z + s * x;
-    pMat->_31 = t * x * z + s * y;
-    pMat->_32 = t * y * z - s * x;
-    pMat->_33 = t * z * z + c;
+	float s = VectorSinD(c_fAngle);
+	float c = VectorCosD(c_fAngle);
+	float t = 1.0 - c;
+
+	float x = c_rv3Axis.x;
+	float y = c_rv3Axis.y;
+	float z = c_rv3Axis.z;
+
+	pMat->_11 = t * x * x + c;
+	pMat->_12 = t * x * y + s * z;
+	pMat->_13 = t * x * z - s * y;
+	pMat->_21 = t * x * y - s * z;
+	pMat->_22 = t * y * y + c;
+	pMat->_23 = t * y * z + s * x;
+	pMat->_31 = t * x * z + s * y;
+	pMat->_32 = t * y * z - s * x;
+	pMat->_33 = t * z * z + c;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::ComputeFrustum
 
 void CSpeedGrassRT::ComputeFrustum(void)
 {
 	// setup useful vectors
-//	CVec3 cCameraIn(-m_afCameraOut[0], -m_afCameraOut[1], -m_afCameraOut[2]);
-//	CVec3 cCameraUp(m_afCameraUp[0], m_afCameraUp[1], m_afCameraUp[2]);
-//	CVec3 cCameraRight(m_afCameraRight[0], m_afCameraRight[1], m_afCameraRight[2]);
-//	CVec3 cCameraPos(m_afCameraPos[0], m_afCameraPos[1], m_afCameraPos[2]);
-//	CVec3 cFarPoint = cCameraPos + cCameraIn * (m_fLodFarDistance + m_fLodTransitionLength);
+	//	CVec3 cCameraIn(-m_afCameraOut[0], -m_afCameraOut[1], -m_afCameraOut[2]);
+	//	CVec3 cCameraUp(m_afCameraUp[0], m_afCameraUp[1], m_afCameraUp[2]);
+	//	CVec3 cCameraRight(m_afCameraRight[0], m_afCameraRight[1], m_afCameraRight[2]);
+	//	CVec3 cCameraPos(m_afCameraPos[0], m_afCameraPos[1], m_afCameraPos[2]);
+	//	CVec3 cFarPoint = cCameraPos + cCameraIn * (m_fLodFarDistance + m_fLodTransitionLength);
 	D3DXVECTOR3 cCameraIn(-m_afCameraOut[0], -m_afCameraOut[1], -m_afCameraOut[2]);
 	D3DXVECTOR3 cCameraUp(m_afCameraUp[0], m_afCameraUp[1], m_afCameraUp[2]);
 	D3DXVECTOR3 cCameraRight(m_afCameraRight[0], m_afCameraRight[1], m_afCameraRight[2]);
@@ -569,45 +572,45 @@ void CSpeedGrassRT::ComputeFrustum(void)
 	D3DXVECTOR3 cFarPoint = cCameraPos + cCameraIn * (m_fLodFarDistance + m_fLodTransitionLength);
 
 	// far plane
-//	memcpy(m_afFrustumPlanes[0], cCameraIn, 3 * sizeof(float));
-// 	m_afFrustumPlanes[0][3] = -(cCameraIn ^ cFarPoint); // operator^ is dot product
+	//	memcpy(m_afFrustumPlanes[0], cCameraIn, 3 * sizeof(float));
+	// 	m_afFrustumPlanes[0][3] = -(cCameraIn ^ cFarPoint); // operator^ is dot product
 	m_afFrustumPlanes[0][0] = cCameraIn.x;
 	m_afFrustumPlanes[0][1] = cCameraIn.y;
 	m_afFrustumPlanes[0][2] = cCameraIn.z;
 	m_afFrustumPlanes[0][3] = -D3DXVec3Dot(&cCameraIn, &cFarPoint); // operator^ is dot product
 
-// 	CRotTransform cRotate(true);
+	// 	CRotTransform cRotate(true);
 	D3DXMATRIX cRotate;
 	D3DXMatrixIdentity(&cRotate);
 	D3DXVECTOR3 cNormal;
 
 	// upper plane
-//	cRotate.RotateAxisFromIdentity(VecRad2Deg(0.5f * m_fFieldOfView * m_fAspectRatio + c_fHalfPi) , cCameraRight);
-//	CVec3 cNormal = cCameraIn * cRotate;
-//	cNormal.Normalize( );
-//	memcpy(m_afFrustumPlanes[1], cNormal, 3 * sizeof(float));
-//	m_afFrustumPlanes[1][3] = -(cNormal ^ cCameraPos);
+	//	cRotate.RotateAxisFromIdentity(VecRad2Deg(0.5f * m_fFieldOfView * m_fAspectRatio + c_fHalfPi) , cCameraRight);
+	//	CVec3 cNormal = cCameraIn * cRotate;
+	//	cNormal.Normalize( );
+	//	memcpy(m_afFrustumPlanes[1], cNormal, 3 * sizeof(float));
+	//	m_afFrustumPlanes[1][3] = -(cNormal ^ cCameraPos);
 
 	// left plane
-//	cRotate.RotateAxisFromIdentity(VecRad2Deg(0.5f * m_fFieldOfView + c_fHalfPi) , cCameraUp);
-//	cNormal = cCameraIn * cRotate;
-//	cNormal.Normalize( );
-//	memcpy(m_afFrustumPlanes[2], cNormal, 3 * sizeof(float));
-//	m_afFrustumPlanes[2][3] = -(cNormal ^ cCameraPos);
+	//	cRotate.RotateAxisFromIdentity(VecRad2Deg(0.5f * m_fFieldOfView + c_fHalfPi) , cCameraUp);
+	//	cNormal = cCameraIn * cRotate;
+	//	cNormal.Normalize( );
+	//	memcpy(m_afFrustumPlanes[2], cNormal, 3 * sizeof(float));
+	//	m_afFrustumPlanes[2][3] = -(cNormal ^ cCameraPos);
 
 	// lower plane
-//	cRotate.RotateAxisFromIdentity(-VecRad2Deg(0.5f * m_fFieldOfView * m_fAspectRatio + c_fHalfPi) , cCameraRight);
-//	cNormal = cCameraIn * cRotate;
-//	cNormal.Normalize( );
-//	memcpy(m_afFrustumPlanes[3], cNormal, 3 * sizeof(float));
-//	m_afFrustumPlanes[3][3] = -(cNormal ^ cCameraPos);
+	//	cRotate.RotateAxisFromIdentity(-VecRad2Deg(0.5f * m_fFieldOfView * m_fAspectRatio + c_fHalfPi) , cCameraRight);
+	//	cNormal = cCameraIn * cRotate;
+	//	cNormal.Normalize( );
+	//	memcpy(m_afFrustumPlanes[3], cNormal, 3 * sizeof(float));
+	//	m_afFrustumPlanes[3][3] = -(cNormal ^ cCameraPos);
 
 	// right plane
-//	cRotate.RotateAxisFromIdentity(-VecRad2Deg(0.5f * m_fFieldOfView + c_fHalfPi) , cCameraUp);
-//	cNormal = cCameraIn * cRotate;
-//	cNormal.Normalize( );
-//	memcpy(m_afFrustumPlanes[4], cNormal, 3 * sizeof(float));
-//	m_afFrustumPlanes[4][3] = -(cNormal ^ cCameraPos);
+	//	cRotate.RotateAxisFromIdentity(-VecRad2Deg(0.5f * m_fFieldOfView + c_fHalfPi) , cCameraUp);
+	//	cNormal = cCameraIn * cRotate;
+	//	cNormal.Normalize( );
+	//	memcpy(m_afFrustumPlanes[4], cNormal, 3 * sizeof(float));
+	//	m_afFrustumPlanes[4][3] = -(cNormal ^ cCameraPos);
 
 	RotateAxisFromIdentity(&cRotate, D3DXToDegree(0.5f * m_fFieldOfView * m_fAspectRatio + c_fHalfPi), cCameraRight);
 	D3DXVec3TransformCoord(&cNormal, &cCameraIn, &cRotate);
@@ -645,7 +648,7 @@ void CSpeedGrassRT::ComputeFrustum(void)
 	float fFrustumHeight = (m_fLodFarDistance + m_fLodTransitionLength) * tanf(0.5f * m_fFieldOfView);
 	float fFrustumWidth = (m_fLodFarDistance + m_fLodTransitionLength) * tanf(0.5f * m_fFieldOfView * m_fAspectRatio);
 
-//	CVec3 acFrustum[5];
+	//	CVec3 acFrustum[5];
 	D3DXVECTOR3 acFrustum[5];
 	acFrustum[0] = cCameraPos;
 	acFrustum[1] = cFarPoint + cCameraRight * fFrustumWidth + cCameraUp * fFrustumHeight;
@@ -656,6 +659,7 @@ void CSpeedGrassRT::ComputeFrustum(void)
 	// find min/max (x,y) coordinates
 	m_afFrustumMin[0] = m_afFrustumMin[1] = FLT_MAX;
 	m_afFrustumMax[0] = m_afFrustumMax[1] = -FLT_MAX;
+
 	for (int i = 0; i < 5; ++i)
 	{
 		m_afFrustumMin[0] = min(m_afFrustumMin[0], acFrustum[i][0]);
@@ -665,32 +669,31 @@ void CSpeedGrassRT::ComputeFrustum(void)
 	}
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::ComputeUnitBillboard
 
 void CSpeedGrassRT::ComputeUnitBillboard(void)
 {
-//	float fAzimuth = D3DXToDegree(atan2(-m_afCameraOut[1], -m_afCameraOut[0]));
+	//	float fAzimuth = D3DXToDegree(atan2(-m_afCameraOut[1], -m_afCameraOut[0]));
 	float fAzimuth = atan2(-m_afCameraOut[1], -m_afCameraOut[0]);
 
-//    CRotTransform cTrans;
-//    cTrans.RotateZ(fAzimuth);
-//
-//	static CVec3 afCorner1(0.0f, 0.5f, 1.0f);
-//	static CVec3 afCorner2(0.0f, -0.5f, 1.0f);
-//	static CVec3 afCorner3(0.0f, -0.5f, 0.0f);
-//	static CVec3 afCorner4(0.0f, 0.5f, 0.0f);
-//
-//	CVec3 afNewCorner1 = afCorner1 * cTrans;
-//	CVec3 afNewCorner2 = afCorner2 * cTrans;
-//	CVec3 afNewCorner3 = afCorner3 * cTrans;
-//	CVec3 afNewCorner4 = afCorner4 * cTrans;
-//
-//	memcpy(m_afUnitBillboard + 0, afNewCorner1.m_afData, 3 * sizeof(float));
-//	memcpy(m_afUnitBillboard + 3, afNewCorner2.m_afData, 3 * sizeof(float));
-//	memcpy(m_afUnitBillboard + 6, afNewCorner3.m_afData, 3 * sizeof(float));
-//	memcpy(m_afUnitBillboard + 9, afNewCorner4.m_afData, 3 * sizeof(float));
+	//    CRotTransform cTrans;
+	//    cTrans.RotateZ(fAzimuth);
+	//
+	//	static CVec3 afCorner1(0.0f, 0.5f, 1.0f);
+	//	static CVec3 afCorner2(0.0f, -0.5f, 1.0f);
+	//	static CVec3 afCorner3(0.0f, -0.5f, 0.0f);
+	//	static CVec3 afCorner4(0.0f, 0.5f, 0.0f);
+	//
+	//	CVec3 afNewCorner1 = afCorner1 * cTrans;
+	//	CVec3 afNewCorner2 = afCorner2 * cTrans;
+	//	CVec3 afNewCorner3 = afCorner3 * cTrans;
+	//	CVec3 afNewCorner4 = afCorner4 * cTrans;
+	//
+	//	memcpy(m_afUnitBillboard + 0, afNewCorner1.m_afData, 3 * sizeof(float));
+	//	memcpy(m_afUnitBillboard + 3, afNewCorner2.m_afData, 3 * sizeof(float));
+	//	memcpy(m_afUnitBillboard + 6, afNewCorner3.m_afData, 3 * sizeof(float));
+	//	memcpy(m_afUnitBillboard + 9, afNewCorner4.m_afData, 3 * sizeof(float));
 
 	D3DXMATRIX cTrans;
 	D3DXMatrixRotationZ(&cTrans, fAzimuth);
@@ -724,32 +727,46 @@ void CSpeedGrassRT::ComputeUnitBillboard(void)
 	m_afUnitBillboard[11] = afNewCorner4.z;
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::ConvertCoordsToCell
 
 void CSpeedGrassRT::ConvertCoordsToCell(const float* pCoords, int* pGridCoords) const
 {
-    float fPercentAlongX = (pCoords[0] - m_afBoundingBox[0]) / (m_afBoundingBox[3] - m_afBoundingBox[0]);
-    float fPercentAlongY = (pCoords[1] - m_afBoundingBox[1]) / (m_afBoundingBox[4] - m_afBoundingBox[1]);
+	float fPercentAlongX = (pCoords[0] - m_afBoundingBox[0]) / (m_afBoundingBox[3] - m_afBoundingBox[0]);
+	float fPercentAlongY = (pCoords[1] - m_afBoundingBox[1]) / (m_afBoundingBox[4] - m_afBoundingBox[1]);
 
-    if (fPercentAlongX < 0.0f)
+	if (fPercentAlongX < 0.0f)
+	{
 		pGridCoords[0] = -1;
+	}
+
 	else if (fPercentAlongX > 1.0f)
+	{
 		pGridCoords[0] = m_nNumRegionCols;
+	}
+
 	else
-	    pGridCoords[0] = fPercentAlongX * m_nNumRegionCols;
+	{
+		pGridCoords[0] = fPercentAlongX * m_nNumRegionCols;
+	}
 
 	if (fPercentAlongY < 0.0f)
+	{
 		pGridCoords[1] = -1;
+	}
+
 	else if (fPercentAlongY > 1.0f)
+	{
 		pGridCoords[1] = m_nNumRegionRows;
+	}
+
 	else
-	    pGridCoords[1] = fPercentAlongY * m_nNumRegionRows;
+	{
+		pGridCoords[1] = fPercentAlongY * m_nNumRegionRows;
+	}
 }
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedGrassRT::OutsideFrustum
 
 __forceinline bool CSpeedGrassRT::OutsideFrustum(CSpeedGrassRT::SRegion* pRegion)
@@ -757,11 +774,13 @@ __forceinline bool CSpeedGrassRT::OutsideFrustum(CSpeedGrassRT::SRegion* pRegion
 	bool bOutside = false;
 
 	for (int i = 0; i < 5 && !bOutside; ++i)
-		if (m_afFrustumPlanes[i][0] * pRegion->m_afCenter[0] + 
-			m_afFrustumPlanes[i][1] * pRegion->m_afCenter[1] + 
+		if (m_afFrustumPlanes[i][0] * pRegion->m_afCenter[0] +
+			m_afFrustumPlanes[i][1] * pRegion->m_afCenter[1] +
 			m_afFrustumPlanes[i][2] * pRegion->m_afCenter[2] +
 			m_afFrustumPlanes[i][3] > pRegion->m_fCullingRadius)
+		{
 			bOutside = true;
+		}
 
 	return bOutside;
 }

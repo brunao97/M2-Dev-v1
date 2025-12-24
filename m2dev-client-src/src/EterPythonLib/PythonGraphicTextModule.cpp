@@ -3,28 +3,36 @@
 bool PyTuple_GetTextInstance(PyObject* poArgs, int pos, CGraphicTextInstance** ppTextInstance)
 {
 	unsigned long long handle;
+
 	if (!PyTuple_GetUnsignedLongLong(poArgs, pos, &handle))
+	{
 		return false;
+	}
 
 	if (!handle)
+	{
 		return false;
+	}
 
-	*ppTextInstance=(CGraphicTextInstance*)handle;	
+	*ppTextInstance = (CGraphicTextInstance*)handle;
 
 	return true;
 }
 
 PyObject* grpTextGenerate(PyObject* poSelf, PyObject* poArgs)
 {
-	CGraphicTextInstance * pTextInstance = CGraphicTextInstance::New();
+	CGraphicTextInstance* pTextInstance = CGraphicTextInstance::New();
 	return Py_BuildValue("K", pTextInstance);
 }
 
 PyObject* grpTextDestroy(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	CGraphicTextInstance::Delete(pTextInstance);
 	return Py_BuildNone();
@@ -33,8 +41,11 @@ PyObject* grpTextDestroy(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextGetSize(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	int width, height;
 	pTextInstance->GetTextSize(&width, &height);
@@ -44,29 +55,45 @@ PyObject* grpTextGetSize(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextSetPosition(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	int ix;
-	if (!PyTuple_GetInteger(poArgs, 1, &ix))
-		return Py_BuildException();
-	int iy;
-	if (!PyTuple_GetInteger(poArgs, 2, &iy))
-		return Py_BuildException();
 
-	pTextInstance->SetPosition((float) ix, (float) iy);
+	if (!PyTuple_GetInteger(poArgs, 1, &ix))
+	{
+		return Py_BuildException();
+	}
+
+	int iy;
+
+	if (!PyTuple_GetInteger(poArgs, 2, &iy))
+	{
+		return Py_BuildException();
+	}
+
+	pTextInstance->SetPosition((float)ix, (float)iy);
 	return Py_BuildNone();
 }
 
 PyObject* grpTextSetText(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	char* szText;
+
 	if (!PyTuple_GetString(poArgs, 1, &szText))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->SetValue(szText);
 	return Py_BuildNone();
@@ -75,12 +102,18 @@ PyObject* grpTextSetText(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextSetSecret(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	bool bValue;
+
 	if (!PyTuple_GetBoolean(poArgs, 1, &bValue))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->SetSecret(bValue);
 	return Py_BuildNone();
@@ -89,12 +122,18 @@ PyObject* grpTextSetSecret(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextOutline(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	bool bValue;
+
 	if (!PyTuple_GetBoolean(poArgs, 1, &bValue))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->SetOutline(bValue);
 	return Py_BuildNone();
@@ -103,8 +142,11 @@ PyObject* grpTextOutline(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextGetText(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	return Py_BuildValue("s", pTextInstance->GetValueStringReference().c_str());
 }
@@ -112,47 +154,74 @@ PyObject* grpTextGetText(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextSetFontName(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	char* szFontName;
+
 	if (!PyTuple_GetString(poArgs, 1, &szFontName))
+	{
 		return Py_BuildException();
+	}
 
 	std::string stFontName = szFontName;
 	stFontName += ".fnt";
 
 	CResource* pResource = CResourceManager::Instance().GetResourcePointer(stFontName.c_str());
-	pTextInstance->SetTextPointer(static_cast<CGraphicText*>(pResource));
+	pTextInstance->SetTextPointer(static_cast<CGraphicText*> (pResource));
 	return Py_BuildNone();
 }
 
 PyObject* grpTextSetFontColor(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	if (2 == PyTuple_Size(poArgs))
 	{
 		int iColor;
+
 		if (!PyTuple_GetInteger(poArgs, 1, &iColor))
+		{
 			return Py_BuildException();
+		}
+
 		pTextInstance->SetColor(DWORD(iColor));
 	}
+
 	else if (4 == PyTuple_Size(poArgs))
 	{
 		float fRed;
+
 		if (!PyTuple_GetFloat(poArgs, 1, &fRed))
+		{
 			return Py_BuildException();
+		}
+
 		float fGreen;
+
 		if (!PyTuple_GetFloat(poArgs, 2, &fGreen))
+		{
 			return Py_BuildException();
+		}
+
 		float fBlue;
+
 		if (!PyTuple_GetFloat(poArgs, 3, &fBlue))
+		{
 			return Py_BuildException();
+		}
+
 		pTextInstance->SetColor(fRed, fGreen, fBlue);
 	}
+
 	else
 	{
 		return Py_BuildException();
@@ -164,33 +233,52 @@ PyObject* grpTextSetFontColor(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextSetOutLineColor(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	float fRed;
+
 	if (!PyTuple_GetFloat(poArgs, 1, &fRed))
+	{
 		return Py_BuildException();
+	}
+
 	float fGreen;
+
 	if (!PyTuple_GetFloat(poArgs, 2, &fGreen))
+	{
 		return Py_BuildException();
+	}
+
 	float fBlue;
+
 	if (!PyTuple_GetFloat(poArgs, 3, &fBlue))
+	{
 		return Py_BuildException();
+	}
 
 	float fAlpha;
+
 	if (!PyTuple_GetFloat(poArgs, 4, &fAlpha))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->SetOutLineColor(fRed, fGreen, fBlue, fAlpha);
 	return Py_BuildNone();
 }
 
-
 PyObject* grpTextRender(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->Render();
 	return Py_BuildNone();
@@ -199,9 +287,12 @@ PyObject* grpTextRender(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextUpdate(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
-	
+	}
+
 	pTextInstance->Update();
 	return Py_BuildNone();
 }
@@ -209,8 +300,11 @@ PyObject* grpTextUpdate(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextShowCursor(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->ShowCursor();
 	return Py_BuildNone();
@@ -219,9 +313,12 @@ PyObject* grpTextShowCursor(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpTextHideCursor(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
-	
+	}
+
 	pTextInstance->HideCursor();
 	return Py_BuildNone();
 }
@@ -229,12 +326,18 @@ PyObject* grpTextHideCursor(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpSetHorizontalAlign(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	int iAlign;
+
 	if (!PyTuple_GetInteger(poArgs, 1, &iAlign))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->SetHorizonalAlign(iAlign);
 	return Py_BuildNone();
@@ -243,12 +346,18 @@ PyObject* grpSetHorizontalAlign(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpSetVerticalAlign(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	int iAlign;
+
 	if (!PyTuple_GetInteger(poArgs, 1, &iAlign))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->SetVerticalAlign(iAlign);
 	return Py_BuildNone();
@@ -257,12 +366,18 @@ PyObject* grpSetVerticalAlign(PyObject* poSelf, PyObject* poArgs)
 PyObject* grpSetMax(PyObject* poSelf, PyObject* poArgs)
 {
 	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	int iValue;
+
 	if (!PyTuple_GetInteger(poArgs, 1, &iValue))
+	{
 		return Py_BuildException();
+	}
 
 	pTextInstance->SetMax(iValue);
 	return Py_BuildNone();
@@ -270,13 +385,19 @@ PyObject* grpSetMax(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* grpGetSplitingTextLineCount(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szText;
+	char* szText;
+
 	if (!PyTuple_GetString(poArgs, 0, &szText))
+	{
 		return Py_BuildException();
+	}
 
 	int iLineLimitation;
+
 	if (!PyTuple_GetInteger(poArgs, 1, &iLineLimitation))
+	{
 		return Py_BuildException();
+	}
 
 	int iPosition = 0;
 	int iLineCount = 0;
@@ -286,10 +407,12 @@ PyObject* grpGetSplitingTextLineCount(PyObject* poSelf, PyObject* poArgs)
 		if ('|' == szText[i])
 		{
 			i += 1;
-			
+
 			// 자동 줄 바꿈되고 바로 | 가 있을 경우
-			if (iPosition>0)
+			if (iPosition > 0)
+			{
 				++iLineCount;
+			}
 
 			iPosition = 0;
 			continue;
@@ -300,6 +423,7 @@ PyObject* grpGetSplitingTextLineCount(PyObject* poSelf, PyObject* poArgs)
 			i += 2;
 			iPosition += 2;
 		}
+
 		else
 		{
 			i += 1;
@@ -314,24 +438,35 @@ PyObject* grpGetSplitingTextLineCount(PyObject* poSelf, PyObject* poArgs)
 	}
 
 	if (iPosition > 0)
+	{
 		++iLineCount;
+	}
 
 	return Py_BuildValue("i", iLineCount);
 }
 
 PyObject* grpGetSplitingTextLine(PyObject* poSelf, PyObject* poArgs)
 {
-	char * szText;
+	char* szText;
+
 	if (!PyTuple_GetString(poArgs, 0, &szText))
+	{
 		return Py_BuildException();
+	}
 
 	int iLineLimitation;
+
 	if (!PyTuple_GetInteger(poArgs, 1, &iLineLimitation))
+	{
 		return Py_BuildException();
+	}
 
 	int iGettingLine;
+
 	if (!PyTuple_GetInteger(poArgs, 2, &iGettingLine))
+	{
 		return Py_BuildException();
+	}
 
 	std::string strLine = "";
 	int iPosition = 0;
@@ -346,8 +481,11 @@ PyObject* grpGetSplitingTextLine(PyObject* poSelf, PyObject* poArgs)
 			i += 1;
 
 			// 자동 줄 바꿈되고 바로 | 가 있을 경우
-			if (iPosition>0)
+			if (iPosition > 0)
+			{
 				++iLineCount;
+			}
+
 			iPosition = 0;
 			continue;
 		}
@@ -355,15 +493,20 @@ PyObject* grpGetSplitingTextLine(PyObject* poSelf, PyObject* poArgs)
 		if (szText[i] & 0x80)
 		{
 			if (iLineCount == iGettingLine)
-				strLine.append(szText+i, 2);
+			{
+				strLine.append(szText + i, 2);
+			}
 
 			i += 2;
 			iPosition += 2;
 		}
+
 		else
 		{
 			if (iLineCount == iGettingLine)
+			{
 				strLine += szText[i];
+			}
 
 			i += 1;
 			iPosition += 1;
@@ -381,13 +524,19 @@ PyObject* grpGetSplitingTextLine(PyObject* poSelf, PyObject* poArgs)
 
 PyObject* grpTextPixelPositionToCharacterPosition(PyObject* poSelf, PyObject* poArgs)
 {
-	CGraphicTextInstance * pTextInstance;
+	CGraphicTextInstance* pTextInstance;
+
 	if (!PyTuple_GetTextInstance(poArgs, 0, &pTextInstance))
+	{
 		return Py_BuildException();
+	}
 
 	int iPixelPosition;
+
 	if (!PyTuple_GetInteger(poArgs, 1, &iPixelPosition))
+	{
 		return Py_BuildException();
+	}
 
 	int iCharacterPosition = pTextInstance->PixelPositionToCharacterPosition(iPixelPosition);
 

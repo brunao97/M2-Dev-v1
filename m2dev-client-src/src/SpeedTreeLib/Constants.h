@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	Constants
 //
 //	(c) 2003 IDV, Inc.
@@ -104,7 +104,7 @@ const   float   c_f90 = 0.5f * c_fPi;
 //										   c_nBranchVertexTexture1Size +
 //										   c_nBranchVertexTexture2Size +
 //										   c_nBranchVertexTexture3Size +
-//										   c_nBranchVertexNormalSize + 
+//										   c_nBranchVertexNormalSize +
 //										   c_nBranchVertexPositionSize;
 
 // frond vertex attribute sizes
@@ -113,7 +113,7 @@ const   float   c_f90 = 0.5f * c_fPi;
 //const	int		c_nFrondVertexPositionSize = 3 * sizeof(float);		// (x, y, z)
 //
 //const	int		c_nFrondVertexTotalSize = c_nFrondVertexTexture0Size +
-//										   c_nFrondVertexNormalSize + 
+//										   c_nFrondVertexNormalSize +
 //										   c_nFrondVertexPositionSize;
 
 // leaf vertex attribute sizes
@@ -124,7 +124,7 @@ const   float   c_f90 = 0.5f * c_fPi;
 //
 //const	int		c_nLeafVertexTotalSize = c_nLeafVertexTexture0Size +
 //										 c_nLeafVertexTexture1Size +
-//										 c_nLeafVertexNormalSize + 
+//										 c_nLeafVertexNormalSize +
 //										 c_nLeafVertexPositionSize;
 
 // grass vertex attribute sizes
@@ -134,10 +134,9 @@ const	int		c_nGrassVertexColorSize = 4 * sizeof(unsigned char);	// (rgba)
 const	int		c_nGrassVertexPositionSize = 3 * sizeof(float);			// (x, y, z)
 
 const	int		c_nGrassVertexTotalSize = c_nGrassVertexTexture0Size +
-										  c_nGrassVertexTexture1Size +
-										  c_nGrassVertexColorSize +
-										  c_nGrassVertexPositionSize;
-
+c_nGrassVertexTexture1Size +
+c_nGrassVertexColorSize +
+c_nGrassVertexPositionSize;
 
 // terrain vertex attribute sizes
 //const	int		c_nTerrainVertexTexture0Size = 2 * sizeof(float);
@@ -152,4 +151,3 @@ const	int		c_nGrassVertexTotalSize = c_nGrassVertexTexture0Size +
 // crosshair
 //const    float      c_fCrosshairSize = 25.0f;
 //const    float      c_fCrosshairAlpha = 0.075f;
-

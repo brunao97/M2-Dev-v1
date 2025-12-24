@@ -3,7 +3,7 @@
 #include "AbstractApplication.h"
 
 CPythonIME::CPythonIME()
-: CIME()
+	: CIME()
 {
 	ms_pEvent = this;
 }
@@ -65,31 +65,38 @@ void CPythonIME::OnReturn()
 
 void CPythonIME::OnEscape()
 {
-//	IAbstractApplication::GetSingleton().RunIMEEscapeEvent();
+	//	IAbstractApplication::GetSingleton().RunIMEEscapeEvent();
 }
 
-bool CPythonIME::OnWM_CHAR( WPARAM wParam, LPARAM lParam )
+bool CPythonIME::OnWM_CHAR(WPARAM wParam, LPARAM lParam)
 {
 	unsigned char c = unsigned char(wParam & 0xff);
 
-	switch (c) 
+	switch (c)
 	{
 	case VK_RETURN:
 		OnReturn();
 		return true;
 
 	case VK_TAB:
-		if(ms_bCaptureInput == false)
+		if (ms_bCaptureInput == false)
+		{
 			return 0;
+		}
+
 		OnTab();
 		return true;
 
 	case VK_ESCAPE:
-		if(ms_bCaptureInput == false)
+		if (ms_bCaptureInput == false)
+		{
 			return 0;
+		}
+
 		OnEscape();
 		return true;
 	}
+
 	return false;
 }
 

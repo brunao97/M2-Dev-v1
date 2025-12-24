@@ -1,28 +1,28 @@
 #include "stdafx.h"
 #include "PythonExchange.h"
 
-void CPythonExchange::SetSelfName(const char *name)
+void CPythonExchange::SetSelfName(const char* name)
 {
 	strncpy(m_self.name, name, CHARACTER_NAME_MAX_LEN);
 }
 
-void CPythonExchange::SetTargetName(const char *name)
+void CPythonExchange::SetTargetName(const char* name)
 {
 	strncpy(m_victim.name, name, CHARACTER_NAME_MAX_LEN);
 }
 
-char * CPythonExchange::GetNameFromSelf()
+char* CPythonExchange::GetNameFromSelf()
 {
 	return m_self.name;
 }
 
-char * CPythonExchange::GetNameFromTarget()
+char* CPythonExchange::GetNameFromTarget()
 {
 	return m_victim.name;
 }
 
 void CPythonExchange::SetElkToTarget(DWORD	elk)
-{	
+{
 	m_victim.elk = elk;
 }
 
@@ -44,7 +44,9 @@ DWORD CPythonExchange::GetElkFromSelf()
 void CPythonExchange::SetItemToTarget(DWORD pos, DWORD vnum, BYTE count)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	m_victim.item_vnum[pos] = vnum;
 	m_victim.item_count[pos] = count;
@@ -53,7 +55,9 @@ void CPythonExchange::SetItemToTarget(DWORD pos, DWORD vnum, BYTE count)
 void CPythonExchange::SetItemToSelf(DWORD pos, DWORD vnum, BYTE count)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	m_self.item_vnum[pos] = vnum;
 	m_self.item_count[pos] = count;
@@ -62,7 +66,9 @@ void CPythonExchange::SetItemToSelf(DWORD pos, DWORD vnum, BYTE count)
 void CPythonExchange::SetItemMetinSocketToTarget(int pos, int imetinpos, DWORD vnum)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	m_victim.item_metin[pos][imetinpos] = vnum;
 }
@@ -70,7 +76,9 @@ void CPythonExchange::SetItemMetinSocketToTarget(int pos, int imetinpos, DWORD v
 void CPythonExchange::SetItemMetinSocketToSelf(int pos, int imetinpos, DWORD vnum)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	m_self.item_metin[pos][imetinpos] = vnum;
 }
@@ -78,7 +86,9 @@ void CPythonExchange::SetItemMetinSocketToSelf(int pos, int imetinpos, DWORD vnu
 void CPythonExchange::SetItemAttributeToTarget(int pos, int iattrpos, BYTE byType, short sValue)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	m_victim.item_attr[pos][iattrpos].bType = byType;
 	m_victim.item_attr[pos][iattrpos].sValue = sValue;
@@ -87,7 +97,9 @@ void CPythonExchange::SetItemAttributeToTarget(int pos, int iattrpos, BYTE byTyp
 void CPythonExchange::SetItemAttributeToSelf(int pos, int iattrpos, BYTE byType, short sValue)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	m_self.item_attr[pos][iattrpos].bType = byType;
 	m_self.item_attr[pos][iattrpos].sValue = sValue;
@@ -96,7 +108,9 @@ void CPythonExchange::SetItemAttributeToSelf(int pos, int iattrpos, BYTE byType,
 void CPythonExchange::DelItemOfTarget(BYTE pos)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	m_victim.item_vnum[pos] = 0;
 	m_victim.item_count[pos] = 0;
@@ -105,7 +119,9 @@ void CPythonExchange::DelItemOfTarget(BYTE pos)
 void CPythonExchange::DelItemOfSelf(BYTE pos)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	m_self.item_vnum[pos] = 0;
 	m_self.item_count[pos] = 0;
@@ -114,7 +130,9 @@ void CPythonExchange::DelItemOfSelf(BYTE pos)
 DWORD CPythonExchange::GetItemVnumFromTarget(BYTE pos)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return 0;
+	}
 
 	return m_victim.item_vnum[pos];
 }
@@ -122,7 +140,9 @@ DWORD CPythonExchange::GetItemVnumFromTarget(BYTE pos)
 DWORD CPythonExchange::GetItemVnumFromSelf(BYTE pos)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return 0;
+	}
 
 	return m_self.item_vnum[pos];
 }
@@ -130,7 +150,9 @@ DWORD CPythonExchange::GetItemVnumFromSelf(BYTE pos)
 BYTE CPythonExchange::GetItemCountFromTarget(BYTE pos)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return 0;
+	}
 
 	return m_victim.item_count[pos];
 }
@@ -138,7 +160,9 @@ BYTE CPythonExchange::GetItemCountFromTarget(BYTE pos)
 BYTE CPythonExchange::GetItemCountFromSelf(BYTE pos)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return 0;
+	}
 
 	return m_self.item_count[pos];
 }
@@ -146,7 +170,9 @@ BYTE CPythonExchange::GetItemCountFromSelf(BYTE pos)
 DWORD CPythonExchange::GetItemMetinSocketFromTarget(BYTE pos, int iMetinSocketPos)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return 0;
+	}
 
 	return m_victim.item_metin[pos][iMetinSocketPos];
 }
@@ -154,24 +180,30 @@ DWORD CPythonExchange::GetItemMetinSocketFromTarget(BYTE pos, int iMetinSocketPo
 DWORD CPythonExchange::GetItemMetinSocketFromSelf(BYTE pos, int iMetinSocketPos)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return 0;
+	}
 
 	return m_self.item_metin[pos][iMetinSocketPos];
 }
 
-void CPythonExchange::GetItemAttributeFromTarget(BYTE pos, int iAttrPos, BYTE * pbyType, short * psValue)
+void CPythonExchange::GetItemAttributeFromTarget(BYTE pos, int iAttrPos, BYTE* pbyType, short* psValue)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	*pbyType = m_victim.item_attr[pos][iAttrPos].bType;
 	*psValue = m_victim.item_attr[pos][iAttrPos].sValue;
 }
 
-void CPythonExchange::GetItemAttributeFromSelf(BYTE pos, int iAttrPos, BYTE * pbyType, short * psValue)
+void CPythonExchange::GetItemAttributeFromSelf(BYTE pos, int iAttrPos, BYTE* pbyType, short* psValue)
 {
 	if (pos >= EXCHANGE_ITEM_MAX_NUM)
+	{
 		return;
+	}
 
 	*pbyType = m_self.item_attr[pos][iAttrPos].bType;
 	*psValue = m_self.item_attr[pos][iAttrPos].sValue;
@@ -226,12 +258,12 @@ void CPythonExchange::Clear()
 {
 	memset(&m_self, 0, sizeof(m_self));
 	memset(&m_victim, 0, sizeof(m_victim));
-/*
-	m_self.item_vnum[0] = 30;
-	m_victim.item_vnum[0] = 30;
-	m_victim.item_vnum[1] = 40;
-	m_victim.item_vnum[2] = 50;
-*/
+	/*
+		m_self.item_vnum[0] = 30;
+		m_victim.item_vnum[0] = 30;
+		m_victim.item_vnum[1] = 40;
+		m_victim.item_vnum[2] = 50;
+	*/
 }
 
 CPythonExchange::CPythonExchange()
@@ -239,10 +271,11 @@ CPythonExchange::CPythonExchange()
 	Clear();
 	m_isTrading = false;
 	m_elk_mode = false;
-		// Clear로 옴겨놓으면 안됨. 
-		// trade_start 페킷이 오면 Clear를 실행하는데
-		// m_elk_mode는 클리어 되선 안됨.;  
+	// Clear로 옴겨놓으면 안됨.
+	// trade_start 페킷이 오면 Clear를 실행하는데
+	// m_elk_mode는 클리어 되선 안됨.;
 }
+
 CPythonExchange::~CPythonExchange()
 {
 }

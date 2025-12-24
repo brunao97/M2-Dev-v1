@@ -8,9 +8,8 @@ class CGraphicImage;
 
 struct SMaterialData
 {
-	CGraphicImage * pImage;
+	CGraphicImage* pImage;
 	float fSpecularPower;
-	BOOL isSpecularEnable;	
+	BOOL isSpecularEnable;
 	BYTE bSphereMapIndex;
 };
-

@@ -3,7 +3,6 @@
 #include "Model.h"
 #include "EterLib/ResourceManager.h"
 
-
 CGrannyModel* CGrannyModelInstance::GetModel()
 {
 	return m_pModel;
@@ -40,11 +39,14 @@ float CGrannyModelInstance::GetLocalTime()
 	return m_fLocalTime;
 }
 
-void CGrannyModelInstance::SetParentModelInstance(const CGrannyModelInstance* c_pParentModelInstance, const char * c_szBoneName)
+void CGrannyModelInstance::SetParentModelInstance(const CGrannyModelInstance* c_pParentModelInstance, const char* c_szBoneName)
 {
 	int iBoneIndex;
+
 	if (!c_pParentModelInstance->GetBoneIndexByName(c_szBoneName, &iBoneIndex))
+	{
 		return;
+	}
 
 	SetParentModelInstance(c_pParentModelInstance, iBoneIndex);
 }
@@ -61,7 +63,10 @@ bool CGrannyModelInstance::IsEmpty()
 	{
 		// NO_MESH_BUG_FIX
 		if (!m_meshMatrices)
+		{
 			return true;
+		}
+
 		// END_OF_NO_MESH_BUG_FIX
 		return false;
 	}
@@ -70,7 +75,7 @@ bool CGrannyModelInstance::IsEmpty()
 }
 
 bool CGrannyModelInstance::CreateDeviceObjects()
-{	
+{
 	__CreateDynamicVertexBuffer();
 
 	return true;
@@ -87,14 +92,15 @@ void CGrannyModelInstance::__Initialize()
 	{
 		m_pModel->Release();
 	}
+
 	m_pModel = NULL;
 	mc_pParentInstance = NULL;
 	m_iParentBoneIndex = 0;
 
-	m_pgrnModelInstance = NULL;	
+	m_pgrnModelInstance = NULL;
 
 	// WORK
-	m_pgrnWorldPoseReal = NULL;	
+	m_pgrnWorldPoseReal = NULL;
 	// END_OF_WORK
 
 	// TEST
@@ -106,8 +112,7 @@ void CGrannyModelInstance::__Initialize()
 	m_pgrnCtrl = NULL;
 	m_pgrnAni = NULL;
 
-	m_dwOldUpdateFrame=0;
-
+	m_dwOldUpdateFrame = 0;
 }
 
 CGrannyModelInstance::CGrannyModelInstance()

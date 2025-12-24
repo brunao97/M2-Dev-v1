@@ -14,12 +14,16 @@ void CFrameController::Update(float fElapsedTime)
 
 			if (m_dwcurFrame >= m_dwMaxFrame)
 			{
-				if (m_isLoop && --m_iLoopCount!=0)
+				if (m_isLoop && --m_iLoopCount != 0)
 				{
-					if (m_iLoopCount<0)
+					if (m_iLoopCount < 0)
+					{
 						m_iLoopCount = 0;
+					}
+
 					m_dwcurFrame = 0;
 				}
+
 				else
 				{
 					m_iLoopCount = 1;
@@ -29,6 +33,7 @@ void CFrameController::Update(float fElapsedTime)
 				}
 			}
 		}
+
 		else
 		{
 			break;
@@ -50,11 +55,13 @@ void CFrameController::SetMaxFrame(DWORD dwMaxFrame)
 {
 	m_dwMaxFrame = dwMaxFrame;
 }
+
 void CFrameController::SetFrameTime(float fTime)
 {
 	m_fFrameTime = fTime;
 	m_fLastFrameTime = fTime;
 }
+
 void CFrameController::SetStartFrame(DWORD dwStartFrame)
 {
 	m_dwStartFrame = dwStartFrame;
@@ -78,7 +85,9 @@ void CFrameController::SetActive(BOOL bFlag)
 BOOL CFrameController::isActive(DWORD dwMainFrame)
 {
 	if (dwMainFrame < m_dwStartFrame)
+	{
 		return FALSE;
+	}
 
 	return m_isActive;
 }
@@ -101,6 +110,7 @@ CFrameController::CFrameController()
 	m_fFrameTime = 0.0f;
 	m_dwStartFrame = 0;
 }
+
 CFrameController::~CFrameController()
 {
 }

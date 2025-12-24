@@ -21,7 +21,7 @@ namespace prt
 		PROPERTY_TYPE_MAX_NUM,
 	};
 
-	const char c_szPropertyTypeName[PROPERTY_TYPE_MAX_NUM][32] = 
+	const char c_szPropertyTypeName[PROPERTY_TYPE_MAX_NUM][32] =
 	{
 		"None",
 		"Tree",
@@ -31,7 +31,7 @@ namespace prt
 		"DungeonBlock"
 	};
 
-	const char c_szPropertyExtension[PROPERTY_TYPE_MAX_NUM][16] = 
+	const char c_szPropertyExtension[PROPERTY_TYPE_MAX_NUM][16] =
 	{
 		".pr",
 		".prt",
@@ -41,8 +41,8 @@ namespace prt
 		".prd"
 	};
 
-	DWORD GetPropertyType(const char * c_szTypeName);
-	const char * GetPropertyExtension(DWORD dwType);
+	DWORD GetPropertyType(const char* c_szTypeName);
+	const char* GetPropertyExtension(DWORD dwType);
 
 	struct TPropertyTree
 	{
@@ -100,23 +100,24 @@ namespace prt
 		std::string	strAttributeDataFileName;
 	};
 
-	bool PropertyTreeDataToString(TPropertyTree * pData, CProperty * pProperty);
-	bool PropertyTreeStringToData(CProperty * pProperty, TPropertyTree * pData);
-	bool PropertyBuildingDataToString(TPropertyBuilding * pData, CProperty * pProperty);
-	bool PropertyBuildingStringToData(CProperty * pProperty, TPropertyBuilding * pData);
-	bool PropertyEffectDataToString(TPropertyEffect * pData, CProperty * pProperty);
-	bool PropertyEffectStringToData(CProperty * pProperty, TPropertyEffect * pData);
-	bool PropertyAmbienceDataToString(TPropertyAmbience * pData, CProperty * pProperty);
-	bool PropertyAmbienceStringToData(CProperty * pProperty, TPropertyAmbience * pData);
-	bool PropertyDungeonBlockDataToString(TPropertyDungeonBlock * pData, CProperty * pProperty);
-	bool PropertyDungeonBlockStringToData(CProperty * pProperty, TPropertyDungeonBlock * pData);
+	bool PropertyTreeDataToString(TPropertyTree* pData, CProperty* pProperty);
+	bool PropertyTreeStringToData(CProperty* pProperty, TPropertyTree* pData);
+	bool PropertyBuildingDataToString(TPropertyBuilding* pData, CProperty* pProperty);
+	bool PropertyBuildingStringToData(CProperty* pProperty, TPropertyBuilding* pData);
+	bool PropertyEffectDataToString(TPropertyEffect* pData, CProperty* pProperty);
+	bool PropertyEffectStringToData(CProperty* pProperty, TPropertyEffect* pData);
+	bool PropertyAmbienceDataToString(TPropertyAmbience* pData, CProperty* pProperty);
+	bool PropertyAmbienceStringToData(CProperty* pProperty, TPropertyAmbience* pData);
+	bool PropertyDungeonBlockDataToString(TPropertyDungeonBlock* pData, CProperty* pProperty);
+	bool PropertyDungeonBlockStringToData(CProperty* pProperty, TPropertyDungeonBlock* pData);
 };
+
 /////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
 // Environment
 //
-enum 
+enum
 {
 	ENV_DIRLIGHT_BACKGROUND,
 	ENV_DIRLIGHT_CHARACTER,
@@ -141,7 +142,7 @@ typedef struct SEnvironmentData
 
 	float GetFogNearDistance() const;
 	float GetFogFarDistance() const;
-	
+
 	D3DXCOLOR FogColor;
 
 	// Filtering
@@ -163,7 +164,6 @@ typedef struct SEnvironmentData
 
 	std::string strSkyBoxFaceFileName[6]; //order : front/back/left/right/top/bottom
 
-
 	D3DXVECTOR2 v2CloudScale;
 	float fCloudHeight;
 	D3DXVECTOR2 v2CloudTextureScale;
@@ -179,16 +179,17 @@ typedef struct SEnvironmentData
 	float fLensFlareMaxBrightness;
 
 	BOOL bMainFlareEnable;
-	std::string strMainFlareTextureFileName; 
+	std::string strMainFlareTextureFileName;
 	float fMainFlareSize;
-	
+
 	BOOL bReserve; // 외부에서 설정을 고치지 않음
 } TEnvironmentData;
 
 typedef std::map<DWORD, TEnvironmentData*> TEnvironmentDataMap;
 /////////////////////////////////////////////////////////////////
 
-typedef struct SScreenPosition {
+typedef struct SScreenPosition
+{
 	int x;
 	int y;
 } TScreenPosition;

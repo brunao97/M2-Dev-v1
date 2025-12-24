@@ -19,15 +19,16 @@
 
 typedef struct SColor
 {
-	SColor(float _r = 0.0f, float _g = 0.0f, float _b = 0.0f, float _a = 0.0f) : r(_r), g(_g), b(_b), a(_a){}
+	SColor(float _r = 0.0f, float _g = 0.0f, float _b = 0.0f, float _a = 0.0f) : r(_r), g(_g), b(_b), a(_a) {}
+
 	float r, g, b, a;
 } TColor;
 
-typedef struct 
+typedef struct
 {
 	TColor	m_FirstColor;
 	TColor	m_SecondColor;
-}TGradientColor;
+} TGradientColor;
 
 typedef std::vector<TGradientColor> TVectorGradientColor;
 typedef TVectorGradientColor::iterator TVectorGradientIterator;
@@ -38,29 +39,29 @@ public:
 	CSkyObjectQuad();
 	virtual ~CSkyObjectQuad();
 
-	void Clear(const unsigned char & c_rucNumVertex,
-		const float & c_rfRed,
-		const float & c_rfGreen,
-		const float & c_rfBlue,
-		const float & c_rfAlpha);
-	void SetSrcColor(const unsigned char & c_rucNumVertex,
-		const float & c_rfRed,
-		const float & c_rfGreen,
-		const float & c_rfBlue,
-		const float & c_rfAlpha);
-	void SetTransition(const unsigned char & c_rucNumVertex,
-		const float & c_rfRed,
-		const float & c_rfGreen,
-		const float & c_rfBlue,
-		const float & c_rfAlpha,
+	void Clear(const unsigned char& c_rucNumVertex,
+		const float& c_rfRed,
+		const float& c_rfGreen,
+		const float& c_rfBlue,
+		const float& c_rfAlpha);
+	void SetSrcColor(const unsigned char& c_rucNumVertex,
+		const float& c_rfRed,
+		const float& c_rfGreen,
+		const float& c_rfBlue,
+		const float& c_rfAlpha);
+	void SetTransition(const unsigned char& c_rucNumVertex,
+		const float& c_rfRed,
+		const float& c_rfGreen,
+		const float& c_rfBlue,
+		const float& c_rfAlpha,
 		DWORD dwDuration);
-	
-	void SetVertex(const unsigned char & c_rucNumVertex, const TPDTVertex & c_rPDTVertex);
-	
+
+	void SetVertex(const unsigned char& c_rucNumVertex, const TPDTVertex& c_rPDTVertex);
+
 	void StartTransition();
 	bool Update();
 	void Render();
-	
+
 private:
 	TPDTVertex m_Vertex[4];
 	TIndex m_Indices[4];					// 인덱스 버퍼...
@@ -89,13 +90,19 @@ public:
 	virtual void Update() = 0;
 	virtual void StartTransition();
 
-	void SetRenderMode(unsigned char ucRenderMode) { m_ucRenderMode = ucRenderMode;	}
+	void SetRenderMode(unsigned char ucRenderMode)
+	{
+		m_ucRenderMode = ucRenderMode;
+	}
 
-	const bool & isTransitionStarted() { return m_bTransitionStarted; }
+	const bool& isTransitionStarted()
+	{
+		return m_bTransitionStarted;
+	}
 
 protected:
-	CGraphicImageInstance * GenerateTexture(const char * szfilename);
-	void DeleteTexture(CGraphicImageInstance * pGraphicImageInstance);
+	CGraphicImageInstance* GenerateTexture(const char* szfilename);
+	void DeleteTexture(CGraphicImageInstance* pGraphicImageInstance);
 
 protected:
 	//////////////////////////////////////////////////////////////////////////
@@ -103,7 +110,7 @@ protected:
 
 	typedef std::vector<CSkyObjectQuad> TSkyObjectQuadVector;
 	typedef TSkyObjectQuadVector::iterator TSkyObjectQuadIterator;
-	
+
 	typedef struct CSkyBox
 	{
 		void StartTransition();
@@ -112,12 +119,12 @@ protected:
 		std::string m_strfacename;
 		std::string m_strFaceTextureFileName;
 		TSkyObjectQuadVector m_SkyObjectQuadVector;
-	}TSkyObjectFace;
+	} TSkyObjectFace;
 
 	typedef std::map <std::string, CGraphicImageInstance*> TGraphicImageInstanceMap;
 
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	// 구름...
 	TSkyObjectFace m_FaceCloud;		// 구름 일단 한장...
 	D3DXMATRIX m_matWorldCloud, m_matTranslationCloud, m_matTextureCloud;
@@ -131,7 +138,7 @@ protected:
 
 	// 스카이 박스 이미지...
 	TGraphicImageInstanceMap m_GraphicImageInstanceMap;
-	
+
 	// Transform...
 	D3DXMATRIX m_matWorld, m_matTranslation;
 	D3DXVECTOR3 m_v3Position;
@@ -143,7 +150,7 @@ protected:
 	std::string m_strCurTime;
 	bool m_bTransitionStarted;
 	bool m_bSkyMatrixUpdated;
-	
+
 	CGraphicImageInstance m_CloudAlphaImageInstance;
 };
 
@@ -160,22 +167,22 @@ public:
 	void Destroy();
 	void Unload();
 
-	void SetSkyBoxScale(const D3DXVECTOR3 & c_rv3Scale);
+	void SetSkyBoxScale(const D3DXVECTOR3& c_rv3Scale);
 	void SetGradientLevel(BYTE byUpper, BYTE byLower);
-	void SetFaceTexture( const char* c_szFileName, int iFaceIndex );
-	void SetCloudTexture(const char * c_szFileName);
-	void SetCloudScale(const D3DXVECTOR2 & c_rv2CloudScale);
+	void SetFaceTexture(const char* c_szFileName, int iFaceIndex);
+	void SetCloudTexture(const char* c_szFileName);
+	void SetCloudScale(const D3DXVECTOR2& c_rv2CloudScale);
 	void SetCloudHeight(float fHeight);
-	void SetCloudTextureScale(const D3DXVECTOR2 & c_rv2CloudTextureScale);
-	void SetCloudScrollSpeed(const D3DXVECTOR2 & c_rv2CloudScrollSpeed);
-	void SetCloudColor(const TGradientColor & c_rColor, const TGradientColor & c_rNextColor, const DWORD & dwTransitionTime);
+	void SetCloudTextureScale(const D3DXVECTOR2& c_rv2CloudTextureScale);
+	void SetCloudScrollSpeed(const D3DXVECTOR2& c_rv2CloudScrollSpeed);
+	void SetCloudColor(const TGradientColor& c_rColor, const TGradientColor& c_rNextColor, const DWORD& dwTransitionTime);
 	void Refresh();
-	void SetSkyColor(const TVectorGradientColor & c_rColorVector, const TVectorGradientColor & c_rNextColorVector, long lTransitionTime);
+	void SetSkyColor(const TVectorGradientColor& c_rColorVector, const TVectorGradientColor& c_rNextColorVector, long lTransitionTime);
 	void StartTransition();
 
 protected:
-	void SetSkyObjectQuadVertical(TSkyObjectQuadVector * pSkyObjectQuadVector, const D3DXVECTOR2 * c_pv2QuadPoints);
-	void SetSkyObjectQuadHorizon(TSkyObjectQuadVector * pSkyObjectQuadVector, const D3DXVECTOR3 * c_pv3QuadPoints);
+	void SetSkyObjectQuadVertical(TSkyObjectQuadVector* pSkyObjectQuadVector, const D3DXVECTOR2* c_pv2QuadPoints);
+	void SetSkyObjectQuadHorizon(TSkyObjectQuadVector* pSkyObjectQuadVector, const D3DXVECTOR3* c_pv3QuadPoints);
 
 	//void UpdateSkyFaceQuadTransform(D3DXVECTOR3 * c_pv3QuadPoints);
 

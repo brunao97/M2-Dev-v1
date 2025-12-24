@@ -12,8 +12,10 @@ CReferenceObject::~CReferenceObject()
 void CReferenceObject::AddReference()
 {
 	if (m_refCount == 0)
+	{
 		OnConstruct();
-	
+	}
+
 	++m_refCount;
 }
 
@@ -55,7 +57,9 @@ void CReferenceObject::OnSelfDestruct()
 bool CReferenceObject::canDestroy()
 {
 	if (m_refCount > 0)
+	{
 		return false;
+	}
 
 	return true;
 }

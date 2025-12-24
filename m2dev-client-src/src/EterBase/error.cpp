@@ -35,8 +35,11 @@ BOOL CALLBACK EnumerateLoadedModulesProc(PSTR ModuleName, ULONG ModuleBase, ULON
 		//__idx += sprintf(__msg+__idx, "%s", ModuleName);
 		return FALSE;
 	}
+
 	else
+	{
 		return TRUE;
+	}
 }
 
 LONG __stdcall EterExceptionFilter(_EXCEPTION_POINTERS* pExceptionInfo)
@@ -45,6 +48,7 @@ LONG __stdcall EterExceptionFilter(_EXCEPTION_POINTERS* pExceptionInfo)
 	HANDLE		hThread = GetCurrentThread();
 
 	fException = fopen("log/ErrorLog.txt", "wt");
+
 	if (fException)
 	{
 		char module_name[256];
@@ -107,35 +111,36 @@ LONG __stdcall EterExceptionFilter(_EXCEPTION_POINTERS* pExceptionInfo)
 
 				//__idx+=sprintf(__msg+__idx,  "\n");
 			}
+
 			else
 			{
 				break;
 			}
 		}
+
 		fprintf(fException, "\n");
 		//__idx+=sprintf(__msg+__idx, "\n");
 
+		/*
+				BYTE* stack = (BYTE*)(context.Esp);
+				fprintf(fException, "stack %08x - %08x\n", context.Esp, context.Esp+1024);
+				//__idx+=sprintf(__msg+__idx, "stack %08x - %08x\n", context.Esp, context.Esp+1024);
 
-/*
-		BYTE* stack = (BYTE*)(context.Esp);
-		fprintf(fException, "stack %08x - %08x\n", context.Esp, context.Esp+1024);
-		//__idx+=sprintf(__msg+__idx, "stack %08x - %08x\n", context.Esp, context.Esp+1024);
-
-		for(i=0; i<16; ++i)
-		{
-			fprintf(fException, "%08X : ", context.Esp+i*16);
-			//__idx+=sprintf(__msg+__idx, "%08X : ", context.Esp+i*16);
-			for(int j=0; j<16; ++j)
-			{
-				fprintf(fException, "%02X ", stack[i*16+j]);
-				//__idx+=sprintf(__msg+__idx, "%02X ", stack[i*16+j]);
-			}
-			fprintf(fException, "\n");
-			//__idx+=sprintf(__msg+__idx, "\n");
-		}
-		fprintf(fException, "\n");
-		//__idx+=sprintf(__msg+__idx, "\n");
-*/
+				for(i=0; i<16; ++i)
+				{
+					fprintf(fException, "%08X : ", context.Esp+i*16);
+					//__idx+=sprintf(__msg+__idx, "%08X : ", context.Esp+i*16);
+					for(int j=0; j<16; ++j)
+					{
+						fprintf(fException, "%02X ", stack[i*16+j]);
+						//__idx+=sprintf(__msg+__idx, "%02X ", stack[i*16+j]);
+					}
+					fprintf(fException, "\n");
+					//__idx+=sprintf(__msg+__idx, "\n");
+				}
+				fprintf(fException, "\n");
+				//__idx+=sprintf(__msg+__idx, "\n");
+		*/
 
 		fflush(fException);
 
@@ -194,8 +199,6 @@ LONG __stdcall EterExceptionFilter(_EXCEPTION_POINTERS* pExceptionInfo)
 		}*/
 
 		WinExec("errorlog.exe", SW_SHOW);
-
-
 	}
 
 	return EXCEPTION_EXECUTE_HANDLER;

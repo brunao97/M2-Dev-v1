@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "NetDatagramSender.h"
 
-BOOL CNetDatagramSender::SetSocket(const char * c_szIP, WORD wPortIndex)
+BOOL CNetDatagramSender::SetSocket(const char* c_szIP, WORD wPortIndex)
 {
 	return SetSocket(inet_addr(c_szIP), wPortIndex);
 }
@@ -23,11 +23,12 @@ BOOL CNetDatagramSender::SetSocket(DWORD dwAddress, WORD wPortIndex)
 	return TRUE;
 }
 
-BOOL CNetDatagramSender::Send(const void * pBuffer, int iSize)
+BOOL CNetDatagramSender::Send(const void* pBuffer, int iSize)
 {
 	assert(isSocket());
 
-	int iSendingLength = sendto(m_Socket, (const char *)pBuffer, iSize, 0, (PSOCKADDR)&m_SockAddr, sizeof(SOCKADDR_IN));
+	int iSendingLength = sendto(m_Socket, (const char*)pBuffer, iSize, 0, (PSOCKADDR)&m_SockAddr, sizeof(SOCKADDR_IN));
+
 	if (iSendingLength < 0)
 	{
 		Tracef("Failed sending packet\n");

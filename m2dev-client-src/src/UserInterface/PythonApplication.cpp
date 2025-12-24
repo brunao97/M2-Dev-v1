@@ -15,29 +15,29 @@ extern void GrannyCreateSharedDeformBuffer();
 extern void GrannyDestroySharedDeformBuffer();
 
 float MIN_FOG = 2400.0f;
-double g_specularSpd=0.007f;
+double g_specularSpd = 0.007f;
 
-CPythonApplication * CPythonApplication::ms_pInstance;
+CPythonApplication* CPythonApplication::ms_pInstance;
 
 float c_fDefaultCameraRotateSpeed = 1.5f;
 float c_fDefaultCameraPitchSpeed = 1.5f;
 float c_fDefaultCameraZoomSpeed = 0.05f;
 
 CPythonApplication::CPythonApplication() :
-m_bCursorVisible(TRUE),
-m_bLiarCursorOn(false),
-m_iCursorMode(CURSOR_MODE_HARDWARE),
-m_isWindowed(false),
-m_isFrameSkipDisable(false),
-m_poMouseHandler(NULL),
-m_dwUpdateFPS(0),
-m_dwRenderFPS(0),
-m_fAveRenderTime(0.0f),
-m_dwFaceCount(0),
-m_fGlobalTime(0.0f),
-m_fGlobalElapsedTime(0.0f),
-m_dwLButtonDownTime(0),
-m_dwLastIdleTime(0)
+	m_bCursorVisible(TRUE),
+	m_bLiarCursorOn(false),
+	m_iCursorMode(CURSOR_MODE_HARDWARE),
+	m_isWindowed(false),
+	m_isFrameSkipDisable(false),
+	m_poMouseHandler(NULL),
+	m_dwUpdateFPS(0),
+	m_dwRenderFPS(0),
+	m_fAveRenderTime(0.0f),
+	m_dwFaceCount(0),
+	m_fGlobalTime(0.0f),
+	m_fGlobalElapsedTime(0.0f),
+	m_dwLButtonDownTime(0),
+	m_dwLastIdleTime(0)
 {
 #ifndef _DEBUG
 	SetEterExceptionHandler();
@@ -65,13 +65,13 @@ m_dwLastIdleTime(0)
 	m_fPitchSpeed = 0.0f;
 	m_fZoomSpeed = 0.0f;
 
-	m_fFaceSpd=0.0f;
+	m_fFaceSpd = 0.0f;
 
-	m_dwFaceAccCount=0;
-	m_dwFaceAccTime=0;
+	m_dwFaceAccCount = 0;
+	m_dwFaceAccTime = 0;
 
-	m_dwFaceSpdSum=0;
-	m_dwFaceSpdCount=0;
+	m_dwFaceSpdSum = 0;
+	m_dwFaceSpdCount = 0;
 
 	m_FlyingManager.SetMapManagerPtr(&m_pyBackground);
 
@@ -109,9 +109,14 @@ void CPythonApplication::SetMinFog(float fMinFog)
 void CPythonApplication::SetFrameSkip(bool isEnable)
 {
 	if (isEnable)
-		m_isFrameSkipDisable=false;
+	{
+		m_isFrameSkipDisable = false;
+	}
+
 	else
-		m_isFrameSkipDisable=true;
+	{
+		m_isFrameSkipDisable = true;
+	}
 }
 
 void CPythonApplication::NotifyHack(const char* c_szFormat, ...)
@@ -119,7 +124,7 @@ void CPythonApplication::NotifyHack(const char* c_szFormat, ...)
 	char szBuf[1024];
 
 	va_list args;
-	va_start(args, c_szFormat);	
+	va_start(args, c_szFormat);
 	_vsnprintf(szBuf, sizeof(szBuf), c_szFormat, args);
 	va_end(args);
 	m_pyNetworkStream.NotifyHack(szBuf);
@@ -132,12 +137,15 @@ void CPythonApplication::GetInfo(UINT eInfo, std::string* pstInfo)
 	case INFO_ACTOR:
 		m_kChrMgr.GetInfo(pstInfo);
 		break;
+
 	case INFO_EFFECT:
-		m_kEftMgr.GetInfo(pstInfo);			
+		m_kEftMgr.GetInfo(pstInfo);
 		break;
+
 	case INFO_ITEM:
 		m_pyItem.GetInfo(pstInfo);
 		break;
+
 	case INFO_TEXTTAIL:
 		m_pyTextTail.GetInfo(pstInfo);
 		break;
@@ -216,7 +224,6 @@ void CPythonApplication::UpdateGame()
 
 	CGraphicTextInstance::Hyperlink_UpdateMousePos(ptMouse.x, ptMouse.y);
 
-
 	//!@# Alt+Tab Áß SetTransfor ¿¡¼­ Æ¨±è Çö»ó ÇØ°áÀ» À§ÇØ - [levites]
 	//if (m_isActivateWnd)
 	{
@@ -224,7 +231,7 @@ void CPythonApplication::UpdateGame()
 		float fAspect = UI::CWindowManager::Instance().GetAspect();
 		float fFarClip = CPythonBackground::Instance().GetFarClip();
 
-		s.SetPerspective(30.0f,fAspect, 100.0f, fFarClip);
+		s.SetPerspective(30.0f, fAspect, 100.0f, fFarClip);
 		s.BuildViewFrustum();
 	}
 
@@ -240,7 +247,7 @@ void CPythonApplication::UpdateGame()
 
 	m_kEftMgr.Update();
 	m_kEftMgr.UpdateSound();
-	
+
 	m_FlyingManager.Update();
 	m_pyItem.Update(ptMouse);
 	m_pyPlayer.Update();
@@ -253,7 +260,7 @@ void CPythonApplication::UpdateGame()
 
 void CPythonApplication::SkipRenderBuffering(DWORD dwSleepMSec)
 {
-	m_dwBufSleepSkipTime=ELTimer_GetMSec()+dwSleepMSec;
+	m_dwBufSleepSkipTime = ELTimer_GetMSec() + dwSleepMSec;
 }
 
 bool CPythonApplication::Process()
@@ -272,13 +279,13 @@ bool CPythonApplication::Process()
 
 	if (ELTimer_GetMSec() - s_dwCheckTime > 1000)
 	{
-		m_dwUpdateFPS		= s_dwUpdateFrameCount;
-		m_dwRenderFPS		= s_dwRenderFrameCount;
-		m_dwLoad			= s_uiLoad;
+		m_dwUpdateFPS = s_dwUpdateFrameCount;
+		m_dwRenderFPS = s_dwRenderFrameCount;
+		m_dwLoad = s_uiLoad;
 
-		m_dwFaceCount		= s_dwFaceCount / std::max(1ul, s_dwRenderFrameCount);
+		m_dwFaceCount = s_dwFaceCount / std::max(1ul, s_dwRenderFrameCount);
 
-		s_dwCheckTime		= ELTimer_GetMSec();
+		s_dwCheckTime = ELTimer_GetMSec();
 
 		s_uiLoad = s_dwFaceCount = s_dwUpdateFrameCount = s_dwRenderFrameCount = 0;
 	}
@@ -288,9 +295,9 @@ bool CPythonApplication::Process()
 	static UINT s_uiNextFrameTime = ELTimer_GetMSec();
 
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime1=ELTimer_GetMSec();
+	DWORD dwUpdateTime1 = ELTimer_GetMSec();
 #endif
-	CTimer& rkTimer=CTimer::Instance();
+	CTimer& rkTimer = CTimer::Instance();
 	rkTimer.Advance();
 
 	m_fGlobalTime = rkTimer.GetCurrentSecond();
@@ -301,10 +308,10 @@ bool CPythonApplication::Process()
 
 	DWORD updatestart = ELTimer_GetMSec();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime2=ELTimer_GetMSec();
+	DWORD dwUpdateTime2 = ELTimer_GetMSec();
 #endif
-	// Network I/O	
-	m_pyNetworkStream.Process();	
+	// Network I/O
+	m_pyNetworkStream.Process();
 	//m_pyNetworkDatagram.Process();
 
 	m_kGuildMarkUploader.Process();
@@ -312,68 +319,71 @@ bool CPythonApplication::Process()
 	m_kGuildMarkDownloader.Process();
 	m_kAccountConnector.Process();
 
-#ifdef __PERFORMANCE_CHECK__		
-	DWORD dwUpdateTime3=ELTimer_GetMSec();
+#ifdef __PERFORMANCE_CHECK__
+	DWORD dwUpdateTime3 = ELTimer_GetMSec();
 #endif
 	//////////////////////
 	// Input Process
 	// Keyboard
 	UpdateKeyboard();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime4=ELTimer_GetMSec();
+	DWORD dwUpdateTime4 = ELTimer_GetMSec();
 #endif
 	// Mouse
 	POINT Point;
+
 	if (GetCursorPos(&Point))
 	{
 		ScreenToClient(m_hWnd, &Point);
-		OnMouseMove(Point.x, Point.y);		
+		OnMouseMove(Point.x, Point.y);
 	}
+
 	//////////////////////
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime5=ELTimer_GetMSec();
+	DWORD dwUpdateTime5 = ELTimer_GetMSec();
 #endif
 	//!@# Alt+Tab Áß SetTransfor ¿¡¼­ Æ¨±è Çö»ó ÇØ°áÀ» À§ÇØ - [levites]
 	//if (m_isActivateWnd)
 	__UpdateCamera();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime6=ELTimer_GetMSec();
+	DWORD dwUpdateTime6 = ELTimer_GetMSec();
 #endif
 	// Update Game Playing
 	CResourceManager::Instance().Update();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime7=ELTimer_GetMSec();
+	DWORD dwUpdateTime7 = ELTimer_GetMSec();
 #endif
 	OnCameraUpdate();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime8=ELTimer_GetMSec();
+	DWORD dwUpdateTime8 = ELTimer_GetMSec();
 #endif
 	OnMouseUpdate();
 #ifdef __PERFORMANCE_CHECK__
-	DWORD dwUpdateTime9=ELTimer_GetMSec();
+	DWORD dwUpdateTime9 = ELTimer_GetMSec();
 #endif
 	OnUIUpdate();
 
-#ifdef __PERFORMANCE_CHECK__		
-	DWORD dwUpdateTime10=ELTimer_GetMSec();
+#ifdef __PERFORMANCE_CHECK__
+	DWORD dwUpdateTime10 = ELTimer_GetMSec();
 
-	if (dwUpdateTime10-dwUpdateTime1>10)
-	{			
-		static FILE* fp=fopen("perf_app_update.txt", "w");
+	if (dwUpdateTime10 - dwUpdateTime1 > 10)
+	{
+		static FILE* fp = fopen("perf_app_update.txt", "w");
 
-		fprintf(fp, "AU.Total %d (Time %d)\n", dwUpdateTime9-dwUpdateTime1, ELTimer_GetMSec());
-		fprintf(fp, "AU.TU %d\n", dwUpdateTime2-dwUpdateTime1);
-		fprintf(fp, "AU.NU %d\n", dwUpdateTime3-dwUpdateTime2);
-		fprintf(fp, "AU.KU %d\n", dwUpdateTime4-dwUpdateTime3);
-		fprintf(fp, "AU.MP %d\n", dwUpdateTime5-dwUpdateTime4);
-		fprintf(fp, "AU.CP %d\n", dwUpdateTime6-dwUpdateTime5);
-		fprintf(fp, "AU.RU %d\n", dwUpdateTime7-dwUpdateTime6);
-		fprintf(fp, "AU.CU %d\n", dwUpdateTime8-dwUpdateTime7);
-		fprintf(fp, "AU.MU %d\n", dwUpdateTime9-dwUpdateTime8);
-		fprintf(fp, "AU.UU %d\n", dwUpdateTime10-dwUpdateTime9);			
+		fprintf(fp, "AU.Total %d (Time %d)\n", dwUpdateTime9 - dwUpdateTime1, ELTimer_GetMSec());
+		fprintf(fp, "AU.TU %d\n", dwUpdateTime2 - dwUpdateTime1);
+		fprintf(fp, "AU.NU %d\n", dwUpdateTime3 - dwUpdateTime2);
+		fprintf(fp, "AU.KU %d\n", dwUpdateTime4 - dwUpdateTime3);
+		fprintf(fp, "AU.MP %d\n", dwUpdateTime5 - dwUpdateTime4);
+		fprintf(fp, "AU.CP %d\n", dwUpdateTime6 - dwUpdateTime5);
+		fprintf(fp, "AU.RU %d\n", dwUpdateTime7 - dwUpdateTime6);
+		fprintf(fp, "AU.CU %d\n", dwUpdateTime8 - dwUpdateTime7);
+		fprintf(fp, "AU.MU %d\n", dwUpdateTime9 - dwUpdateTime8);
+		fprintf(fp, "AU.UU %d\n", dwUpdateTime10 - dwUpdateTime9);
 		fprintf(fp, "----------------------------------\n");
 		fflush(fp);
-	}		
+	}
+
 #endif
 
 	//UpdateÇÏ´Âµ¥ °É¸°½Ã°£.delta°ª
@@ -387,12 +397,12 @@ bool CPythonApplication::Process()
 	if (dwCurrentTime > s_uiNextFrameTime)
 	{
 		int dt = dwCurrentTime - s_uiNextFrameTime;
-		int nAdjustTime = ((float)dt / (float)uiFrameTime) * uiFrameTime; 
+		int nAdjustTime = ((float)dt / (float)uiFrameTime) * uiFrameTime;
 
-		if ( dt >= 500 )
+		if (dt >= 500)
 		{
-			s_uiNextFrameTime += nAdjustTime; 
-			printf("FrameSkip º¸Á¤ %d\n",nAdjustTime);
+			s_uiNextFrameTime += nAdjustTime;
+			printf("FrameSkip º¸Á¤ %d\n", nAdjustTime);
 			CTimer::Instance().Adjust(nAdjustTime);
 		}
 
@@ -413,7 +423,7 @@ bool CPythonApplication::Process()
 	//	//±âÁ¸ÄÚµå´ë·Î ÇÏ¸é 0.5ÃÊ ÀÌÇÏ Â÷ÀÌ³­ »óÅÂ·Î update°¡ Áö¼ÓµÇ¸é °è¼Ó rendering frame skip¹ß»ý
 	//	if (dt >= 500 || m_dwCurUpdateTime > s_uiNextFrameTime)
 	//	{
-	//		s_uiNextFrameTime += dt / uiFrameTime * uiFrameTime; 
+	//		s_uiNextFrameTime += dt / uiFrameTime * uiFrameTime;
 	//		printf("FrameSkip º¸Á¤ %d\n", dt / uiFrameTime * uiFrameTime);
 	//		CTimer::Instance().Adjust((dt / uiFrameTime) * uiFrameTime);
 	//		s_bFrameSkip = true;
@@ -421,11 +431,14 @@ bool CPythonApplication::Process()
 	//}
 
 	if (m_isFrameSkipDisable)
+	{
 		s_bFrameSkip = false;
+	}
 
 #ifdef __VTUNE__
 	s_bFrameSkip = false;
 #endif
+
 	/*
 	static bool s_isPrevFrameSkip=false;
 	static DWORD s_dwFrameSkipCount=0;
@@ -457,9 +470,9 @@ bool CPythonApplication::Process()
 	//if (MAX_FRAME_SKIP<s_dwFrameSkipCount)
 	//	MAX_FRAME_SKIP=s_dwFrameSkipCount;
 
-	//printf("u %d c %d/%d t %d\n", 
+	//printf("u %d c %d/%d t %d\n",
 	//	dwUpdateTime9-dwUpdateTime1,
-	//	s_dwFrameSkipCount, 
+	//	s_dwFrameSkipCount,
 	//	MAX_FRAME_SKIP,
 	//	s_dwFrameSkipEndTime);
 
@@ -522,7 +535,7 @@ bool CPythonApplication::Process()
 
 		CGrannyMaterial::TranslateSpecularMatrix(g_specularSpd, g_specularSpd, 0.0f);
 
-		DWORD dwRenderStartTime = ELTimer_GetMSec();		
+		DWORD dwRenderStartTime = ELTimer_GetMSec();
 
 		bool canRender = true;
 
@@ -530,6 +543,7 @@ bool CPythonApplication::Process()
 		{
 			canRender = false;
 		}
+
 		else
 		{
 			if (m_pyGraphic.IsLostDevice())
@@ -537,10 +551,15 @@ bool CPythonApplication::Process()
 				CPythonBackground& rkBG = CPythonBackground::Instance();
 				rkBG.ReleaseCharacterShadowTexture();
 
-				if (m_pyGraphic.RestoreDevice())					
+				if (m_pyGraphic.RestoreDevice())
+				{
 					rkBG.CreateCharacterShadowTexture();
+				}
+
 				else
-					canRender = false;				
+				{
+					canRender = false;
+				}
 			}
 		}
 
@@ -554,13 +573,14 @@ bool CPythonApplication::Process()
 		{
 			SkipRenderBuffering(3000);
 		}
+
 		else
 		{
 			// RestoreLostDevice
 			CCullingManager::Instance().Update();
+
 			if (m_pyGraphic.Begin())
 			{
-
 				m_pyGraphic.ClearDepthBuffer();
 
 #ifdef _DEBUG
@@ -588,20 +608,20 @@ bool CPythonApplication::Process()
 				static DWORD s_dwRenderRangeTime = 0;
 				static DWORD s_dwRenderRangeFrame = 0;
 
-				m_dwCurRenderTime = dwRenderEndTime - dwRenderStartTime;			
-				s_dwRenderRangeTime += m_dwCurRenderTime;				
-				++s_dwRenderRangeFrame;			
+				m_dwCurRenderTime = dwRenderEndTime - dwRenderStartTime;
+				s_dwRenderRangeTime += m_dwCurRenderTime;
+				++s_dwRenderRangeFrame;
 
-				if (dwRenderEndTime-s_dwRenderCheckTime>1000)
+				if (dwRenderEndTime - s_dwRenderCheckTime > 1000)
 				{
-					m_fAveRenderTime=float(double(s_dwRenderRangeTime)/double(s_dwRenderRangeFrame));
+					m_fAveRenderTime = float(double(s_dwRenderRangeTime) / double(s_dwRenderRangeFrame));
 
-					s_dwRenderCheckTime=ELTimer_GetMSec();
-					s_dwRenderRangeTime=0;
-					s_dwRenderRangeFrame=0;
-				}										
+					s_dwRenderCheckTime = ELTimer_GetMSec();
+					s_dwRenderRangeTime = 0;
+					s_dwRenderRangeFrame = 0;
+				}
 
-				DWORD dwCurFaceCount=m_pyGraphic.GetFaceCount();
+				DWORD dwCurFaceCount = m_pyGraphic.GetFaceCount();
 				m_pyGraphic.ResetFaceCount();
 				s_dwFaceCount += dwCurFaceCount;
 
@@ -609,7 +629,7 @@ bool CPythonApplication::Process()
 				{
 					// ÇÁ·¹ÀÓ ¿ÏÃæ Ã³¸®
 					if (dwRenderEndTime > m_dwBufSleepSkipTime)
-					{	
+					{
 						static float s_fBufRenderTime = 0.0f;
 
 						float fCurRenderTime = m_dwCurRenderTime;
@@ -619,6 +639,7 @@ bool CPythonApplication::Process()
 							float fRatio = fMAX(0.5f, (fCurRenderTime - s_fBufRenderTime) / 30.0f);
 							s_fBufRenderTime = (s_fBufRenderTime * (100.0f - fRatio) + (fCurRenderTime + 5) * fRatio) / 100.0f;
 						}
+
 						else
 						{
 							float fRatio = 0.5f;
@@ -627,58 +648,75 @@ bool CPythonApplication::Process()
 
 						// ÇÑ°èÄ¡¸¦ Á¤ÇÑ´Ù
 						if (s_fBufRenderTime > 100.0f)
+						{
 							s_fBufRenderTime = 100.0f;
+						}
 
 						DWORD dwBufRenderTime = s_fBufRenderTime;
 
 						if (m_isWindowed)
-						{						
-							if (dwBufRenderTime>58)
-								dwBufRenderTime=64;
-							else if (dwBufRenderTime>42)
-								dwBufRenderTime=48;
-							else if (dwBufRenderTime>26)
-								dwBufRenderTime=32;
-							else if (dwBufRenderTime>10)
-								dwBufRenderTime=16;
+						{
+							if (dwBufRenderTime > 58)
+							{
+								dwBufRenderTime = 64;
+							}
+
+							else if (dwBufRenderTime > 42)
+							{
+								dwBufRenderTime = 48;
+							}
+
+							else if (dwBufRenderTime > 26)
+							{
+								dwBufRenderTime = 32;
+							}
+
+							else if (dwBufRenderTime > 10)
+							{
+								dwBufRenderTime = 16;
+							}
+
 							else
-								dwBufRenderTime=8;
+							{
+								dwBufRenderTime = 8;
+							}
 						}
 
 						// ÀÏÁ¤ ÇÁ·¹ÀÓ ¼Óµµ¿¡ ¸ÂÃß¾îÁÖ´ÂÂÊ¿¡ ´«¿¡ ÆíÇÏ´Ù
 						// ¾Æ·¡¿¡¼­ ÇÑ¹ø ÇÏ¸é ç´?
 						//if (m_dwCurRenderTime<dwBufRenderTime)
-						//	Sleep(dwBufRenderTime-m_dwCurRenderTime);			
+						//	Sleep(dwBufRenderTime-m_dwCurRenderTime);
 
-						m_fAveRenderTime=s_fBufRenderTime;
+						m_fAveRenderTime = s_fBufRenderTime;
 					}
 
 					m_dwFaceAccCount += dwCurFaceCount;
 					m_dwFaceAccTime += m_dwCurRenderTime;
 
-					m_fFaceSpd=(m_dwFaceAccCount/m_dwFaceAccTime);
+					m_fFaceSpd = (m_dwFaceAccCount / m_dwFaceAccTime);
 
 					// °Å¸® ÀÚµ¿ Á¶Àý
 					if (-1 == m_iForceSightRange)
 					{
 						static float s_fAveRenderTime = 16.0f;
-						float fRatio=0.3f;
-						s_fAveRenderTime=(s_fAveRenderTime*(100.0f-fRatio)+std::max(16.0f, (float)m_dwCurRenderTime)*fRatio)/100.0f;
+						float fRatio = 0.3f;
+						s_fAveRenderTime = (s_fAveRenderTime * (100.0f - fRatio) + std::max(16.0f, (float)m_dwCurRenderTime) * fRatio) / 100.0f;
 
-
-						float fFar=25600.0f;
-						float fNear=MIN_FOG;
-						double dbAvePow=double(1000.0f/s_fAveRenderTime);
-						double dbMaxPow=60.0;
-						float fDistance=std::max((float)(fNear+(fFar-fNear)*(dbAvePow)/dbMaxPow), fNear);
+						float fFar = 25600.0f;
+						float fNear = MIN_FOG;
+						double dbAvePow = double(1000.0f / s_fAveRenderTime);
+						double dbMaxPow = 60.0;
+						float fDistance = std::max((float)(fNear + (fFar - fNear) * (dbAvePow) / dbMaxPow), fNear);
 						m_pyBackground.SetViewDistanceSet(0, fDistance);
 					}
+
 					// °Å¸® °­Á¦ ¼³Á¤½Ã
 					else
 					{
 						m_pyBackground.SetViewDistanceSet(0, float(m_iForceSightRange));
 					}
 				}
+
 				else
 				{
 					// 10000 Æú¸®°ï º¸´Ù ÀûÀ»¶§´Â °¡Àå ¸Ö¸® º¸ÀÌ°Ô ÇÑ´Ù
@@ -692,16 +730,16 @@ bool CPythonApplication::Process()
 
 	int rest = s_uiNextFrameTime - ELTimer_GetMSec();
 
-	if (rest > 0 && !bCurrentLateUpdate )
+	if (rest > 0 && !bCurrentLateUpdate)
 	{
 		s_uiLoad -= rest;	// ½® ½Ã°£Àº ·Îµå¿¡¼­ »«´Ù..
 		Sleep(rest);
-	}	
+	}
 
 	++s_dwUpdateFrameCount;
 
 	s_uiLoad += ELTimer_GetMSec() - dwStart;
-	//m_Profiler.ProfileByScreen();	
+	//m_Profiler.ProfileByScreen();
 	return true;
 }
 
@@ -713,7 +751,7 @@ void CPythonApplication::UpdateClientRect()
 }
 
 void CPythonApplication::SetMouseHandler(PyObject* poMouseHandler)
-{	
+{
 	m_poMouseHandler = poMouseHandler;
 }
 
@@ -734,7 +772,9 @@ int CPythonApplication::CheckDeviceState()
 
 	case CGraphicDevice::DEVICESTATE_NEEDS_RESET:
 		if (!m_grpDevice.Reset())
+		{
 			return DEVICE_STATE_SKIP;
+		}
 
 		break;
 	}
@@ -750,7 +790,7 @@ bool CPythonApplication::CreateDevice(int width, int height, int Windowed, int b
 	m_grpDevice.RegisterWarningString(CGraphicDevice::CREATE_BAD_DRIVER, ApplicationStringTable_GetStringz(IDS_WARN_BAD_DRIVER, "WARN_BAD_DRIVER"));
 	m_grpDevice.RegisterWarningString(CGraphicDevice::CREATE_NO_TNL, ApplicationStringTable_GetStringz(IDS_WARN_NO_TNL, "WARN_NO_TNL"));
 
-	iRet = m_grpDevice.Create(GetWindowHandle(), width, height, Windowed ? true : false, bit,frequency);
+	iRet = m_grpDevice.Create(GetWindowHandle(), width, height, Windowed ? true : false, bit, frequency);
 
 	switch (iRet)
 	{
@@ -811,6 +851,7 @@ bool CPythonApplication::CreateDevice(int width, int height, int Windowed, int b
 				CGrannyLODController::SetMinLODMode(true);
 				//LogBox(ApplicationStringTable_GetStringz(IDS_WARN_NO_TNL), NULL, GetWindowHandle());
 			}
+
 			return true;
 		}
 
@@ -822,20 +863,25 @@ bool CPythonApplication::CreateDevice(int width, int height, int Windowed, int b
 }
 
 void CPythonApplication::Loop()
-{	
+{
 	while (1)
-	{	
+	{
 		if (IsMessage())
 		{
 			if (!MessageProcess())
+			{
 				break;
+			}
 		}
+
 		else
 		{
 			if (!Process())
+			{
 				break;
+			}
 
-			m_dwLastIdleTime=ELTimer_GetMSec();
+			m_dwLastIdleTime = ELTimer_GetMSec();
 		}
 	}
 }
@@ -844,34 +890,34 @@ void CPythonApplication::Loop()
 bool LoadLocaleData(const char* localePath)
 {
 	NANOBEGIN
-		CPythonNonPlayer&	rkNPCMgr	= CPythonNonPlayer::Instance();
-	CItemManager&		rkItemMgr	= CItemManager::Instance();	
-	CPythonSkill&		rkSkillMgr	= CPythonSkill::Instance();
+		CPythonNonPlayer& rkNPCMgr = CPythonNonPlayer::Instance();
+	CItemManager& rkItemMgr = CItemManager::Instance();
+	CPythonSkill& rkSkillMgr = CPythonSkill::Instance();
 	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
 
 	char szItemList[256];
 	char szItemProto[256];
-	char szItemDesc[256];	
+	char szItemDesc[256];
 	char szMobProto[256];
 	char szSkillDescFileName[256];
 	char szSkillTableFileName[256];
 	char szInsultList[256];
-	snprintf(szItemList,	sizeof(szItemList) ,	"%s/item_list.txt",	localePath);		
-	snprintf(szItemProto,	sizeof(szItemProto),	"%s/item_proto",	localePath);
-	snprintf(szItemDesc,	sizeof(szItemDesc),	"%s/itemdesc.txt",	localePath);	
-	snprintf(szMobProto,	sizeof(szMobProto),	"%s/mob_proto",		localePath);	
-	snprintf(szSkillDescFileName, sizeof(szSkillDescFileName),	"%s/SkillDesc.txt", localePath);
-	snprintf(szSkillTableFileName, sizeof(szSkillTableFileName),	"%s/SkillTable.txt", localePath);	
-	snprintf(szInsultList,	sizeof(szInsultList),	"%s/insult.txt", localePath);
+	snprintf(szItemList, sizeof(szItemList), "%s/item_list.txt", localePath);
+	snprintf(szItemProto, sizeof(szItemProto), "%s/item_proto", localePath);
+	snprintf(szItemDesc, sizeof(szItemDesc), "%s/itemdesc.txt", localePath);
+	snprintf(szMobProto, sizeof(szMobProto), "%s/mob_proto", localePath);
+	snprintf(szSkillDescFileName, sizeof(szSkillDescFileName), "%s/SkillDesc.txt", localePath);
+	snprintf(szSkillTableFileName, sizeof(szSkillTableFileName), "%s/SkillTable.txt", localePath);
+	snprintf(szInsultList, sizeof(szInsultList), "%s/insult.txt", localePath);
 
 	rkNPCMgr.Destroy();
-	rkItemMgr.Destroy();	
+	rkItemMgr.Destroy();
 	rkSkillMgr.Destroy();
 
 	if (!rkItemMgr.LoadItemList(szItemList))
 	{
 		TraceError("LoadLocaleData - LoadItemList(%s) Error", szItemList);
-	}	
+	}
 
 	if (!rkItemMgr.LoadItemTable(szItemProto))
 	{
@@ -881,7 +927,7 @@ bool LoadLocaleData(const char* localePath)
 
 	if (!rkItemMgr.LoadItemDesc(szItemDesc))
 	{
-		Tracenf("LoadLocaleData - LoadItemDesc(%s) Error", szItemDesc);	
+		Tracenf("LoadLocaleData - LoadItemDesc(%s) Error", szItemDesc);
 	}
 
 	if (!rkNPCMgr.LoadNonPlayerData(szMobProto))
@@ -904,18 +950,20 @@ bool LoadLocaleData(const char* localePath)
 
 	if (!rkNetStream.LoadInsultList(szInsultList))
 	{
-		Tracenf("CPythonApplication - CPythonNetworkStream::LoadInsultList(%s)", szInsultList);				
+		Tracenf("CPythonApplication - CPythonNetworkStream::LoadInsultList(%s)", szInsultList);
 	}
 
 	if (LocaleService_IsYMIR())
-	{	
+	{
 		char szEmpireTextConvFile[256];
-		for (DWORD dwEmpireID=1; dwEmpireID<=3; ++dwEmpireID)
-		{			
+
+		for (DWORD dwEmpireID = 1; dwEmpireID <= 3; ++dwEmpireID)
+		{
 			sprintf(szEmpireTextConvFile, "%s/lang%d.cvt", localePath, dwEmpireID);
+
 			if (!rkNetStream.LoadConvertTable(dwEmpireID, szEmpireTextConvFile))
 			{
-				TraceError("LoadLocaleData - CPythonNetworkStream::LoadConvertTable(%d, %s) FAILURE", dwEmpireID, szEmpireTextConvFile);			
+				TraceError("LoadLocaleData - CPythonNetworkStream::LoadConvertTable(%d, %s) FAILURE", dwEmpireID, szEmpireTextConvFile);
 			}
 		}
 	}
@@ -923,17 +971,20 @@ bool LoadLocaleData(const char* localePath)
 	NANOEND
 		return true;
 }
+
 // END_OF_SUPPORT_NEW_KOREA_SERVER
 
 unsigned __GetWindowMode(bool windowed)
 {
 	if (windowed)
-		return WS_OVERLAPPED | WS_CAPTION |   WS_SYSMENU | WS_MINIMIZEBOX;
+	{
+		return WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+	}
 
 	return WS_POPUP;
 }
 
-bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int width, int height, int Windowed)
+bool CPythonApplication::Create(PyObject* poSelf, const char* c_szName, int width, int height, int Windowed)
 {
 	NANOBEGIN
 		Windowed = CPythonSystem::Instance().IsWindowed() ? 1 : 0;
@@ -941,7 +992,9 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	bool bAnotherWindow = false;
 
 	if (FindWindow(NULL, c_szName))
+	{
 		bAnotherWindow = true;
+	}
 
 	m_dwWidth = width;
 	m_dwHeight = height;
@@ -949,7 +1002,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 	// Window
 	UINT WindowMode = __GetWindowMode(Windowed ? true : false);
 
-	if (!CMSWindow::Create(c_szName, 4, 0, WindowMode, ::LoadIcon( GetInstance(), MAKEINTRESOURCE( IDI_METIN2 ) ), IDC_CURSOR_NORMAL))
+	if (!CMSWindow::Create(c_szName, 4, 0, WindowMode, ::LoadIcon(GetInstance(), MAKEINTRESOURCE(IDI_METIN2)), IDC_CURSOR_NORMAL))
 	{
 		//PyErr_SetString(PyExc_RuntimeError, "CMSWindow::Create failed");
 		TraceError("CMSWindow::Create failed");
@@ -970,6 +1023,7 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 
 		Windowed = true;
 	}
+
 	else
 	{
 		AdjustSize(m_pySystem.GetWidth(), m_pySystem.GetHeight());
@@ -989,8 +1043,10 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 
 				CMSApplication::SetPosition(GetScreenWidth() - windowWidth, GetScreenHeight() - 60 - windowHeight);
 			}
+
 			SetPosition(-8, 0); //Fix
 		}
+
 		else
 		{
 			m_isWindowed = false;
@@ -1011,107 +1067,122 @@ bool CPythonApplication::Create(PyObject * poSelf, const char * c_szName, int wi
 			return false;
 		}
 
-		if (!m_pySystem.IsNoSoundCard())
+	if (!m_pySystem.IsNoSoundCard())
+	{
+		// Sound
+		if (!m_SoundEngine.Initialize())
 		{
-			// Sound
-			if (!m_SoundEngine.Initialize())
-			{
-				TraceError("Failed to initialize sound manager!");
-				return false; // Is this important enough to stop the client?
-			}
+			TraceError("Failed to initialize sound manager!");
+			return false; // Is this important enough to stop the client?
+		}
+	}
+
+	extern bool GRAPHICS_CAPS_SOFTWARE_TILING;
+
+	if (!m_pySystem.IsAutoTiling())
+	{
+		GRAPHICS_CAPS_SOFTWARE_TILING = m_pySystem.IsSoftwareTiling();
+	}
+
+	// Device
+	if (!CreateDevice(m_pySystem.GetWidth(), m_pySystem.GetHeight(), Windowed, m_pySystem.GetBPP(), m_pySystem.GetFrequency()))
+	{
+		return false;
+	}
+
+	GrannyCreateSharedDeformBuffer();
+
+	if (m_pySystem.IsAutoTiling())
+	{
+		if (m_grpDevice.IsFastTNL())
+		{
+			m_pyBackground.ReserveSoftwareTilingEnable(false);
 		}
 
-		extern bool GRAPHICS_CAPS_SOFTWARE_TILING;
-
-		if (!m_pySystem.IsAutoTiling())
-			GRAPHICS_CAPS_SOFTWARE_TILING = m_pySystem.IsSoftwareTiling();
-
-		// Device
-		if (!CreateDevice(m_pySystem.GetWidth(), m_pySystem.GetHeight(), Windowed, m_pySystem.GetBPP(), m_pySystem.GetFrequency()))
-			return false;
-
-		GrannyCreateSharedDeformBuffer();
-
-		if (m_pySystem.IsAutoTiling())
-		{
-			if (m_grpDevice.IsFastTNL())
-			{
-				m_pyBackground.ReserveSoftwareTilingEnable(false);
-			}
-			else
-			{
-				m_pyBackground.ReserveSoftwareTilingEnable(true);
-			}
-		}
 		else
 		{
-			m_pyBackground.ReserveSoftwareTilingEnable(m_pySystem.IsSoftwareTiling());
+			m_pyBackground.ReserveSoftwareTilingEnable(true);
 		}
+	}
 
-		SetVisibleMode(true);
+	else
+	{
+		m_pyBackground.ReserveSoftwareTilingEnable(m_pySystem.IsSoftwareTiling());
+	}
 
-		if (m_isWindowFullScreenEnable) //m_pySystem.IsUseDefaultIME() && !m_pySystem.IsWindowed())
-		{
-			SetWindowPos(GetWindowHandle(), HWND_TOP, 0, 0, width, height, SWP_SHOWWINDOW);
-		}
+	SetVisibleMode(true);
 
-		if (!InitializeKeyboard(GetWindowHandle()))
-			return false;
+	if (m_isWindowFullScreenEnable) //m_pySystem.IsUseDefaultIME() && !m_pySystem.IsWindowed())
+	{
+		SetWindowPos(GetWindowHandle(), HWND_TOP, 0, 0, width, height, SWP_SHOWWINDOW);
+	}
 
-		m_pySystem.GetDisplaySettings();
+	if (!InitializeKeyboard(GetWindowHandle()))
+	{
+		return false;
+	}
 
-		// Mouse
-		if (m_pySystem.IsSoftwareCursor())
-			SetCursorMode(CURSOR_MODE_SOFTWARE);
-		else
-			SetCursorMode(CURSOR_MODE_HARDWARE);
+	m_pySystem.GetDisplaySettings();
 
-		// Network
-		if (!m_netDevice.Create())
-		{
-			//PyErr_SetString(PyExc_RuntimeError, "NetDevice::Create failed");
-			TraceError("NetDevice::Create failed");
-			SET_EXCEPTION("CREATE_NETWORK");
-			return false;
-		}
+	// Mouse
+	if (m_pySystem.IsSoftwareCursor())
+	{
+		SetCursorMode(CURSOR_MODE_SOFTWARE);
+	}
 
-		if (!m_grpDevice.IsFastTNL())
-			CGrannyLODController::SetMinLODMode(true);
+	else
+	{
+		SetCursorMode(CURSOR_MODE_HARDWARE);
+	}
 
-		m_pyItem.Create();
+	// Network
+	if (!m_netDevice.Create())
+	{
+		//PyErr_SetString(PyExc_RuntimeError, "NetDevice::Create failed");
+		TraceError("NetDevice::Create failed");
+		SET_EXCEPTION("CREATE_NETWORK");
+		return false;
+	}
 
-		// Other Modules
-		DefaultFont_Startup();
+	if (!m_grpDevice.IsFastTNL())
+	{
+		CGrannyLODController::SetMinLODMode(true);
+	}
 
-		CPythonIME::Instance().Create(GetWindowHandle());
-		CPythonIME::Instance().SetText("", 0);
-		CPythonTextTail::Instance().Initialize();
+	m_pyItem.Create();
 
-		// Light Manager
-		m_LightManager.Initialize();
+	// Other Modules
+	DefaultFont_Startup();
 
-		CGraphicImageInstance::CreateSystem(32);
+	CPythonIME::Instance().Create(GetWindowHandle());
+	CPythonIME::Instance().SetText("", 0);
+	CPythonTextTail::Instance().Initialize();
 
-		// ¹é¾÷
-		STICKYKEYS sStickKeys;
-		memset(&sStickKeys, 0, sizeof(sStickKeys));
-		sStickKeys.cbSize = sizeof(sStickKeys);
-		SystemParametersInfo( SPI_GETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0 );
-		m_dwStickyKeysFlag = sStickKeys.dwFlags;
+	// Light Manager
+	m_LightManager.Initialize();
 
-		// ¼³Á¤
-		sStickKeys.dwFlags &= ~(SKF_AVAILABLE|SKF_HOTKEYACTIVE);
-		SystemParametersInfo( SPI_SETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0 );
+	CGraphicImageInstance::CreateSystem(32);
 
-		// SphereMap
-		CGrannyMaterial::CreateSphereMap(0, "d:/ymir work/special/spheremap.jpg");
-		CGrannyMaterial::CreateSphereMap(1, "d:/ymir work/special/spheremap01.jpg");
-		return true;
+	// ¹é¾÷
+	STICKYKEYS sStickKeys;
+	memset(&sStickKeys, 0, sizeof(sStickKeys));
+	sStickKeys.cbSize = sizeof(sStickKeys);
+	SystemParametersInfo(SPI_GETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0);
+	m_dwStickyKeysFlag = sStickKeys.dwFlags;
+
+	// ¼³Á¤
+	sStickKeys.dwFlags &= ~(SKF_AVAILABLE | SKF_HOTKEYACTIVE);
+	SystemParametersInfo(SPI_SETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0);
+
+	// SphereMap
+	CGrannyMaterial::CreateSphereMap(0, "d:/ymir work/special/spheremap.jpg");
+	CGrannyMaterial::CreateSphereMap(1, "d:/ymir work/special/spheremap01.jpg");
+	return true;
 }
 
 void CPythonApplication::SetGlobalCenterPosition(int32_t x, int32_t y)
 {
-	CPythonBackground& rkBG=CPythonBackground::Instance();
+	CPythonBackground& rkBG = CPythonBackground::Instance();
 	rkBG.GlobalPositionToLocalPosition(x, y);
 
 	float z = CPythonBackground::Instance().GetHeight(x, y);
@@ -1126,19 +1197,18 @@ void CPythonApplication::SetCenterPosition(float fx, float fy, float fz)
 	m_v3CenterPosition.z = +fz;
 }
 
-void CPythonApplication::GetCenterPosition(TPixelPosition * pPixelPosition)
+void CPythonApplication::GetCenterPosition(TPixelPosition* pPixelPosition)
 {
 	pPixelPosition->x = +m_v3CenterPosition.x;
 	pPixelPosition->y = -m_v3CenterPosition.y;
 	pPixelPosition->z = +m_v3CenterPosition.z;
 }
 
-
 void CPythonApplication::SetServerTime(time_t tTime)
 {
-	m_dwStartLocalTime	= ELTimer_GetMSec();
-	m_tServerTime		= tTime;
-	m_tLocalStartTime	= time(0);
+	m_dwStartLocalTime = ELTimer_GetMSec();
+	m_tServerTime = tTime;
+	m_tLocalStartTime = time(0);
 }
 
 time_t CPythonApplication::GetServerTime()
@@ -1178,16 +1248,16 @@ int CPythonApplication::GetHeight()
 	return m_dwHeight;
 }
 
-void CPythonApplication::SetConnectData(const char * c_szIP, int iPort)
+void CPythonApplication::SetConnectData(const char* c_szIP, int iPort)
 {
 	m_strIP = c_szIP;
 	m_iPort = iPort;
 }
 
-void CPythonApplication::GetConnectData(std::string & rstIP, int & riPort)
+void CPythonApplication::GetConnectData(std::string& rstIP, int& riPort)
 {
-	rstIP	= m_strIP;
-	riPort	= m_iPort;
+	rstIP = m_strIP;
+	riPort = m_iPort;
 }
 
 void CPythonApplication::EnableSpecialCameraMode()
@@ -1225,13 +1295,13 @@ void CPythonApplication::Destroy()
 
 	m_pySystem.SaveInterfaceStatus();
 
-	m_pyEventManager.Destroy();	
+	m_pyEventManager.Destroy();
 	m_FlyingManager.Destroy();
 
 	m_pyMiniMap.Destroy();
 
 	m_pyTextTail.Destroy();
-	m_pyChat.Destroy();	
+	m_pyChat.Destroy();
 	m_kChrMgr.Destroy();
 	m_RaceManager.Destroy();
 
@@ -1250,7 +1320,7 @@ void CPythonApplication::Destroy()
 	GrannyDestroySharedDeformBuffer();
 
 	m_pyGraphic.Destroy();
-	//m_pyNetworkDatagram.Destroy();	
+	//m_pyNetworkDatagram.Destroy();
 
 	m_pyRes.Destroy();
 
@@ -1274,5 +1344,5 @@ void CPythonApplication::Destroy()
 	memset(&sStickKeys, 0, sizeof(sStickKeys));
 	sStickKeys.cbSize = sizeof(sStickKeys);
 	sStickKeys.dwFlags = m_dwStickyKeysFlag;
-	SystemParametersInfo( SPI_SETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0 );
+	SystemParametersInfo(SPI_SETSTICKYKEYS, sizeof(sStickKeys), &sStickKeys, 0);
 }

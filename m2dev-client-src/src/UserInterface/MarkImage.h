@@ -31,7 +31,7 @@ struct SGuildMarkBlock
 		HEIGHT = SGuildMark::HEIGHT * MARK_PER_BLOCK_HEIGHT,
 
 		SIZE = WIDTH * HEIGHT,
-		MAX_COMP_SIZE = (SIZE * sizeof(Pixel)) + ((SIZE * sizeof(Pixel)) >> 4) + 64 + 3 
+		MAX_COMP_SIZE = (SIZE * sizeof(Pixel)) + ((SIZE * sizeof(Pixel)) >> 4) + 64 + 3
 	};
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -45,62 +45,62 @@ struct SGuildMarkBlock
 	DWORD	GetCRC() const;
 
 	void	CopyFrom(const uint8_t* pbCompBuf, DWORD dwCompSize, DWORD crc);
-	void	Compress(const Pixel * pxBuf);
+	void	Compress(const Pixel* pxBuf);
 };
 
 class CGuildMarkImage
 {
-	public:
-		enum
-		{
-			WIDTH = 512,
-			HEIGHT = 512,
+public:
+	enum
+	{
+		WIDTH = 512,
+		HEIGHT = 512,
 
-			BLOCK_ROW_COUNT = HEIGHT / SGuildMarkBlock::HEIGHT, // 10
-			BLOCK_COL_COUNT = WIDTH / SGuildMarkBlock::WIDTH, // 8
+		BLOCK_ROW_COUNT = HEIGHT / SGuildMarkBlock::HEIGHT, // 10
+		BLOCK_COL_COUNT = WIDTH / SGuildMarkBlock::WIDTH, // 8
 
-			BLOCK_TOTAL_COUNT = BLOCK_ROW_COUNT * BLOCK_COL_COUNT, // 80
+		BLOCK_TOTAL_COUNT = BLOCK_ROW_COUNT * BLOCK_COL_COUNT,  // 80
 
-			MARK_ROW_COUNT = BLOCK_ROW_COUNT * SGuildMarkBlock::MARK_PER_BLOCK_HEIGHT, // 40
-			MARK_COL_COUNT = BLOCK_COL_COUNT * SGuildMarkBlock::MARK_PER_BLOCK_WIDTH, // 32
+		MARK_ROW_COUNT = BLOCK_ROW_COUNT * SGuildMarkBlock::MARK_PER_BLOCK_HEIGHT,  // 40
+		MARK_COL_COUNT = BLOCK_COL_COUNT * SGuildMarkBlock::MARK_PER_BLOCK_WIDTH,  // 32
 
-			MARK_TOTAL_COUNT = MARK_ROW_COUNT * MARK_COL_COUNT, // 1280
+		MARK_TOTAL_COUNT = MARK_ROW_COUNT * MARK_COL_COUNT,  // 1280
 
-			INVALID_MARK_POSITION = 0xffffffff,
-		};
+		INVALID_MARK_POSITION = 0xffffffff,
+	};
 
-		CGuildMarkImage();
-		virtual ~CGuildMarkImage();
+	CGuildMarkImage();
+	virtual ~CGuildMarkImage();
 
-		void Create();
-		void Destroy();
+	void Create();
+	void Destroy();
 
-		bool Build(const char * c_szFileName);
-		bool Save(const char* c_szFileName);
-		bool Load(const char* c_szFileName);
+	bool Build(const char* c_szFileName);
+	bool Save(const char* c_szFileName);
+	bool Load(const char* c_szFileName);
 
-		void PutData(UINT x, UINT y, UINT width, UINT height, void* data);
-		void GetData(UINT x, UINT y, UINT width, UINT height, void* data);
+	void PutData(UINT x, UINT y, UINT width, UINT height, void* data);
+	void GetData(UINT x, UINT y, UINT width, UINT height, void* data);
 
-		bool SaveMark(DWORD posMark, uint8_t* pbMarkImage);
-		bool DeleteMark(DWORD posMark);
-		bool SaveBlockFromCompressedData(DWORD posBlock, const uint8_t * pbComp, DWORD dwCompSize); // 서버 -> 클라이언트
+	bool SaveMark(DWORD posMark, uint8_t* pbMarkImage);
+	bool DeleteMark(DWORD posMark);
+	bool SaveBlockFromCompressedData(DWORD posBlock, const uint8_t* pbComp, DWORD dwCompSize); // 서버 -> 클라이언트
 
-		DWORD GetEmptyPosition(); // 빈 마크 위치를 얻는다.
+	DWORD GetEmptyPosition(); // 빈 마크 위치를 얻는다.
 
-		void GetBlockCRCList(uint32_t* crcList);
-		void GetDiffBlocks(const DWORD * crcList, std::map<uint8_t, const SGuildMarkBlock *> & mapDiffBlocks);
+	void GetBlockCRCList(uint32_t* crcList);
+	void GetDiffBlocks(const DWORD* crcList, std::map<uint8_t, const SGuildMarkBlock*>& mapDiffBlocks);
 
-	private:
-		enum
-		{
-			INVALID_HANDLE = 0xffffffff,
-		};
+private:
+	enum
+	{
+		INVALID_HANDLE = 0xffffffff,
+	};
 
-		void	BuildAllBlocks();
+	void	BuildAllBlocks();
 
-		SGuildMarkBlock	m_aakBlock[BLOCK_ROW_COUNT][BLOCK_COL_COUNT];
-		Pixel m_apxImage[WIDTH * HEIGHT];
+	SGuildMarkBlock	m_aakBlock[BLOCK_ROW_COUNT][BLOCK_COL_COUNT];
+	Pixel m_apxImage[WIDTH * HEIGHT];
 };
 
 #endif

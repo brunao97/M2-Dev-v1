@@ -11,30 +11,29 @@ class CParticleInstance;
 
 class CParticleSystemData : public CEffectElementBase
 {
-	public:	
-		virtual ~CParticleSystemData();	
-		CParticleSystemData();
+public:
+	virtual ~CParticleSystemData();
+	CParticleSystemData();
 
-		CEmitterProperty * GetEmitterPropertyPointer();
-		CParticleProperty * GetParticlePropertyPointer();
+	CEmitterProperty* GetEmitterPropertyPointer();
+	CParticleProperty* GetParticlePropertyPointer();
 
-		void ChangeTexture(const char * c_szFileName);
+	void ChangeTexture(const char* c_szFileName);
 
-	protected:		
-		BOOL OnLoadScript(CTextFileLoader & rTextFileLoader);
+protected:
+	BOOL OnLoadScript(CTextFileLoader& rTextFileLoader);
 
-		void OnClear();
-		bool OnIsData();
+	void OnClear();
+	bool OnIsData();
 
+	CEmitterProperty m_EmitterProperty;
+	CParticleProperty m_ParticleProperty;
 
-		CEmitterProperty m_EmitterProperty;
-		CParticleProperty m_ParticleProperty;
+public:
+	static void DestroySystem();
 
-	public:
-		static void DestroySystem();
+	static CParticleSystemData* New();
+	static void Delete(CParticleSystemData* pkData);
 
-		static CParticleSystemData* New();
-		static void Delete(CParticleSystemData* pkData);
-
-		static CDynamicPool<CParticleSystemData>		ms_kPool;
+	static CDynamicPool<CParticleSystemData>		ms_kPool;
 };

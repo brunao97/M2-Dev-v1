@@ -21,7 +21,7 @@ bool CPropertyLoader::OnFile(const char* c_szPathName, const char* c_szFileName)
 	return true;
 }
 
-DWORD CPropertyLoader::RegisterFile(const char * c_szPathName, const char * c_szFileName)
+DWORD CPropertyLoader::RegisterFile(const char* c_szPathName, const char* c_szFileName)
 {
 	std::string strFileName = "";
 	strFileName += c_szPathName;
@@ -42,18 +42,24 @@ DWORD CPropertyLoader::RegisterFile(const char * c_szPathName, const char * c_sz
 		m_pPropertyManager->LoadReservedCRC(strFileName.c_str());
 		return 1;
 	}
+
 	else
 	{
-		CProperty * pProperty;
+		CProperty* pProperty;
 
 		if (m_pPropertyManager->Register(strFileName.c_str(), &pProperty))
+		{
 			return pProperty->GetCRC();
+		}
+
 		else
+		{
 			return 0;
+		}
 	}
 }
 
-void CPropertyLoader::SetPropertyManager(CPropertyManager * pPropertyManager)
+void CPropertyLoader::SetPropertyManager(CPropertyManager* pPropertyManager)
 {
 	m_pPropertyManager = pPropertyManager;
 }

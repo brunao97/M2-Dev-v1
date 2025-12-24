@@ -38,9 +38,11 @@ bool CGraphicSubImage::SetImageFileName(const char* c_szFileName)
 	CResource* pResource = CResourceManager::Instance().GetResourcePointer(c_szFileName);
 
 	if (!pResource->IsType(CGraphicImage::Type()))
+	{
 		return false;
+	}
 
-	SetImagePointer(static_cast<CGraphicImage*>(pResource));
+	SetImagePointer(static_cast<CGraphicImage*> (pResource));
 	return true;
 }
 
@@ -57,15 +59,17 @@ void CGraphicSubImage::SetRectReference(const RECT& c_rRect)
 	m_rect = c_rRect;
 }
 
-void CGraphicSubImage::SetSearchPath(const char * c_szFileName)
+void CGraphicSubImage::SetSearchPath(const char* c_szFileName)
 {
-	strncpy(m_SearchPath, c_szFileName, sizeof(m_SearchPath)-1);
+	strncpy(m_SearchPath, c_szFileName, sizeof(m_SearchPath) - 1);
 }
 
 bool CGraphicSubImage::OnLoad(int iSize, const void* c_pvBuf)
 {
 	if (!c_pvBuf)
+	{
 		return false;
+	}
 
 	CTokenVector stTokenVector;
 	std::map<std::string, std::string> stTokenMap;
@@ -77,10 +81,14 @@ bool CGraphicSubImage::OnLoad(int iSize, const void* c_pvBuf)
 	for (DWORD i = 0; i < textFileLoader.GetLineCount(); ++i)
 	{
 		if (!textFileLoader.SplitLine(i, &stTokenVector))
+		{
 			continue;
+		}
 
 		if (stTokenVector.size() != 2)
+		{
 			return false;
+		}
 
 		stl_lowers(stTokenVector[0]);
 		stl_lowers(stTokenVector[1]);
@@ -97,26 +105,32 @@ bool CGraphicSubImage::OnLoad(int iSize, const void* c_pvBuf)
 	const std::string& c_rstBottom = stTokenMap["bottom"];
 
 	if (c_rstTitle != "subimage")
+	{
 		return false;
-	
+	}
+
 	char szFileName[256];
-	if ("2.0"==c_rstVersion)
-	{	
-		const std::string& c_rstSubFileName=GetFileNameString();
-		int nPos=c_rstSubFileName.find_last_of('\\', -1);
-		if (nPos>=0)
+
+	if ("2.0" == c_rstVersion)
+	{
+		const std::string& c_rstSubFileName = GetFileNameString();
+		int nPos = c_rstSubFileName.find_last_of('\\', -1);
+
+		if (nPos >= 0)
 		{
 			nPos++;
 			memcpy(szFileName, c_rstSubFileName.c_str(), nPos);
-			szFileName[nPos]='\0';
-			memcpy(szFileName+nPos, c_rstImage.c_str(), c_rstImage.length());
-			szFileName[nPos+c_rstImage.length()]='\0';
+			szFileName[nPos] = '\0';
+			memcpy(szFileName + nPos, c_rstImage.c_str(), c_rstImage.length());
+			szFileName[nPos + c_rstImage.length()] = '\0';
 		}
+
 		else
 		{
 			memcpy(szFileName, c_rstImage.c_str(), c_rstImage.length());
 		}
 	}
+
 	else
 	{
 		_snprintf(szFileName, sizeof(szFileName), "%s%s", m_SearchPath, c_rstImage.c_str());
@@ -125,9 +139,9 @@ bool CGraphicSubImage::OnLoad(int iSize, const void* c_pvBuf)
 	SetImageFileName(szFileName);
 
 	SetRectPosition(atoi(c_rstLeft.c_str()),
-					atoi(c_rstTop.c_str()),
-					atoi(c_rstRight.c_str()),
-					atoi(c_rstBottom.c_str()));
+		atoi(c_rstTop.c_str()),
+		atoi(c_rstRight.c_str()),
+		atoi(c_rstBottom.c_str()));
 
 	return true;
 }
@@ -140,9 +154,11 @@ void CGraphicSubImage::OnClear()
 
 bool CGraphicSubImage::OnIsEmpty() const
 {
-	if (!m_roImage.IsNull())		
+	if (!m_roImage.IsNull())
 		if (!m_roImage->IsEmpty())
+		{
 			return false;
+		}
 
 	return true;
 }
@@ -150,7 +166,9 @@ bool CGraphicSubImage::OnIsEmpty() const
 bool CGraphicSubImage::OnIsType(TType type)
 {
 	if (CGraphicSubImage::Type() == type)
+	{
 		return true;
+	}
 
 	return CGraphicImage::OnIsType(type);
 }

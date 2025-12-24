@@ -13,11 +13,11 @@
 
 // Armadillo nanomite protection
 #ifndef NANOBEGIN
-	#ifdef __BORLANDC__
-		#define NANOBEGIN     
-		#define NANOEND       
-	#else
-		#define NANOBEGIN     
-		#define NANOEND       
-	#endif
+#ifdef __BORLANDC__
+#define NANOBEGIN
+#define NANOEND
+#else
+#define NANOBEGIN
+#define NANOEND
+#endif
 #endif

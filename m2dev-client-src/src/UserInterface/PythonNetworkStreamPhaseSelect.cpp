@@ -9,16 +9,18 @@ extern DWORD g_adwDecryptKey[4];
 void CPythonNetworkStream::SetSelectPhase()
 {
 	if ("Select" != m_strPhase)
+	{
 		m_phaseLeaveFunc.Run();
+	}
 
 	Tracen("");
 	Tracen("## Network - Select Phase ##");
 	Tracen("");
 
-	m_strPhase = "Select";	
+	m_strPhase = "Select";
 
 #ifndef _IMPROVED_PACKET_ENCRYPTION_
-	SetSecurityMode(true, (const char *) g_adwEncryptKey, (const char *) g_adwDecryptKey);
+	SetSecurityMode(true, (const char*)g_adwEncryptKey, (const char*)g_adwDecryptKey);
 #endif
 
 	m_dwChangingPhaseTime = ELTimer_GetMSec();
@@ -27,14 +29,20 @@ void CPythonNetworkStream::SetSelectPhase()
 
 	if (__DirectEnterMode_IsSet())
 	{
-		PyCallClassMemberFunc(m_poHandler, "SetLoadingPhase", Py_BuildValue("()"));	
+		PyCallClassMemberFunc(m_poHandler, "SetLoadingPhase", Py_BuildValue("()"));
 	}
+
 	else
 	{
 		if (IsSelectedEmpire())
+		{
 			PyCallClassMemberFunc(m_poHandler, "SetSelectCharacterPhase", Py_BuildValue("()"));
+		}
+
 		else
+		{
 			PyCallClassMemberFunc(m_poHandler, "SetSelectEmpirePhase", Py_BuildValue("()"));
+		}
 	}
 }
 
@@ -43,100 +51,131 @@ void CPythonNetworkStream::SelectPhase()
 	TPacketHeader header;
 
 	if (!CheckPacket(&header))
+	{
 		return;
+	}
 
 	switch (header)
 	{
-		case HEADER_GC_PHASE:
-			if (RecvPhasePacket())
-				return;	
-			break;
-
-		case HEADER_GC_EMPIRE:
-			if (__RecvEmpirePacket())
-				return;
-			break;
-
-		case HEADER_GC_LOGIN_SUCCESS3:
-			if (__RecvLoginSuccessPacket3())
-				return;
-			break;
-
-		case HEADER_GC_LOGIN_SUCCESS4:
-			if (__RecvLoginSuccessPacket4())
-				return;
-			break;
-
-
-		case HEADER_GC_PLAYER_CREATE_SUCCESS:
-			if (__RecvPlayerCreateSuccessPacket())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_CREATE_FAILURE:
-			if (__RecvPlayerCreateFailurePacket())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_DELETE_WRONG_SOCIAL_ID:
-			if (__RecvPlayerDestroyFailurePacket())
-				return;
-			break;
-
-		case HEADER_GC_PLAYER_DELETE_SUCCESS:
-			if (__RecvPlayerDestroySuccessPacket())
-				return;
-			break;
-
-		case HEADER_GC_CHANGE_NAME:
-			if (__RecvChangeName())
-				return;
-			break;
-
-		case HEADER_GC_HANDSHAKE:
-			RecvHandshakePacket();
+	case HEADER_GC_PHASE:
+		if (RecvPhasePacket())
+		{
 			return;
-			break;
+		}
 
-		case HEADER_GC_HANDSHAKE_OK:
-			RecvHandshakeOKPacket();
+		break;
+
+	case HEADER_GC_EMPIRE:
+		if (__RecvEmpirePacket())
+		{
 			return;
-			break;
+		}
 
-		case HEADER_GC_HYBRIDCRYPT_KEYS:
-			RecvHybridCryptKeyPacket();
+		break;
+
+	case HEADER_GC_LOGIN_SUCCESS3:
+		if (__RecvLoginSuccessPacket3())
+		{
 			return;
-			break;
+		}
 
-		case HEADER_GC_HYBRIDCRYPT_SDB:
-			RecvHybridCryptSDBPacket();
+		break;
+
+	case HEADER_GC_LOGIN_SUCCESS4:
+		if (__RecvLoginSuccessPacket4())
+		{
 			return;
-			break;
+		}
 
+		break;
+
+	case HEADER_GC_PLAYER_CREATE_SUCCESS:
+		if (__RecvPlayerCreateSuccessPacket())
+		{
+			return;
+		}
+
+		break;
+
+	case HEADER_GC_PLAYER_CREATE_FAILURE:
+		if (__RecvPlayerCreateFailurePacket())
+		{
+			return;
+		}
+
+		break;
+
+	case HEADER_GC_PLAYER_DELETE_WRONG_SOCIAL_ID:
+		if (__RecvPlayerDestroyFailurePacket())
+		{
+			return;
+		}
+
+		break;
+
+	case HEADER_GC_PLAYER_DELETE_SUCCESS:
+		if (__RecvPlayerDestroySuccessPacket())
+		{
+			return;
+		}
+
+		break;
+
+	case HEADER_GC_CHANGE_NAME:
+		if (__RecvChangeName())
+		{
+			return;
+		}
+
+		break;
+
+	case HEADER_GC_HANDSHAKE:
+		RecvHandshakePacket();
+		return;
+		break;
+
+	case HEADER_GC_HANDSHAKE_OK:
+		RecvHandshakeOKPacket();
+		return;
+		break;
+
+	case HEADER_GC_HYBRIDCRYPT_KEYS:
+		RecvHybridCryptKeyPacket();
+		return;
+		break;
+
+	case HEADER_GC_HYBRIDCRYPT_SDB:
+		RecvHybridCryptSDBPacket();
+		return;
+		break;
 
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
-		case HEADER_GC_KEY_AGREEMENT:
-			RecvKeyAgreementPacket();
-			return;
-			break;
 
-		case HEADER_GC_KEY_AGREEMENT_COMPLETED:
-			RecvKeyAgreementCompletedPacket();
-			return;
-			break;
+	case HEADER_GC_KEY_AGREEMENT:
+		RecvKeyAgreementPacket();
+		return;
+		break;
+
+	case HEADER_GC_KEY_AGREEMENT_COMPLETED:
+		RecvKeyAgreementCompletedPacket();
+		return;
+		break;
 #endif
 
-		case HEADER_GC_PLAYER_POINT_CHANGE:
-			TPacketGCPointChange PointChange;
-			Recv(sizeof(TPacketGCPointChange), &PointChange);
-			return;
-			break;
+	case HEADER_GC_PLAYER_POINT_CHANGE:
+		TPacketGCPointChange PointChange;
+		Recv(sizeof(TPacketGCPointChange), &PointChange);
+		return;
+		break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		case HEADER_GC_PING:
-			if (RecvPingPacket())
-				return;
-			break;
+	case HEADER_GC_PING:
+		if (RecvPingPacket())
+		{
+			return;
+		}
+
+		break;
 	}
 
 	RecvErrorPacket(header);
@@ -145,8 +184,8 @@ void CPythonNetworkStream::SelectPhase()
 bool CPythonNetworkStream::SendSelectEmpirePacket(DWORD dwEmpireID)
 {
 	TPacketCGEmpire kPacketEmpire;
-	kPacketEmpire.bHeader=HEADER_CG_EMPIRE;
-	kPacketEmpire.bEmpire=dwEmpireID;
+	kPacketEmpire.bHeader = HEADER_CG_EMPIRE;
+	kPacketEmpire.bEmpire = dwEmpireID;
 
 	if (!Send(sizeof(kPacketEmpire), &kPacketEmpire))
 	{
@@ -174,13 +213,13 @@ bool CPythonNetworkStream::SendSelectCharacterPacket(BYTE Index)
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendDestroyCharacterPacket(BYTE index, const char * szPrivateCode)
+bool CPythonNetworkStream::SendDestroyCharacterPacket(BYTE index, const char* szPrivateCode)
 {
-    TPacketCGDestroyCharacter DestroyCharacterPacket;
+	TPacketCGDestroyCharacter DestroyCharacterPacket;
 
 	DestroyCharacterPacket.header = HEADER_CG_PLAYER_DESTROY;
 	DestroyCharacterPacket.index = index;
-	strncpy(DestroyCharacterPacket.szPrivateCode, szPrivateCode, PRIVATE_CODE_LENGTH-1);
+	strncpy(DestroyCharacterPacket.szPrivateCode, szPrivateCode, PRIVATE_CODE_LENGTH - 1);
 
 	if (!Send(sizeof(TPacketCGDestroyCharacter), &DestroyCharacterPacket))
 	{
@@ -191,7 +230,7 @@ bool CPythonNetworkStream::SendDestroyCharacterPacket(BYTE index, const char * s
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char *name, BYTE job, BYTE shape, BYTE byCON, BYTE byINT, BYTE bySTR, BYTE byDEX)
+bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char* name, BYTE job, BYTE shape, BYTE byCON, BYTE byINT, BYTE bySTR, BYTE byDEX)
 {
 	TPacketCGCreateCharacter createCharacterPacket;
 
@@ -214,7 +253,7 @@ bool CPythonNetworkStream::SendCreateCharacterPacket(BYTE index, const char *nam
 	return SendSequence();
 }
 
-bool CPythonNetworkStream::SendChangeNamePacket(BYTE index, const char *name)
+bool CPythonNetworkStream::SendChangeNamePacket(BYTE index, const char* name)
 {
 	TPacketCGChangeName ChangeNamePacket;
 	ChangeNamePacket.header = HEADER_CG_CHANGE_NAME;
@@ -235,16 +274,18 @@ bool CPythonNetworkStream::__RecvPlayerCreateSuccessPacket()
 	TPacketGCPlayerCreateSuccess kCreateSuccessPacket;
 
 	if (!Recv(sizeof(kCreateSuccessPacket), &kCreateSuccessPacket))
+	{
 		return false;
+	}
 
-	if (kCreateSuccessPacket.bAccountCharacterSlot>=PLAYER_PER_ACCOUNT4)
+	if (kCreateSuccessPacket.bAccountCharacterSlot >= PLAYER_PER_ACCOUNT4)
 	{
 		TraceError("CPythonNetworkStream::RecvPlayerCreateSuccessPacket - OUT OF RANGE SLOT(%d) > PLATER_PER_ACCOUNT(%d)",
 			kCreateSuccessPacket.bAccountCharacterSlot, PLAYER_PER_ACCOUNT4);
 		return true;
 	}
 
-	m_akSimplePlayerInfo[kCreateSuccessPacket.bAccountCharacterSlot]=kCreateSuccessPacket.kSimplePlayerInfomation;
+	m_akSimplePlayerInfo[kCreateSuccessPacket.bAccountCharacterSlot] = kCreateSuccessPacket.kSimplePlayerInfomation;
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateSuccess", Py_BuildValue("()"));
 	return true;
 }
@@ -254,7 +295,9 @@ bool CPythonNetworkStream::__RecvPlayerCreateFailurePacket()
 	TPacketGCCreateFailure packet;
 
 	if (!Recv(sizeof(TPacketGCCreateFailure), &packet))
+	{
 		return false;
+	}
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_CREATE], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnCreateFailure", Py_BuildValue("(i)", packet.bType));
@@ -264,8 +307,11 @@ bool CPythonNetworkStream::__RecvPlayerCreateFailurePacket()
 bool CPythonNetworkStream::__RecvPlayerDestroySuccessPacket()
 {
 	TPacketGCDestroyCharacterSuccess packet;
+
 	if (!Recv(sizeof(TPacketGCDestroyCharacterSuccess), &packet))
+	{
 		return false;
+	}
 
 	memset(&m_akSimplePlayerInfo[packet.account_index], 0, sizeof(m_akSimplePlayerInfo[packet.account_index]));
 	m_adwGuildID[packet.account_index] = 0;
@@ -278,8 +324,11 @@ bool CPythonNetworkStream::__RecvPlayerDestroySuccessPacket()
 bool CPythonNetworkStream::__RecvPlayerDestroyFailurePacket()
 {
 	TPacketGCBlank packet_blank;
+
 	if (!Recv(sizeof(TPacketGCBlank), &packet_blank))
+	{
 		return false;
+	}
 
 	PyCallClassMemberFunc(m_apoPhaseWnd[PHASE_WINDOW_SELECT], "OnDeleteFailure", Py_BuildValue("()"));
 	return true;
@@ -288,8 +337,11 @@ bool CPythonNetworkStream::__RecvPlayerDestroyFailurePacket()
 bool CPythonNetworkStream::__RecvChangeName()
 {
 	TPacketGCChangeName ChangeNamePacket;
+
 	if (!Recv(sizeof(TPacketGCChangeName), &ChangeNamePacket))
+	{
 		return false;
+	}
 
 	for (int i = 0; i < PLAYER_PER_ACCOUNT4; ++i)
 	{

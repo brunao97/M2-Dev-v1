@@ -20,7 +20,7 @@ void initudp()
 	{
 		{ "Enable",		udpEnable,					METH_VARARGS },
 		{ "Disable",	udpDisable,					METH_VARARGS },
-		
+
 		{ NULL,						NULL,							NULL		 }
 	};
 

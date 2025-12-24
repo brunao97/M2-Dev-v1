@@ -22,29 +22,39 @@ int CGraphicVertexBuffer::GetVertexCount() const
 void CGraphicVertexBuffer::SetStream(int stride, int layer) const
 {
 	assert(ms_lpd3dDevice != NULL);
-	STATEMANAGER.SetStreamSource(layer, m_lpd3dVB, stride);	
+	STATEMANAGER.SetStreamSource(layer, m_lpd3dVB, stride);
 }
 
 bool CGraphicVertexBuffer::LockRange(unsigned count, void** pretVertices) const
 {
 	if (!m_lpd3dVB)
+	{
 		return false;
+	}
 
-	DWORD dwLockSize=GetVertexStride() * count;
-	if (FAILED(m_lpd3dVB->Lock(0, dwLockSize, (void **) pretVertices, m_dwLockFlag)))
+	DWORD dwLockSize = GetVertexStride() * count;
+
+	if (FAILED(m_lpd3dVB->Lock(0, dwLockSize, (void**)pretVertices, m_dwLockFlag)))
+	{
 		return false;
+	}
 
 	return true;
 }
 
-bool CGraphicVertexBuffer::Lock(void ** pretVertices) const
+bool CGraphicVertexBuffer::Lock(void** pretVertices) const
 {
 	if (!m_lpd3dVB)
+	{
 		return false;
+	}
 
-	DWORD dwLockSize=GetVertexStride()*GetVertexCount();
-	if (FAILED(m_lpd3dVB->Lock(0, dwLockSize, (void **) pretVertices, m_dwLockFlag)))
+	DWORD dwLockSize = GetVertexStride() * GetVertexCount();
+
+	if (FAILED(m_lpd3dVB->Lock(0, dwLockSize, (void**)pretVertices, m_dwLockFlag)))
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -52,10 +62,15 @@ bool CGraphicVertexBuffer::Lock(void ** pretVertices) const
 bool CGraphicVertexBuffer::Unlock() const
 {
 	if (!m_lpd3dVB)
+	{
 		return false;
+	}
 
-	if ( FAILED(m_lpd3dVB->Unlock()) )
+	if (FAILED(m_lpd3dVB->Unlock()))
+	{
 		return false;
+	}
+
 	return true;
 }
 
@@ -67,21 +82,29 @@ bool CGraphicVertexBuffer::IsEmpty() const
 bool CGraphicVertexBuffer::LockDynamic(void** pretVertices)
 {
 	if (!m_lpd3dVB)
+	{
 		return false;
+	}
 
 	if (FAILED(m_lpd3dVB->Lock(0, 0, (void**)pretVertices, 0)))
+	{
 		return false;
+	}
 
 	return true;
 }
 
-bool CGraphicVertexBuffer::Lock(void ** pretVertices)
+bool CGraphicVertexBuffer::Lock(void** pretVertices)
 {
 	if (!m_lpd3dVB)
+	{
 		return false;
+	}
 
 	if (FAILED(m_lpd3dVB->Lock(0, 0, (void**)pretVertices, m_dwLockFlag)))
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -89,22 +112,29 @@ bool CGraphicVertexBuffer::Lock(void ** pretVertices)
 bool CGraphicVertexBuffer::Unlock()
 {
 	if (!m_lpd3dVB)
+	{
 		return false;
+	}
 
-	if ( FAILED(m_lpd3dVB->Unlock()) )
+	if (FAILED(m_lpd3dVB->Unlock()))
+	{
 		return false;
+	}
+
 	return true;
 }
 
 bool CGraphicVertexBuffer::Copy(int bufSize, const void* srcVertices)
 {
-	void * dstVertices;
+	void* dstVertices;
 
 	if (!Lock(&dstVertices))
+	{
 		return false;
+	}
 
 	memcpy(dstVertices, srcVertices, bufSize);
-	
+
 	Unlock();
 	return true;
 }
@@ -116,14 +146,16 @@ bool CGraphicVertexBuffer::CreateDeviceObjects()
 
 	if (FAILED(
 		ms_lpd3dDevice->CreateVertexBuffer(
-		m_dwBufferSize, 
-		m_dwUsage, 
-		m_dwFVF, 
-		m_d3dPool, 
-		&m_lpd3dVB,
-		nullptr)
-		))
+			m_dwBufferSize,
+			m_dwUsage,
+			m_dwFVF,
+			m_d3dPool,
+			&m_lpd3dVB,
+			nullptr)
+	))
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -147,9 +179,14 @@ bool CGraphicVertexBuffer::Create(int vtxCount, DWORD fvf, DWORD usage, D3DPOOL 
 	m_dwFVF = fvf;
 
 	if (usage == D3DUSAGE_WRITEONLY || usage == D3DUSAGE_DYNAMIC)
+	{
 		m_dwLockFlag = 0;
+	}
+
 	else
+	{
 		m_dwLockFlag = D3DLOCK_READONLY;
+	}
 
 	return CreateDeviceObjects();
 }

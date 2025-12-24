@@ -16,19 +16,23 @@
 #include <filesystem>
 #include <format>
 
-extern "C" {  
-extern int _fltused;  
-volatile int _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;  
-};  
-extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
+extern "C" {
+	extern int _fltused;
+	volatile int _AVOID_FLOATING_POINT_LIBRARY_BUG = _fltused;
+};
+
+extern "C" {
+	FILE __iob_func[3] = { *stdin, *stdout, *stderr };
+}
+
 #pragma comment(linker, "/NODEFAULTLIB:libci.lib")
 
 #include <stdlib.h>
-bool __IS_TEST_SERVER_MODE__=false;
+bool __IS_TEST_SERVER_MODE__ = false;
 
 extern bool SetDefaultCodePage(DWORD codePage);
 
-static const char * sc_apszPythonLibraryFilenames[] =
+static const char* sc_apszPythonLibraryFilenames[] =
 {
 	"UserDict.pyc",
 	"__future__.pyc",
@@ -69,7 +73,7 @@ bool CheckPythonLibraryFilenames()
 	return true;
 }
 
-struct ApplicationStringTable 
+struct ApplicationStringTable
 {
 	HINSTANCE m_hInstance;
 	std::map<DWORD, std::string> m_kMap_dwID_stLocale;
@@ -77,7 +81,7 @@ struct ApplicationStringTable
 
 void ApplicationStringTable_Initialize(HINSTANCE hInstance)
 {
-	gs_kAppStrTable.m_hInstance=hInstance;
+	gs_kAppStrTable.m_hInstance = hInstance;
 }
 
 const std::string& ApplicationStringTable_GetString(DWORD dwID, LPCSTR szKey)
@@ -87,23 +91,40 @@ const std::string& ApplicationStringTable_GetString(DWORD dwID, LPCSTR szKey)
 	char szLocale[256];
 
 	::GetCurrentDirectory(sizeof(szIniFileName), szIniFileName);
-	if(szIniFileName[lstrlen(szIniFileName)-1] != '\\')
+
+	if (szIniFileName[lstrlen(szIniFileName) - 1] != '\\')
+	{
 		strcat(szIniFileName, "\\");
+	}
+
 	strcat(szIniFileName, "metin2client.dat");
 
 	strcpy(szLocale, LocaleService_GetLocalePath());
-	if(strnicmp(szLocale, "locale/", strlen("locale/")) == 0)
-		strcpy(szLocale, LocaleService_GetLocalePath() + strlen("locale/"));
-	::GetPrivateProfileString(szLocale, szKey, NULL, szBuffer, sizeof(szBuffer)-1, szIniFileName);
-	if(szBuffer[0] == '\0')
-		LoadString(gs_kAppStrTable.m_hInstance, dwID, szBuffer, sizeof(szBuffer)-1);
-	if(szBuffer[0] == '\0')
-		::GetPrivateProfileString("en", szKey, NULL, szBuffer, sizeof(szBuffer)-1, szIniFileName);
-	if(szBuffer[0] == '\0')
-		strcpy(szBuffer, szKey);
 
-	std::string& rstLocale=gs_kAppStrTable.m_kMap_dwID_stLocale[dwID];
-	rstLocale=szBuffer;
+	if (strnicmp(szLocale, "locale/", strlen("locale/")) == 0)
+	{
+		strcpy(szLocale, LocaleService_GetLocalePath() + strlen("locale/"));
+	}
+
+	::GetPrivateProfileString(szLocale, szKey, NULL, szBuffer, sizeof(szBuffer) - 1, szIniFileName);
+
+	if (szBuffer[0] == '\0')
+	{
+		LoadString(gs_kAppStrTable.m_hInstance, dwID, szBuffer, sizeof(szBuffer) - 1);
+	}
+
+	if (szBuffer[0] == '\0')
+	{
+		::GetPrivateProfileString("en", szKey, NULL, szBuffer, sizeof(szBuffer) - 1, szIniFileName);
+	}
+
+	if (szBuffer[0] == '\0')
+	{
+		strcpy(szBuffer, szKey);
+	}
+
+	std::string& rstLocale = gs_kAppStrTable.m_kMap_dwID_stLocale[dwID];
+	rstLocale = szBuffer;
 
 	return rstLocale;
 }
@@ -112,9 +133,9 @@ const std::string& ApplicationStringTable_GetString(DWORD dwID)
 {
 	char szBuffer[512];
 
-	LoadString(gs_kAppStrTable.m_hInstance, dwID, szBuffer, sizeof(szBuffer)-1);
-	std::string& rstLocale=gs_kAppStrTable.m_kMap_dwID_stLocale[dwID];
-	rstLocale=szBuffer;
+	LoadString(gs_kAppStrTable.m_hInstance, dwID, szBuffer, sizeof(szBuffer) - 1);
+	std::string& rstLocale = gs_kAppStrTable.m_kMap_dwID_stLocale[dwID];
+	rstLocale = szBuffer;
 
 	return rstLocale;
 }
@@ -133,13 +154,17 @@ const char* ApplicationStringTable_GetStringz(DWORD dwID)
 
 int Setup(LPSTR lpCmdLine); // Internal function forward
 
-bool PackInitialize(const char * c_pszFolder)
+bool PackInitialize(const char* c_pszFolder)
 {
 	NANOBEGIN
-	if (_access(c_pszFolder, 0) != 0)
-		return false;
 
-	std::vector<std::string> packFiles = {
+		if (_access(c_pszFolder, 0) != 0)
+		{
+			return false;
+		}
+
+	std::vector<std::string> packFiles =
+	{
 		"patch1",
 		"season3_eu",
 		"patch2",
@@ -253,12 +278,14 @@ bool PackInitialize(const char * c_pszFolder)
 	};
 
 	CPackManager::instance().AddPack(std::format("{}/root.pck", c_pszFolder));
-	for (const std::string& packFileName : packFiles) {
+
+	for (const std::string& packFileName : packFiles)
+	{
 		CPackManager::instance().AddPack(std::format("{}/{}.pck", c_pszFolder, packFileName));
 	}
 
 	NANOEND
-	return true;
+		return true;
 }
 
 bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
@@ -301,15 +328,15 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 
 	NANOBEGIN
 
-	// RegisterDebugFlag
+		// RegisterDebugFlag
 	{
 		std::string stRegisterDebugFlag;
 
-#ifdef _DISTRIBUTE 
-		stRegisterDebugFlag ="__DEBUG__ = 0";
-#else
-		stRegisterDebugFlag ="__DEBUG__ = 1"; 
-#endif
+		#ifdef _DISTRIBUTE
+		stRegisterDebugFlag = "__DEBUG__ = 0";
+		#else
+		stRegisterDebugFlag = "__DEBUG__ = 1";
+		#endif
 
 		if (!pyLauncher.RunLine(stRegisterDebugFlag.c_str()))
 		{
@@ -318,39 +345,45 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 		}
 	}
 
-	// RegisterCommandLine
+		// RegisterCommandLine
 	{
 		std::string stRegisterCmdLine;
 
-		const char * loginMark = "-cs";
-		const char * loginMark_NonEncode = "-ncs";
-		const char * seperator = " ";
+		const char* loginMark = "-cs";
+		const char* loginMark_NonEncode = "-ncs";
+		const char* seperator = " ";
 
 		std::string stCmdLine;
 		const int CmdSize = 3;
 		std::vector<std::string> stVec;
-		SplitLine(lpCmdLine,seperator,&stVec);
-		if (CmdSize == stVec.size() && stVec[0]==loginMark)
+		SplitLine(lpCmdLine, seperator, &stVec);
+
+		if (CmdSize == stVec.size() && stVec[0] == loginMark)
 		{
 			char buf[MAX_PATH];	//TODO 아래 함수 string 형태로 수정
-			base64_decode(stVec[2].c_str(),buf);
+			base64_decode(stVec[2].c_str(), buf);
 			stVec[2] = buf;
-			string_join(seperator,stVec,&stCmdLine);
+			string_join(seperator, stVec, &stCmdLine);
 		}
-		else if (CmdSize <= stVec.size() && stVec[0]==loginMark_NonEncode)
+
+		else if (CmdSize <= stVec.size() && stVec[0] == loginMark_NonEncode)
 		{
 			stVec[0] = loginMark;
-			string_join(" ",stVec,&stCmdLine);
+			string_join(" ", stVec, &stCmdLine);
 		}
+
 		else
+		{
 			stCmdLine = lpCmdLine;
+		}
 
-		stRegisterCmdLine ="__COMMAND_LINE__ = ";
-		stRegisterCmdLine+='"';
-		stRegisterCmdLine+=stCmdLine;
-		stRegisterCmdLine+='"';
+		stRegisterCmdLine = "__COMMAND_LINE__ = ";
+		stRegisterCmdLine += '"';
+		stRegisterCmdLine += stCmdLine;
+		stRegisterCmdLine += '"';
 
-		const CHAR* c_szRegisterCmdLine=stRegisterCmdLine.c_str();
+		const CHAR* c_szRegisterCmdLine = stRegisterCmdLine.c_str();
+
 		if (!pyLauncher.RunLine(c_szRegisterCmdLine))
 		{
 			TraceError("RegisterCommandLine Error");
@@ -359,12 +392,13 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 	}
 	{
 		std::vector<std::string> stVec;
-		SplitLine(lpCmdLine," " ,&stVec);
+		SplitLine(lpCmdLine, " ", &stVec);
 
 		if (stVec.size() != 0 && "--pause-before-create-window" == stVec[0])
 		{
 			system("pause");
 		}
+
 		if (!pyLauncher.RunFile("system.py"))
 		{
 			TraceError("RunMain Error");
@@ -373,7 +407,7 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 	}
 
 	NANOEND
-	return true;
+		return true;
 }
 
 bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
@@ -383,7 +417,7 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 	g_isScreenShotKey = true;
 #endif
 
-	DWORD dwRandSeed=time(NULL)+DWORD(GetCurrentProcess());
+	DWORD dwRandSeed = time(NULL) + DWORD(GetCurrentProcess());
 	srandom(dwRandSeed);
 	srand(random());
 
@@ -394,19 +428,21 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 	USE_VIETNAM_CONVERT_WEAPON_VNUM = true;
 #endif
 
-	if (_access("perf_game_update.txt", 0)==0)
+	if (_access("perf_game_update.txt", 0) == 0)
 	{
 		DeleteFile("perf_game_update.txt");
 	}
 
-	if (_access("newpatch.exe", 0)==0)
-	{		
+	if (_access("newpatch.exe", 0) == 0)
+	{
 		system("patchupdater.exe");
 		return false;
 	}
 
 	if (!Setup(lpCmdLine))
+	{
 		return false;
+	}
 
 #ifdef _DEBUG
 	OpenConsoleWindow();
@@ -424,14 +460,16 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 		return false;
 	}
 
-	if(LocaleService_LoadGlobal(hInstance))
+	if (LocaleService_LoadGlobal(hInstance))
+	{
 		SetDefaultCodePage(LocaleService_GetCodePage());
+	}
 
-	CPythonApplication * app = new CPythonApplication;
+	CPythonApplication* app = new CPythonApplication;
 
 	app->Initialize(hInstance);
 
-	bool ret=false;
+	bool ret = false;
 	{
 		CPythonLauncher pyLauncher;
 		CPythonExceptionSender pyExceptionSender;
@@ -439,11 +477,11 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 
 		if (pyLauncher.Create())
 		{
-			ret=RunMainScript(pyLauncher, lpCmdLine);	//게임 실행중엔 함수가 끝나지 않는다.
+			ret = RunMainScript(pyLauncher, lpCmdLine);	//게임 실행중엔 함수가 끝나지 않는다.
 		}
 
 		//ProcessScanner_ReleaseQuitEvent();
-		
+
 		//게임 종료시.
 		app->Clear();
 
@@ -453,7 +491,7 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 
 	app->Destroy();
 	delete app;
-	
+
 	return ret;
 }
 
@@ -461,9 +499,9 @@ HANDLE CreateMetin2GameMutex()
 {
 	SECURITY_ATTRIBUTES sa;
 	ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-	sa.nLength				= sizeof(sa);
-	sa.lpSecurityDescriptor	= NULL;
-	sa.bInheritHandle		= FALSE;
+	sa.nLength = sizeof(sa);
+	sa.lpSecurityDescriptor = NULL;
+	sa.bInheritHandle = FALSE;
 
 	return CreateMutex(&sa, FALSE, "Metin2GameMutex");
 }
@@ -485,23 +523,36 @@ void __ErrorPythonLibraryIsNotExist()
 bool __IsTimeStampOption(LPSTR lpCmdLine)
 {
 	const char* TIMESTAMP = "/timestamp";
-	return (strncmp(lpCmdLine, TIMESTAMP, strlen(TIMESTAMP))==0);
+	return (strncmp(lpCmdLine, TIMESTAMP, strlen(TIMESTAMP)) == 0);
 }
 
 void __PrintTimeStamp()
 {
 #ifdef	_DEBUG
+
 	if (__IS_TEST_SERVER_MODE__)
+	{
 		LogBoxf("METIN2 BINARY TEST DEBUG VERSION %s  ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);
+	}
+
 	else
+	{
 		LogBoxf("METIN2 BINARY DEBUG VERSION %s ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);
-	
+	}
+
 #else
+
 	if (__IS_TEST_SERVER_MODE__)
+	{
 		LogBoxf("METIN2 BINARY TEST VERSION %s  ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);
+	}
+
 	else
-		LogBoxf("METIN2 BINARY DISTRIBUTE VERSION %s ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);			
-#endif			
+	{
+		LogBoxf("METIN2 BINARY DISTRIBUTE VERSION %s ( MS C++ %d Compiled )", __TIMESTAMP__, _MSC_VER);
+	}
+
+#endif
 }
 
 bool __IsLocaleOption(LPSTR lpCmdLine)
@@ -517,48 +568,60 @@ bool __IsLocaleVersion(LPSTR lpCmdLine)
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 #ifdef _DEBUG
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_CRT_DF | _CRTDBG_LEAK_CHECK_DF );
-	//_CrtSetBreakAlloc( 110247 ); 
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_CRT_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc( 110247 );
 #endif
 
 	ApplicationStringTable_Initialize(hInstance);
 
 	LocaleService_LoadConfig("config/locale.cfg");
-	SetDefaultCodePage(LocaleService_GetCodePage());	
+	SetDefaultCodePage(LocaleService_GetCodePage());
 
 	bool bQuit = false;
 	int nArgc = 0;
-	PCHAR* szArgv = CommandLineToArgv( lpCmdLine, &nArgc );
+	PCHAR* szArgv = CommandLineToArgv(lpCmdLine, &nArgc);
 
-	for( int i=0; i < nArgc; i++ ) {
-		if(szArgv[i] == 0)
+	for (int i = 0; i < nArgc; i++)
+	{
+		if (szArgv[i] == 0)
+		{
 			continue;
-		if (__IsLocaleVersion(szArgv[i])) // #0000829: [M2EU] 버전 파일이 항상 생기지 않도록 수정 
+		}
+
+		if (__IsLocaleVersion(szArgv[i])) // #0000829: [M2EU] 버전 파일이 항상 생기지 않도록 수정
 		{
 			char szModuleName[MAX_PATH];
 			char szVersionPath[MAX_PATH];
 			GetModuleFileName(NULL, szModuleName, sizeof(szModuleName));
 			sprintf(szVersionPath, "%s.version", szModuleName);
 			FILE* fp = fopen(szVersionPath, "wt");
+
 			if (fp)
 			{
 				extern int METIN2_GET_VERSION();
 				fprintf(fp, "r%d\n", METIN2_GET_VERSION());
 				fclose(fp);
 			}
+
 			bQuit = true;
-		} else if (__IsLocaleOption(szArgv[i]))
+		}
+
+		else if (__IsLocaleOption(szArgv[i]))
 		{
-			FILE* fp=fopen("locale.txt", "wt");
-			fprintf(fp, "service[%s] code_page[%d]", 
+			FILE* fp = fopen("locale.txt", "wt");
+			fprintf(fp, "service[%s] code_page[%d]",
 				LocaleService_GetName(), LocaleService_GetCodePage());
 			fclose(fp);
 			bQuit = true;
-		} else if (__IsTimeStampOption(szArgv[i]))
+		}
+
+		else if (__IsTimeStampOption(szArgv[i]))
 		{
 			__PrintTimeStamp();
 			bQuit = true;
-		} else if ((strcmp(szArgv[i], "--force-set-locale") == 0))
+		}
+
+		else if ((strcmp(szArgv[i], "--force-set-locale") == 0))
 		{
 			// locale 설정엔 인자가 두 개 더 필요함 (로케일 명칭, 데이터 경로)
 			if (nArgc <= i + 2)
@@ -574,8 +637,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		}
 	}
 
-	if(bQuit)
+	if (bQuit)
+	{
 		goto Clean;
+	}
 
 	if (!CheckPythonLibraryFilenames())
 	{
@@ -587,8 +652,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	::CoUninitialize();
 
-	if(gs_szErrorString[0])
+	if (gs_szErrorString[0])
+	{
 		MessageBox(NULL, gs_szErrorString, ApplicationStringTable_GetStringz(IDS_APP_NAME, "APP_NAME"), MB_ICONSTOP);
+	}
 
 Clean:
 	SAFE_FREE_GLOBAL(szArgv);
@@ -603,30 +670,32 @@ static void GrannyError(granny_log_message_type Type,
 	char const* Message,
 	void* UserData)
 {
-    TraceError("GRANNY: %s", Message);
+	TraceError("GRANNY: %s", Message);
 }
 
 int Setup(LPSTR lpCmdLine)
 {
-	/* 
+	/*
 	 *	타이머 정밀도를 올린다.
 	 */
-	TIMECAPS tc; 
-	UINT wTimerRes; 
+	TIMECAPS tc;
+	UINT wTimerRes;
 
-	if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) != TIMERR_NOERROR) 
+	if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) != TIMERR_NOERROR)
+	{
 		return 0;
+	}
 
-	wTimerRes = MINMAX(tc.wPeriodMin, 1, tc.wPeriodMax); 
-	timeBeginPeriod(wTimerRes); 
+	wTimerRes = MINMAX(tc.wPeriodMin, 1, tc.wPeriodMax);
+	timeBeginPeriod(wTimerRes);
 
 	/*
 	 *	그래니 에러 핸들링
 	 */
 
 	granny_log_callback Callback;
-    Callback.Function = nullptr;
-    Callback.UserData = 0;
-    GrannySetLogCallback(&Callback);
+	Callback.Function = nullptr;
+	Callback.UserData = 0;
+	GrannySetLogCallback(&Callback);
 	return 1;
 }

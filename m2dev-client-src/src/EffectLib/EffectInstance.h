@@ -13,86 +13,93 @@
 
 class CEffectInstance : public CGraphicObjectInstance
 {
-	public:
- 		typedef std::vector<CEffectElementBaseInstance*> TEffectElementInstanceVector;
+public:
+	typedef std::vector<CEffectElementBaseInstance*> TEffectElementInstanceVector;
 
-		enum
-		{
-			ID = EFFECT_OBJECT
-		};
-		int GetType() const
-		{
-			return CEffectInstance::ID;
-		}
+	enum
+	{
+		ID = EFFECT_OBJECT
+	};
+	int GetType() const
+	{
+		return CEffectInstance::ID;
+	}
 
-		bool GetBoundingSphere(D3DXVECTOR3 & v3Center, float & fRadius);
+	bool GetBoundingSphere(D3DXVECTOR3& v3Center, float& fRadius);
 
-		static void DestroySystem();
+	static void DestroySystem();
 
-		static CEffectInstance* New();
-		static void Delete(CEffectInstance* pkEftInst);
+	static CEffectInstance* New();
+	static void Delete(CEffectInstance* pkEftInst);
 
-		static void ResetRenderingEffectCount();
-		static int GetRenderingEffectCount();
+	static void ResetRenderingEffectCount();
+	static int GetRenderingEffectCount();
 
-	public:
-		CEffectInstance();
-		virtual ~CEffectInstance();
-		
-		bool LessRenderOrder(CEffectInstance* pkEftInst);
+public:
+	CEffectInstance();
+	virtual ~CEffectInstance();
 
-		void SetEffectDataPointer(CEffectData * pEffectData);
-		
-		// Returns the pointer to the effect data associated with this instance.
-		CEffectData* GetEffectDataPointer() const
-		{
-			return m_pkEftData;
-		}
+	bool LessRenderOrder(CEffectInstance* pkEftInst);
 
-		void Clear();
-		BOOL isAlive();
-		void SetActive();
-		void SetDeactive();
-		void SetGlobalMatrix(const D3DXMATRIX & c_rmatGlobal);
-		void UpdateSound();
-		void OnUpdate();
-		void OnRender();
-		void OnBlendRender() {} // Not used
-		void OnRenderToShadowMap() {} // Not used
-		void OnRenderShadow() {} // Not used
-		void OnRenderPCBlocker() {} // Not used
+	void SetEffectDataPointer(CEffectData* pEffectData);
 
-	protected:
-		void					__Initialize();
+	// Returns the pointer to the effect data associated with this instance.
+	CEffectData* GetEffectDataPointer() const
+	{
+		return m_pkEftData;
+	}
 
-		void					__SetParticleData(CParticleSystemData * pData);
-		void					__SetMeshData(CEffectMeshScript * pMesh);
-		void					__SetLightData(CLightData * pData);
+	void Clear();
+	BOOL isAlive();
+	void SetActive();
+	void SetDeactive();
+	void SetGlobalMatrix(const D3DXMATRIX& c_rmatGlobal);
+	void UpdateSound();
+	void OnUpdate();
+	void OnRender();
+	void OnBlendRender() {} // Not used
 
-		virtual void			OnUpdateCollisionData(const CStaticCollisionDataVector * pscdVector) {} // Not used
-		virtual void			OnUpdateHeighInstance(CAttributeInstance * pAttributeInstance) {}
-		virtual bool			OnGetObjectHeight(float fX, float fY, float * pfHeight) { return false; }
+	void OnRenderToShadowMap() {} // Not used
 
-	protected:
-		BOOL					m_isAlive;
-		DWORD					m_dwFrame;
-		D3DXMATRIX				m_matGlobal;
+	void OnRenderShadow() {} // Not used
 
-		CEffectData * m_pkEftData;
+	void OnRenderPCBlocker() {} // Not used
 
- 		std::vector<CParticleSystemInstance*>	m_ParticleInstanceVector;
-		std::vector<CEffectMeshInstance*>		m_MeshInstanceVector;
-		std::vector<CLightInstance*>			m_LightInstanceVector;
+protected:
+	void					__Initialize();
 
-		NSound::TSoundInstanceVector *					m_pSoundInstanceVector;
+	void					__SetParticleData(CParticleSystemData* pData);
+	void					__SetMeshData(CEffectMeshScript* pMesh);
+	void					__SetLightData(CLightData* pData);
 
-		float m_fBoundingSphereRadius;
-		D3DXVECTOR3 m_v3BoundingSpherePosition;
+	virtual void			OnUpdateCollisionData(const CStaticCollisionDataVector* pscdVector) {} // Not used
 
-		float m_fLastTime;
+	virtual void			OnUpdateHeighInstance(CAttributeInstance* pAttributeInstance) {}
 
-	public:
+	virtual bool			OnGetObjectHeight(float fX, float fY, float* pfHeight)
+	{
+		return false;
+	}
 
-		static CDynamicPool<CEffectInstance>	ms_kPool;
-		static int ms_iRenderingEffectCount;
+protected:
+	BOOL					m_isAlive;
+	DWORD					m_dwFrame;
+	D3DXMATRIX				m_matGlobal;
+
+	CEffectData* m_pkEftData;
+
+	std::vector<CParticleSystemInstance*>	m_ParticleInstanceVector;
+	std::vector<CEffectMeshInstance*>		m_MeshInstanceVector;
+	std::vector<CLightInstance*>			m_LightInstanceVector;
+
+	NSound::TSoundInstanceVector* m_pSoundInstanceVector;
+
+	float m_fBoundingSphereRadius;
+	D3DXVECTOR3 m_v3BoundingSpherePosition;
+
+	float m_fLastTime;
+
+public:
+	static CDynamicPool<CEffectInstance>	ms_kPool;
+	static int ms_iRenderingEffectCount;
 };

@@ -10,7 +10,7 @@
 struct SoundFile
 {
 	std::string name;
-	std::vector<std::byte> buffer; // raw file data. 
+	std::vector<std::byte> buffer; // raw file data.
 };
 
 class SoundEngine : public CSingleton<SoundEngine>
@@ -67,10 +67,9 @@ public:
 	void SetListenerPosition(float x, float y, float z);
 
 	void SetListenerOrientation(float forwardX, float forwardY, float forwardZ,
-								float upX, float upY, float upZ);
+		float upX, float upY, float upZ);
 
 	void Update();
-
 
 private:
 	MaSoundInstance* Internal_GetInstance3D(const std::string& name);
@@ -78,7 +77,10 @@ private:
 	bool Internal_LoadSoundFromPack(const std::string& name);
 
 private:
-	struct { float x, y, z; } m_CharacterPosition{};
+	struct
+	{
+		float x, y, z;
+	} m_CharacterPosition{};
 
 	ma_engine m_Engine{};
 	std::unordered_map<std::string, std::vector<uint8_t>> m_Files;

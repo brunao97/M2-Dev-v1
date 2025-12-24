@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	CSpeedTreeForest Class
 //
 //	(c) 2003 IDV, Inc.
@@ -29,8 +29,7 @@
 
 #pragma once
 
-
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	Include Files
 #include <SpeedTreeRT.h>
 #include "SpeedTreeWrapper.h"
@@ -40,7 +39,7 @@
 
 #include "EterBase/CRC32.h"
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	Render bit vector
 
 #define Forest_RenderBranches		(1 << 0)
@@ -51,61 +50,67 @@
 #define Forest_RenderToShadow		(1 << 5)
 #define Forest_RenderToMiniMap		(1 << 6)
 
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	class CSpeedTreeForest declaration
 
 class CSpeedTreeForest
 {
-	public:
-		using SpeedTreeWrapperPtr = std::shared_ptr <CSpeedTreeWrapper>;
-		using TTreeMap = std::map <DWORD, SpeedTreeWrapperPtr>;
+public:
+	using SpeedTreeWrapperPtr = std::shared_ptr <CSpeedTreeWrapper>;
+	using TTreeMap = std::map <DWORD, SpeedTreeWrapperPtr>;
 
-	public:
-		CSpeedTreeForest();
-		virtual ~CSpeedTreeForest();
-		
-		void						ClearMainTree();
+public:
+	CSpeedTreeForest();
+	virtual ~CSpeedTreeForest();
 
+	void						ClearMainTree();
 
-		BOOL						GetMainTree(DWORD dwCRC, SpeedTreeWrapperPtr& ppMainTree, const char* c_pszFileName);
-		SpeedTreeWrapperPtr			GetMainTree(DWORD dwCRC);
-		void						DeleteMainTree(DWORD dwCRC);
+	BOOL						GetMainTree(DWORD dwCRC, SpeedTreeWrapperPtr& ppMainTree, const char* c_pszFileName);
+	SpeedTreeWrapperPtr			GetMainTree(DWORD dwCRC);
+	void						DeleteMainTree(DWORD dwCRC);
 
-		SpeedTreeWrapperPtr			CreateInstance(float x, float y, float z, DWORD dwTreeCRC, const char* c_pszTreeName);
-		void						DeleteInstance(SpeedTreeWrapperPtr pTree);
+	SpeedTreeWrapperPtr			CreateInstance(float x, float y, float z, DWORD dwTreeCRC, const char* c_pszTreeName);
+	void						DeleteInstance(SpeedTreeWrapperPtr pTree);
 
-		//void						SetLodLimits(void);
+	//void						SetLodLimits(void);
 
-		void						UpdateSystem(float fCurrentTime);
+	void						UpdateSystem(float fCurrentTime);
 
-		void						Clear();
+	void						Clear();
 
-		void						SetLight(const float * afDirection, const float * afAmbient, const float * afDiffuse);
-		void						SetFog(float fFogNear, float fFogFar);
-		//////////////////////////////////////////////////////////////////////////
+	void						SetLight(const float* afDirection, const float* afAmbient, const float* afDiffuse);
+	void						SetFog(float fFogNear, float fFogFar);
+	//////////////////////////////////////////////////////////////////////////
 
-		const float *				GetExtents(void) const						{ return m_afForestExtents; }
+	const float* GetExtents(void) const
+	{
+		return m_afForestExtents;
+	}
 
-		// wind management
-		float						GetWindStrength(void) const					{ return m_fWindStrength; }
-		void						SetWindStrength(float fStrength);
-		void						SetupWindMatrices(float fTimeInSecs);
-		
-		// overridden by specific graphics API
-		virtual	void				UploadWindMatrix(unsigned int uiLocation, const float* pMatrix) const = 0;
-		virtual void				Render(unsigned long ulRenderBitVector) = 0;
-		
-	protected:
-		TTreeMap					m_pMainTreeMap;
+	// wind management
+	float						GetWindStrength(void) const
+	{
+		return m_fWindStrength;
+	}
 
-		float						m_afLighting[12];
-		float						m_afFog[4];
+	void						SetWindStrength(float fStrength);
+	void						SetupWindMatrices(float fTimeInSecs);
 
-	private:
-		void						AdjustExtents(float x, float y, float z);
-		
-		float						m_afForestExtents[6];	// [0] = min x, [1] = min y..., [3] = max x, [4] = max y...
-		float						m_fWindStrength;		// 0.0 = no wind, 1.0 = full strength
+	// overridden by specific graphics API
+	virtual	void				UploadWindMatrix(unsigned int uiLocation, const float* pMatrix) const = 0;
+	virtual void				Render(unsigned long ulRenderBitVector) = 0;
 
-		float						m_fAccumTime;
+protected:
+	TTreeMap					m_pMainTreeMap;
+
+	float						m_afLighting[12];
+	float						m_afFog[4];
+
+private:
+	void						AdjustExtents(float x, float y, float z);
+
+	float						m_afForestExtents[6];	// [0] = min x, [1] = min y..., [3] = max x, [4] = max y...
+	float						m_fWindStrength;		// 0.0 = no wind, 1.0 = full strength
+
+	float						m_fAccumTime;
 };

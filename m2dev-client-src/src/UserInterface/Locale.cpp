@@ -6,14 +6,14 @@
 #include "EterLocale/Japanese.h"
 #include <windowsx.h>
 
-const char* LSS_YMIR		= "YMIR";
-const char* LSS_JAPAN		= "JAPAN";
-const char* LSS_ENGLISH		= "ENGLISH";
-const char* LSS_HONGKONG	= "HONGKONG";
-const char* LSS_TAIWAN		= "TAIWAN";
-const char* LSS_NEWCIBN		= "NEWCIBN";
-const char* LSS_EUROPE		= "EUROPE";
-const char* LSS_GLOBAL		= "GLOBAL";
+const char* LSS_YMIR = "YMIR";
+const char* LSS_JAPAN = "JAPAN";
+const char* LSS_ENGLISH = "ENGLISH";
+const char* LSS_HONGKONG = "HONGKONG";
+const char* LSS_TAIWAN = "TAIWAN";
+const char* LSS_NEWCIBN = "NEWCIBN";
+const char* LSS_EUROPE = "EUROPE";
+const char* LSS_GLOBAL = "GLOBAL";
 
 static bool IS_CHEONMA = false;
 
@@ -23,35 +23,38 @@ static bool IS_CHEONMA = false;
 
 std::string __SECURITY_KEY_STRING__ = LSS_SECURITY_KEY;
 
-char	MULTI_LOCALE_SERVICE[256]	= "YMIR";
-char	MULTI_LOCALE_PATH[256]		= "locale/ymir";
-char	MULTI_LOCALE_NAME[256]		= "ymir";
-int		MULTI_LOCALE_CODE			= 949;
-int		MULTI_LOCALE_REPORT_PORT	= 10000;
+char	MULTI_LOCALE_SERVICE[256] = "YMIR";
+char	MULTI_LOCALE_PATH[256] = "locale/ymir";
+char	MULTI_LOCALE_NAME[256] = "ymir";
+int		MULTI_LOCALE_CODE = 949;
+int		MULTI_LOCALE_REPORT_PORT = 10000;
 
 void LocaleService_LoadConfig(const char* fileName)
 {
 	NANOBEGIN
-	FILE* fp = fopen(fileName, "rt");
+		FILE* fp = fopen(fileName, "rt");
 
 	if (fp)
-	{		
-		char	line[256];			
+	{
+		char	line[256];
 		char	name[256];
 		int		code;
 		int		id;
-		if (fgets(line, sizeof(line)-1, fp))
+
+		if (fgets(line, sizeof(line) - 1, fp))
 		{
-			line[sizeof(line)-1] = '\0';
+			line[sizeof(line) - 1] = '\0';
 			sscanf(line, "%d %d %s", &id, &code, name);
 
-			MULTI_LOCALE_REPORT_PORT		= id;
-			MULTI_LOCALE_CODE				= code;
+			MULTI_LOCALE_REPORT_PORT = id;
+			MULTI_LOCALE_CODE = code;
 			strcpy(MULTI_LOCALE_NAME, name);
 			sprintf(MULTI_LOCALE_PATH, "locale/%s", MULTI_LOCALE_NAME);
-		}			
+		}
+
 		fclose(fp);
 	}
+
 	NANOEND
 }
 
@@ -61,7 +64,7 @@ unsigned LocaleService_GetLastExp(int level)
 
 	if (LocaleService_IsCHEONMA())
 	{
-		static DWORD CHEONMA_GUILDEXP_LIST[GUILD_LEVEL_MAX+1] = 
+		static DWORD CHEONMA_GUILDEXP_LIST[GUILD_LEVEL_MAX + 1] =
 		{
 			0,			// 0
 			15000ul,	// 1
@@ -82,16 +85,19 @@ unsigned LocaleService_GetLastExp(int level)
 			4500000ul,	// 16
 			6500000ul,	// 17
 			8000000ul,	// 18
-			10000000ul,	// 19			
+			10000000ul,	// 19
 			42000000UL	// 20
 		};
+
 		if (level < 0 && level >= GUILD_LEVEL_MAX)
+		{
 			return 0;
-		
+		}
+
 		return CHEONMA_GUILDEXP_LIST[level];
 	}
-	
-	static DWORD INTERNATIONAL_GUILDEXP_LIST[GUILD_LEVEL_MAX+1] = 
+
+	static DWORD INTERNATIONAL_GUILDEXP_LIST[GUILD_LEVEL_MAX + 1] =
 	{
 		0,			// 0
 		6000UL,		// 1
@@ -112,14 +118,16 @@ unsigned LocaleService_GetLastExp(int level)
 		1800000UL,	// 16
 		2600000UL,	// 17
 		3200000UL,	// 18
-		4000000UL,	// 19		
-		16800000UL	// 20		
+		4000000UL,	// 19
+		16800000UL	// 20
 	};
 
 	if (level < 0 && level >= GUILD_LEVEL_MAX)
+	{
 		return 0;
-	
-	return INTERNATIONAL_GUILDEXP_LIST[level];	
+	}
+
+	return INTERNATIONAL_GUILDEXP_LIST[level];
 }
 
 int LocaleService_GetSkillPower(unsigned level)
@@ -127,44 +135,46 @@ int LocaleService_GetSkillPower(unsigned level)
 	static const unsigned SKILL_POWER_NUM = 50;
 
 	if (level >= SKILL_POWER_NUM)
+	{
 		return 0;
+	}
 
 	if (LocaleService_IsCHEONMA())
 	{
-		static unsigned CHEONMA_SKILL_POWERS[SKILL_POWER_NUM]=
+		static unsigned CHEONMA_SKILL_POWERS[SKILL_POWER_NUM] =
 		{
-			0,  
-				5,  7,  9, 11, 13, 
-				15, 17, 19, 20, 22, 
-				24, 26, 28, 30, 32, 
-				34, 36, 38, 40, 50, // master
-				52, 55, 58, 61, 63,
-				66, 69, 72, 75, 80, // grand_master
-				82, 84, 87, 90, 95,
-				100,110,120,130,150,// perfect_master
-				150,
-		};
-		return CHEONMA_SKILL_POWERS[level];		
-	}
-	
-	// 0 5 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 50 52 54 56 58 60 63 66 69 72 82 85 88 91 94 98 102 106 110 115 125 125 125 125 125
-	static unsigned INTERNATIONAL_SKILL_POWERS[SKILL_POWER_NUM]=
-	{
-		0, 
-			5,  6,  8, 10, 12, 
-			14, 16, 18, 20, 22, 
-			24, 26, 28, 30, 32, 
+			0,
+			5,  7,  9, 11, 13,
+			15, 17, 19, 20, 22,
+			24, 26, 28, 30, 32,
 			34, 36, 38, 40, 50, // master
-			52, 54, 56, 58, 60, 
-			63, 66, 69, 72, 82, // grand_master
-			85, 88, 91, 94, 98, 
-			102,106,110,115,125,// perfect_master
-			125,	
+			52, 55, 58, 61, 63,
+			66, 69, 72, 75, 80, // grand_master
+			82, 84, 87, 90, 95,
+			100, 110, 120, 130, 150, // perfect_master
+			150,
+		};
+		return CHEONMA_SKILL_POWERS[level];
+	}
+
+	// 0 5 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 50 52 54 56 58 60 63 66 69 72 82 85 88 91 94 98 102 106 110 115 125 125 125 125 125
+	static unsigned INTERNATIONAL_SKILL_POWERS[SKILL_POWER_NUM] =
+	{
+		0,
+		5,  6,  8, 10, 12,
+		14, 16, 18, 20, 22,
+		24, 26, 28, 30, 32,
+		34, 36, 38, 40, 50, // master
+		52, 54, 56, 58, 60,
+		63, 66, 69, 72, 82, // grand_master
+		85, 88, 91, 94, 98,
+		102, 106, 110, 115, 125, // perfect_master
+		125,
 	};
 	return INTERNATIONAL_SKILL_POWERS[level];
 }
 
-const char*	LocaleService_GetSecurityKey()
+const char* LocaleService_GetSecurityKey()
 {
 	return __SECURITY_KEY_STRING__.c_str();
 }
@@ -224,18 +234,54 @@ bool LocaleService_IsCHEONMA()
 
 #if defined(_LSS_USE_LOCALE_CFG)
 #if defined(_LSS_SERVICE_NAME)
-const char* LocaleService_GetName()				{ return _LSS_SERVICE_NAME;}
+const char* LocaleService_GetName()
+{
+	return _LSS_SERVICE_NAME;
+}
+
 #else
-const char* LocaleService_GetName()				{ return MULTI_LOCALE_SERVICE; }
+const char* LocaleService_GetName()
+{
+	return MULTI_LOCALE_SERVICE;
+}
+
 #endif
-unsigned int LocaleService_GetCodePage()		{ return MULTI_LOCALE_CODE; }
-const char*	LocaleService_GetLocaleName()		{ return MULTI_LOCALE_NAME; }
-const char*	LocaleService_GetLocalePath()		{ return MULTI_LOCALE_PATH; }
+unsigned int LocaleService_GetCodePage()
+{
+	return MULTI_LOCALE_CODE;
+}
+
+const char* LocaleService_GetLocaleName()
+{
+	return MULTI_LOCALE_NAME;
+}
+
+const char* LocaleService_GetLocalePath()
+{
+	return MULTI_LOCALE_PATH;
+}
+
 #elif defined(_LSS_SERVICE_NAME)
-const char* LocaleService_GetName()				{ return _LSS_SERVICE_NAME;}
-unsigned int LocaleService_GetCodePage()		{ return _LSS_SERVICE_CODEPAGE; }
-const char*	LocaleService_GetLocaleName()		{ return _LSS_SERVICE_LOCALE_NAME; }
-const char*	LocaleService_GetLocalePath()		{ return _LSS_SERVICE_LOCALE_PATH; }
+const char* LocaleService_GetName()
+{
+	return _LSS_SERVICE_NAME;
+}
+
+unsigned int LocaleService_GetCodePage()
+{
+	return _LSS_SERVICE_CODEPAGE;
+}
+
+const char* LocaleService_GetLocaleName()
+{
+	return _LSS_SERVICE_LOCALE_NAME;
+}
+
+const char* LocaleService_GetLocalePath()
+{
+	return _LSS_SERVICE_LOCALE_PATH;
+}
+
 #endif
 
 void LocaleService_ForceSetLocale(const char* name, const char* localePath)
@@ -245,9 +291,14 @@ void LocaleService_ForceSetLocale(const char* name, const char* localePath)
 
 	// 기존 천마 서버로 접속시에는 security key 변경 (WE 버전 클라로 천마서버 접속하기 위함)
 	if (0 == stricmp(name, "ymir"))
+	{
 		__SECURITY_KEY_STRING__ = "testtesttesttest";
+	}
+
 	if (0 == stricmp(name, "we_korea"))
+	{
 		__SECURITY_KEY_STRING__ = "1234abcd5678efgh";
+	}
 }
 
 #if defined(LOCALE_SERVICE_GLOBAL)
@@ -256,8 +307,10 @@ struct SLOCALEDATA
 	const char* szServiceName;
 	const char* szLocaleName;
 	WORD		wCodePage;
-	const char*	szSecurityKey;
-} gs_stLocaleData[] = {
+	const char* szSecurityKey;
+} gs_stLocaleData[] =
+
+{
 	{ LSS_YMIR,		"ymir",			949,	"testtesttesttest"	},		// Korea
 	{ LSS_EUROPE,	"en",			1252,	"1234abcd5678efgh"	},		// GameForge (United Kingdom)
 	{ LSS_EUROPE,	"de",			1252,	"1234abcd5678efgh"	},		// GameForge (Germany)
@@ -298,60 +351,80 @@ unsigned int LocaleService_GetCodePage()
 	return MULTI_LOCALE_CODE;
 }
 
-const char*	LocaleService_GetLocaleName()
+const char* LocaleService_GetLocaleName()
 {
 	return MULTI_LOCALE_NAME;
 }
 
-const char*	LocaleService_GetLocalePath()
+const char* LocaleService_GetLocalePath()
 {
 	return MULTI_LOCALE_PATH;
 }
 
 static int gs_iLocale = -1;
 
-LRESULT CALLBACK SelectDlgProc( HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT CALLBACK SelectDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch( uMsg ) {
-	case WM_INITDIALOG : {
+	switch (uMsg)
+	{
+	case WM_INITDIALOG:
+	{
 		char szLocalePath[256], szDisplayName[256];
-		for(int i=0; gs_stLocaleData[i].szServiceName; i++ ) {
+
+		for (int i = 0; gs_stLocaleData[i].szServiceName; i++)
+		{
 			sprintf(szLocalePath, "locale/%s/item_proto", gs_stLocaleData[i].szLocaleName);
-			if(CPackManager::Instance().IsExist(szLocalePath)) {
+
+			if (CPackManager::Instance().IsExist(szLocalePath))
+			{
 				sprintf(szDisplayName, "%s (%s, %d)", gs_stLocaleData[i].szLocaleName, gs_stLocaleData[i].szServiceName, gs_stLocaleData[i].wCodePage);
 				int iIndex = ListBox_AddString(GetDlgItem(hDlg, IDC_LOCALE_LIST), szDisplayName);
 				ListBox_SetItemData(GetDlgItem(hDlg, IDC_LOCALE_LIST), iIndex, i);
 			}
 		}
+
 		return TRUE;
-		}
-	case WM_COMMAND :
-		switch( LOWORD( wParam ) ) {
-		case IDC_LOCALE_LIST: {
+	}
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDC_LOCALE_LIST:
+		{
 			int iSelected = ListBox_GetCurSel(GetDlgItem(hDlg, IDC_LOCALE_LIST));
-			switch(HIWORD(wParam)) {
-			case LBN_SELCHANGE :
+
+			switch (HIWORD(wParam))
+			{
+			case LBN_SELCHANGE:
 				gs_iLocale = ListBox_GetItemData(GetDlgItem(hDlg, IDC_LOCALE_LIST), iSelected);
 				break;
-			case LBN_DBLCLK :
+
+			case LBN_DBLCLK:
 				gs_iLocale = ListBox_GetItemData(GetDlgItem(hDlg, IDC_LOCALE_LIST), iSelected);
 				::EndDialog(hDlg, 0);
 				break;
-			} 
-			break;
 			}
-		case IDC_START: {
+
+			break;
+		}
+
+		case IDC_START:
+		{
 			::EndDialog(hDlg, 0);
 			break;
-			}
-		case IDC_EXIT: {
+		}
+
+		case IDC_EXIT:
+		{
 			gs_iLocale = -1;
 			::EndDialog(hDlg, 0);
 			break;
-			}
 		}
+		}
+
 		return FALSE;
 	}
+
 	return FALSE;
 }
 
@@ -360,61 +433,112 @@ bool LocaleService_LoadGlobal(HINSTANCE hInstance)
 	int nFoundLocales = 0;
 	char szLocalePath[256];
 
-	for(int i=0; gs_stLocaleData[i].szServiceName; i++ ) {
+	for (int i = 0; gs_stLocaleData[i].szServiceName; i++)
+	{
 		sprintf(szLocalePath, "locale/%s/item_proto", gs_stLocaleData[i].szLocaleName);
-		if(CPackManager::Instance().IsExist(szLocalePath)) {
+
+		if (CPackManager::Instance().IsExist(szLocalePath))
+		{
 			nFoundLocales++;
-			if(gs_iLocale == -1)
+
+			if (gs_iLocale == -1)
+			{
 				gs_iLocale = i;
+			}
 		}
 	}
+
 	if (gs_iLocale < 0)
+	{
 		return false;
-	if(nFoundLocales > 1)
-		::DialogBox(hInstance, MAKEINTRESOURCE(IDD_SELECT_LOCALE), NULL, (DLGPROC) SelectDlgProc);
+	}
+
+	if (nFoundLocales > 1)
+	{
+		::DialogBox(hInstance, MAKEINTRESOURCE(IDD_SELECT_LOCALE), NULL, (DLGPROC)SelectDlgProc);
+	}
+
 	if (gs_iLocale < 0)
+	{
 		return false;
+	}
+
 	strcpy(MULTI_LOCALE_SERVICE, gs_stLocaleData[gs_iLocale].szServiceName);
 	strcpy(MULTI_LOCALE_NAME, gs_stLocaleData[gs_iLocale].szLocaleName);
 	sprintf(MULTI_LOCALE_PATH, "locale/%s", gs_stLocaleData[gs_iLocale].szLocaleName);
 	MULTI_LOCALE_CODE = gs_stLocaleData[gs_iLocale].wCodePage;
-	if(gs_stLocaleData[gs_iLocale].szSecurityKey)
+
+	if (gs_stLocaleData[gs_iLocale].szSecurityKey)
+	{
 		__SECURITY_KEY_STRING__ = gs_stLocaleData[gs_iLocale].szSecurityKey;
+	}
+
 	return true;
 }
+
 #else
 bool LocaleService_LoadGlobal(HINSTANCE hInstance)
 {
 	return false;
 }
+
 #endif
 
-bool LocaleService_IsYMIR()		{ return (stricmp( LocaleService_GetName(), LSS_YMIR ) == 0) || (stricmp( LocaleService_GetLocaleName(), "ymir" ) == 0);	}
-bool LocaleService_IsJAPAN()	{ return (stricmp( LocaleService_GetName(), LSS_JAPAN ) == 0) || (stricmp( LocaleService_GetLocaleName(), "japan" ) == 0);	}
-bool LocaleService_IsENGLISH()	{ return (stricmp( LocaleService_GetName(), LSS_ENGLISH ) == 0);	}
-bool LocaleService_IsEUROPE()	{ return (stricmp( LocaleService_GetName(), LSS_EUROPE ) == 0);		}
-bool LocaleService_IsHONGKONG()	{ return (stricmp( LocaleService_GetName(), LSS_HONGKONG ) == 0);	}
-bool LocaleService_IsTAIWAN()	{ return (stricmp( LocaleService_GetName(), LSS_TAIWAN ) == 0);		}
-bool LocaleService_IsNEWCIBN()	{ return (stricmp( LocaleService_GetName(), LSS_NEWCIBN ) == 0);	}
+bool LocaleService_IsYMIR()
+{
+	return (stricmp(LocaleService_GetName(), LSS_YMIR) == 0) || (stricmp(LocaleService_GetLocaleName(), "ymir") == 0);
+}
+
+bool LocaleService_IsJAPAN()
+{
+	return (stricmp(LocaleService_GetName(), LSS_JAPAN) == 0) || (stricmp(LocaleService_GetLocaleName(), "japan") == 0);
+}
+
+bool LocaleService_IsENGLISH()
+{
+	return (stricmp(LocaleService_GetName(), LSS_ENGLISH) == 0);
+}
+
+bool LocaleService_IsEUROPE()
+{
+	return (stricmp(LocaleService_GetName(), LSS_EUROPE) == 0);
+}
+
+bool LocaleService_IsHONGKONG()
+{
+	return (stricmp(LocaleService_GetName(), LSS_HONGKONG) == 0);
+}
+
+bool LocaleService_IsTAIWAN()
+{
+	return (stricmp(LocaleService_GetName(), LSS_TAIWAN) == 0);
+}
+
+bool LocaleService_IsNEWCIBN()
+{
+	return (stricmp(LocaleService_GetName(), LSS_NEWCIBN) == 0);
+}
 
 #if defined(LOCALE_SERVICE_WE_JAPAN)
-BOOL LocaleService_IsLeadByte( const char chByte )
+BOOL LocaleService_IsLeadByte(const char chByte)
 {
-	return ShiftJIS_IsLeadByte( chByte );
+	return ShiftJIS_IsLeadByte(chByte);
 }
 
-int LocaleService_StringCompareCI( LPCSTR szStringLeft, LPCSTR szStringRight, size_t sizeLength )
+int LocaleService_StringCompareCI(LPCSTR szStringLeft, LPCSTR szStringRight, size_t sizeLength)
 {
-	return ShiftJIS_StringCompareCI( szStringLeft, szStringRight, sizeLength );
+	return ShiftJIS_StringCompareCI(szStringLeft, szStringRight, sizeLength);
 }
+
 #else
-BOOL LocaleService_IsLeadByte( const char chByte )
+BOOL LocaleService_IsLeadByte(const char chByte)
 {
-	return (((unsigned char) chByte) & 0x80) != 0;
+	return (((unsigned char)chByte) & 0x80) != 0;
 }
 
-int LocaleService_StringCompareCI( LPCSTR szStringLeft, LPCSTR szStringRight, size_t sizeLength )
+int LocaleService_StringCompareCI(LPCSTR szStringLeft, LPCSTR szStringRight, size_t sizeLength)
 {
-	return strnicmp( szStringLeft, szStringRight, sizeLength );
+	return strnicmp(szStringLeft, szStringRight, sizeLength);
 }
+
 #endif

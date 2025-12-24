@@ -21,12 +21,12 @@ BOOL CAttributeData::GetCollisionDataPointer(DWORD dwIndex, const TCollisionData
 }
 */
 
-const CStaticCollisionDataVector & CAttributeData::GetCollisionDataVector() const
+const CStaticCollisionDataVector& CAttributeData::GetCollisionDataVector() const
 {
 	return m_StaticCollisionDataVector;
 }
 
-const THeightDataVector & CAttributeData::GetHeightDataVector() const
+const THeightDataVector& CAttributeData::GetHeightDataVector() const
 {
 	return m_HeightDataVector;
 }
@@ -36,10 +36,12 @@ DWORD CAttributeData::GetHeightDataCount() const
 	return m_HeightDataVector.size();
 }
 
-BOOL CAttributeData::GetHeightDataPointer(DWORD dwIndex, const THeightData ** c_ppHeightData) const
+BOOL CAttributeData::GetHeightDataPointer(DWORD dwIndex, const THeightData** c_ppHeightData) const
 {
 	if (dwIndex >= GetHeightDataCount())
+	{
 		return FALSE;
+	}
 
 	*c_ppHeightData = &m_HeightDataVector[dwIndex];
 
@@ -57,7 +59,7 @@ size_t CAttributeData::AddCollisionData(const CStaticCollisionData& data)
 	return m_StaticCollisionDataVector.size();
 }
 
-bool CAttributeData::OnLoad(int /*iSize*/, const void * c_pvBuf)
+bool CAttributeData::OnLoad(int /*iSize*/, const void* c_pvBuf)
 {
 	if (!c_pvBuf)
 	{
@@ -65,13 +67,16 @@ bool CAttributeData::OnLoad(int /*iSize*/, const void * c_pvBuf)
 		return true;
 	}
 
-	const BYTE * c_pbBuf = static_cast<const BYTE *> (c_pvBuf);
+	const BYTE* c_pbBuf = static_cast<const BYTE*> (c_pvBuf);
 
-	char szHeader[c_iAttributeDataFileHeaderLength+1];
-	memcpy(szHeader, c_pbBuf, c_iAttributeDataFileHeaderLength+1);
-	c_pbBuf += c_iAttributeDataFileHeaderLength+1;
+	char szHeader[c_iAttributeDataFileHeaderLength + 1];
+	memcpy(szHeader, c_pbBuf, c_iAttributeDataFileHeaderLength + 1);
+	c_pbBuf += c_iAttributeDataFileHeaderLength + 1;
+
 	if (strcmp(szHeader, c_szAttributeDataFileHeader))
+	{
 		return FALSE;
+	}
 
 	DWORD dwCollisionDataCount;
 	DWORD dwHeightDataCount;
@@ -87,7 +92,7 @@ bool CAttributeData::OnLoad(int /*iSize*/, const void * c_pvBuf)
 
 	for (DWORD i = 0; i < dwCollisionDataCount; ++i)
 	{
-		CStaticCollisionData & rCollisionData = m_StaticCollisionDataVector[i];
+		CStaticCollisionData& rCollisionData = m_StaticCollisionDataVector[i];
 		memcpy(&rCollisionData.dwType, c_pbBuf, sizeof(DWORD));
 		c_pbBuf += sizeof(DWORD);
 		memcpy(rCollisionData.szName, c_pbBuf, 32);
@@ -95,32 +100,37 @@ bool CAttributeData::OnLoad(int /*iSize*/, const void * c_pvBuf)
 		memcpy(&rCollisionData.v3Position, c_pbBuf, sizeof(D3DXVECTOR3));
 		c_pbBuf += sizeof(D3DXVECTOR3);
 
-		switch(rCollisionData.dwType)
+		switch (rCollisionData.dwType)
 		{
-			case COLLISION_TYPE_PLANE:
-				memcpy(rCollisionData.fDimensions, c_pbBuf, 2*sizeof(float));
-				c_pbBuf += 2*sizeof(float);
-				break;
-			case COLLISION_TYPE_BOX:
-				memcpy(rCollisionData.fDimensions, c_pbBuf, 3*sizeof(float));
-				c_pbBuf += 3*sizeof(float);
-				break;
-			case COLLISION_TYPE_SPHERE:
-				memcpy(rCollisionData.fDimensions, c_pbBuf, sizeof(float));
-				c_pbBuf += sizeof(float);
-				break;
-			case COLLISION_TYPE_CYLINDER:
-				memcpy(rCollisionData.fDimensions, c_pbBuf, 2*sizeof(float));
-				c_pbBuf += 2*sizeof(float);
-				break;
-			case COLLISION_TYPE_AABB:
-				memcpy(rCollisionData.fDimensions, c_pbBuf, 3*sizeof(float));
-				c_pbBuf += 3*sizeof(float);
-				break;
-			case COLLISION_TYPE_OBB:
-				memcpy(rCollisionData.fDimensions, c_pbBuf, 3*sizeof(float));
-				c_pbBuf += 3*sizeof(float);
-				break;
+		case COLLISION_TYPE_PLANE:
+			memcpy(rCollisionData.fDimensions, c_pbBuf, 2 * sizeof(float));
+			c_pbBuf += 2 * sizeof(float);
+			break;
+
+		case COLLISION_TYPE_BOX:
+			memcpy(rCollisionData.fDimensions, c_pbBuf, 3 * sizeof(float));
+			c_pbBuf += 3 * sizeof(float);
+			break;
+
+		case COLLISION_TYPE_SPHERE:
+			memcpy(rCollisionData.fDimensions, c_pbBuf, sizeof(float));
+			c_pbBuf += sizeof(float);
+			break;
+
+		case COLLISION_TYPE_CYLINDER:
+			memcpy(rCollisionData.fDimensions, c_pbBuf, 2 * sizeof(float));
+			c_pbBuf += 2 * sizeof(float);
+			break;
+
+		case COLLISION_TYPE_AABB:
+			memcpy(rCollisionData.fDimensions, c_pbBuf, 3 * sizeof(float));
+			c_pbBuf += 3 * sizeof(float);
+			break;
+
+		case COLLISION_TYPE_OBB:
+			memcpy(rCollisionData.fDimensions, c_pbBuf, 3 * sizeof(float));
+			c_pbBuf += 3 * sizeof(float);
+			break;
 		}
 
 		memcpy(rCollisionData.quatRotation, c_pbBuf, sizeof(D3DXQUATERNION));
@@ -129,7 +139,7 @@ bool CAttributeData::OnLoad(int /*iSize*/, const void * c_pvBuf)
 
 	for (DWORD j = 0; j < dwHeightDataCount; ++j)
 	{
-		THeightData & rHeightData = m_HeightDataVector[j];
+		THeightData& rHeightData = m_HeightDataVector[j];
 		memcpy(rHeightData.szName, c_pbBuf, 32);
 		c_pbBuf += 32;
 
@@ -139,16 +149,17 @@ bool CAttributeData::OnLoad(int /*iSize*/, const void * c_pvBuf)
 
 		rHeightData.v3VertexVector.clear();
 		rHeightData.v3VertexVector.resize(dwPrimitiveCount);
-		memcpy(&rHeightData.v3VertexVector[0], c_pbBuf, dwPrimitiveCount*sizeof(D3DXVECTOR3));
-		c_pbBuf += dwPrimitiveCount*sizeof(D3DXVECTOR3);
+		memcpy(&rHeightData.v3VertexVector[0], c_pbBuf, dwPrimitiveCount * sizeof(D3DXVECTOR3));
+		c_pbBuf += dwPrimitiveCount * sizeof(D3DXVECTOR3);
 
 		// Getting Maximize Radius
 		for (DWORD k = 0; k < rHeightData.v3VertexVector.size(); ++k)
 		{
-			m_fMaximizeRadius = fMAX(m_fMaximizeRadius, fabs(rHeightData.v3VertexVector[k].x)+50.0f);
-			m_fMaximizeRadius = fMAX(m_fMaximizeRadius, fabs(rHeightData.v3VertexVector[k].y)+50.0f);
-			m_fMaximizeRadius = fMAX(m_fMaximizeRadius, fabs(rHeightData.v3VertexVector[k].z)+50.0f);
+			m_fMaximizeRadius = fMAX(m_fMaximizeRadius, fabs(rHeightData.v3VertexVector[k].x) + 50.0f);
+			m_fMaximizeRadius = fMAX(m_fMaximizeRadius, fabs(rHeightData.v3VertexVector[k].y) + 50.0f);
+			m_fMaximizeRadius = fMAX(m_fMaximizeRadius, fabs(rHeightData.v3VertexVector[k].z) + 50.0f);
 		}
+
 		// Getting Maximize Radius
 	}
 
@@ -164,9 +175,14 @@ void CAttributeData::OnClear()
 bool CAttributeData::OnIsEmpty() const
 {
 	if (!m_StaticCollisionDataVector.empty())
+	{
 		return false;
+	}
+
 	if (!m_HeightDataVector.empty())
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -174,7 +190,9 @@ bool CAttributeData::OnIsEmpty() const
 bool CAttributeData::OnIsType(TType type)
 {
 	if (CAttributeData::Type() == type)
+	{
 		return true;
+	}
 
 	return CResource::OnIsType(type);
 }
@@ -190,7 +208,7 @@ void CAttributeData::OnSelfDestruct()
 	Clear();
 }
 
-CAttributeData::CAttributeData(const char * c_szFileName) : CResource(c_szFileName)
+CAttributeData::CAttributeData(const char* c_szFileName) : CResource(c_szFileName)
 {
 	m_fMaximizeRadius = 0.0f;
 }

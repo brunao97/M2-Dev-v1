@@ -18,8 +18,8 @@ typedef struct
 
 typedef struct
 {
- 	DWORD			TileCount[MAXTERRAINTEXTURES];
-	DWORD			PatchTileCount[TERRAIN_PATCHCOUNT*TERRAIN_PATCHCOUNT][MAXTERRAINTEXTURES];
+	DWORD			TileCount[MAXTERRAINTEXTURES];
+	DWORD			PatchTileCount[TERRAIN_PATCHCOUNT * TERRAIN_PATCHCOUNT][MAXTERRAINTEXTURES];
 	TTerainSplat 	Splats[MAXTERRAINTEXTURES];
 	bool			m_bNeedsUpdate;
 } TTerrainSplatPatch;
@@ -28,13 +28,13 @@ typedef struct
 {
 	char					used;
 	short					mat;
-	
+
 	CGraphicVertexBuffer	vb;
 	CGraphicIndexBuffer		ib;
 	long					VertexSize;
-	
+
 	short					NumIndices;
-	
+
 	float					minx, maxx;
 	float					miny, maxy;
 	float					minz, maxz;

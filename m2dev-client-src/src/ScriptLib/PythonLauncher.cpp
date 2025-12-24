@@ -35,11 +35,11 @@ void Traceback()
 		str.append(g_stTraceBuffer[i]);
 		str.append("\n");
 	}
-	
-	PyObject * exc;
-	PyObject * v;
-	PyObject * tb;
-	const char * errStr;
+
+	PyObject* exc;
+	PyObject* v;
+	PyObject* tb;
+	const char* errStr;
 
 	PyErr_Fetch(&exc, &v, &tb);
 
@@ -51,68 +51,79 @@ void Traceback()
 
 		Tracef("%s\n", errStr);
 	}
+
 	Py_DECREF(exc);
 	Py_DECREF(v);
 	Py_DECREF(tb);
 	LogBoxf("Traceback:\n\n%s\n", str.c_str());
 }
 
-int TraceFunc(PyObject * obj, PyFrameObject * f, int what, PyObject *arg)
+int TraceFunc(PyObject* obj, PyFrameObject* f, int what, PyObject* arg)
 {
-	const char * funcname;
+	const char* funcname;
 	char szTraceBuffer[128];
 
 	switch (what)
 	{
-		case PyTrace_CALL:
-			if (g_nCurTraceN >= 512)
-				return 0;
+	case PyTrace_CALL:
+		if (g_nCurTraceN >= 512)
+		{
+			return 0;
+		}
 
-			if (Py_OptimizeFlag)
-				f->f_lineno = PyCode_Addr2Line(f->f_code, f->f_lasti);
+		if (Py_OptimizeFlag)
+		{
+			f->f_lineno = PyCode_Addr2Line(f->f_code, f->f_lasti);
+		}
 
-			funcname = PyString_AsString(f->f_code->co_name);
+		funcname = PyString_AsString(f->f_code->co_name);
 
-			_snprintf(szTraceBuffer, sizeof(szTraceBuffer), "Call: File \"%s\", line %d, in %s", 
-					  PyString_AsString(f->f_code->co_filename), 
-					  f->f_lineno,
-					  funcname);
+		_snprintf(szTraceBuffer, sizeof(szTraceBuffer), "Call: File \"%s\", line %d, in %s",
+			PyString_AsString(f->f_code->co_filename),
+			f->f_lineno,
+			funcname);
 
-			g_stTraceBuffer[g_nCurTraceN++]=szTraceBuffer;			
-			break;
+		g_stTraceBuffer[g_nCurTraceN++] = szTraceBuffer;
+		break;
 
-		case PyTrace_RETURN:
-			if (g_nCurTraceN > 0)
-				--g_nCurTraceN;
-			break;
+	case PyTrace_RETURN:
+		if (g_nCurTraceN > 0)
+		{
+			--g_nCurTraceN;
+		}
 
-		case PyTrace_EXCEPTION:
-			if (g_nCurTraceN >= 512)
-				return 0;
-			
-			PyObject * exc_type, * exc_value, * exc_traceback;
+		break;
 
-			PyTuple_GetObject(arg, 0, &exc_type);
-			PyTuple_GetObject(arg, 1, &exc_value);
-			PyTuple_GetObject(arg, 2, &exc_traceback);
+	case PyTrace_EXCEPTION:
+		if (g_nCurTraceN >= 512)
+		{
+			return 0;
+		}
 
-			Py_ssize_t len;
-			const char * exc_str;
-			PyObject_AsCharBuffer(exc_type, &exc_str, &len);
-			
-			_snprintf(szTraceBuffer, sizeof(szTraceBuffer), "Exception: File \"%s\", line %d, in %s", 
-					  PyString_AS_STRING(f->f_code->co_filename), 
-					  f->f_lineno,
-					  PyString_AS_STRING(f->f_code->co_name));
+		PyObject* exc_type, * exc_value, * exc_traceback;
 
-			g_stTraceBuffer[g_nCurTraceN++]=szTraceBuffer;
-			
-			break;
+		PyTuple_GetObject(arg, 0, &exc_type);
+		PyTuple_GetObject(arg, 1, &exc_value);
+		PyTuple_GetObject(arg, 2, &exc_traceback);
+
+		Py_ssize_t len;
+		const char* exc_str;
+		PyObject_AsCharBuffer(exc_type, &exc_str, &len);
+
+		_snprintf(szTraceBuffer, sizeof(szTraceBuffer), "Exception: File \"%s\", line %d, in %s",
+			PyString_AS_STRING(f->f_code->co_filename),
+			f->f_lineno,
+			PyString_AS_STRING(f->f_code->co_name));
+
+		g_stTraceBuffer[g_nCurTraceN++] = szTraceBuffer;
+
+		break;
 	}
+
 	return 0;
 }
 
-void CPythonLauncher::SetTraceFunc(int (*pFunc)(PyObject * obj, PyFrameObject * f, int what, PyObject *arg))
+void CPythonLauncher::SetTraceFunc(int (*pFunc) (PyObject* obj, PyFrameObject* f, int what, PyObject* arg))
 {
 	PyEval_SetTrace(pFunc, NULL);
 }
@@ -120,43 +131,51 @@ void CPythonLauncher::SetTraceFunc(int (*pFunc)(PyObject * obj, PyFrameObject * 
 bool CPythonLauncher::Create(const char* c_szProgramName)
 {
 	NANOBEGIN
-	Py_SetProgramName((char*)c_szProgramName);
+		Py_SetProgramName((char*)c_szProgramName);
 #ifdef _DEBUG
 	PyEval_SetTrace(TraceFunc, NULL);
 #endif
-	m_poModule = PyImport_AddModule((char *) "__main__");
+	m_poModule = PyImport_AddModule((char*)"__main__");
 
 	if (!m_poModule)
+	{
 		return false;
-	
+	}
+
 	m_poDic = PyModule_GetDict(m_poModule);
 
-    PyObject * builtins = PyImport_ImportModule("__builtin__");
+	PyObject* builtins = PyImport_ImportModule("__builtin__");
 	PyModule_AddIntConstant(builtins, "TRUE", 1);
 	PyModule_AddIntConstant(builtins, "FALSE", 0);
-    PyDict_SetItemString(m_poDic, "__builtins__", builtins);
+	PyDict_SetItemString(m_poDic, "__builtins__", builtins);
 	Py_DECREF(builtins);
 
 	if (!RunLine("import __main__"))
+	{
 		return false;
-	
+	}
+
 	if (!RunLine("import sys"))
+	{
 		return false;
+	}
 
 	NANOEND
-	return true;
+		return true;
 }
 
 bool CPythonLauncher::RunCompiledFile(const char* c_szFileName)
 {
 	NANOBEGIN
-	FILE * fp = fopen(c_szFileName, "rb");
+		FILE* fp = fopen(c_szFileName, "rb");
 
 	if (!fp)
+	{
 		return false;
+	}
 
-	PyCodeObject *co;
-	PyObject *v;
+	PyCodeObject* co;
+	PyObject* v;
 	long magic;
 	long PyImport_GetMagicNumber(void);
 
@@ -181,11 +200,12 @@ bool CPythonLauncher::RunCompiledFile(const char* c_szFileName)
 		return false;
 	}
 
-	co = (PyCodeObject *) v;
+	co = (PyCodeObject*)v;
 	v = PyEval_EvalCode(co, m_poDic, m_poDic);
-/*	if (v && flags)
-		flags->cf_flags |= (co->co_flags & PyCF_MASK);*/
+	/*	if (v && flags)
+			flags->cf_flags |= (co->co_flags & PyCF_MASK);*/
 	Py_DECREF(co);
+
 	if (!v)
 	{
 		Traceback();
@@ -193,57 +213,63 @@ bool CPythonLauncher::RunCompiledFile(const char* c_szFileName)
 	}
 
 	Py_DECREF(v);
-	if (Py_FlushLine()) 
+
+	if (Py_FlushLine())
+	{
 		PyErr_Clear();
+	}
 
 	NANOEND
-	return true;
+		return true;
 }
-
 
 bool CPythonLauncher::RunMemoryTextFile(const char* c_szFileName, UINT uFileSize, const VOID* c_pvFileData)
 {
 	NANOBEGIN
-	const CHAR* c_pcFileData=(const CHAR*)c_pvFileData;
+		const CHAR* c_pcFileData = (const CHAR*)c_pvFileData;
 
 	std::string stConvFileData;
 	stConvFileData.reserve(uFileSize);
-	stConvFileData+="exec(compile('''";
+	stConvFileData += "exec(compile('''";
 
 	// ConvertPythonTextFormat
 	{
-		for (UINT i=0; i<uFileSize; ++i)
+		for (UINT i = 0; i < uFileSize; ++i)
 		{
-			if (c_pcFileData[i]!=13)
-				stConvFileData+=c_pcFileData[i];
+			if (c_pcFileData[i] != 13)
+			{
+				stConvFileData += c_pcFileData[i];
+			}
 		}
 	}
 
-	stConvFileData+= "''', ";
-	stConvFileData+= "'";
-	stConvFileData+= c_szFileName;
-	stConvFileData+= "', ";
-	stConvFileData+= "'exec'))";
+	stConvFileData += "''', ";
+	stConvFileData += "'";
+	stConvFileData += c_szFileName;
+	stConvFileData += "', ";
+	stConvFileData += "'exec'))";
 
-	const CHAR* c_pcConvFileData=stConvFileData.c_str();
+	const CHAR* c_pcConvFileData = stConvFileData.c_str();
 	NANOEND
-	return RunLine(c_pcConvFileData);
+		return RunLine(c_pcConvFileData);
 }
 
 bool CPythonLauncher::RunFile(const char* c_szFileName)
 {
 	TPackFile file;
 	CPackManager::Instance().GetFile(c_szFileName, file);
-		
+
 	if (file.empty())
+	{
 		return false;
-		
+	}
+
 	return RunMemoryTextFile(c_szFileName, file.size(), file.data());
 }
 
 bool CPythonLauncher::RunLine(const char* c_szSrc)
 {
-	PyObject * v = PyRun_String((char *) c_szSrc, Py_file_input, m_poDic, m_poDic);
+	PyObject* v = PyRun_String((char*)c_szSrc, Py_file_input, m_poDic, m_poDic);
 
 	if (!v)
 	{
@@ -261,10 +287,12 @@ const char* CPythonLauncher::GetError()
 	PyObject* v;
 	PyObject* tb;
 
-	PyErr_Fetch(&exc, &v, &tb);        
+	PyErr_Fetch(&exc, &v, &tb);
 
 	if (PyString_Check(v))
+	{
 		return PyString_AS_STRING(v);
-	
+	}
+
 	return "";
 }

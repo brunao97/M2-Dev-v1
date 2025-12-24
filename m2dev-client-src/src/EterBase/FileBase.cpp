@@ -10,7 +10,7 @@ CFileBase::~CFileBase()
 	Destroy();
 }
 
-char * CFileBase::GetFileName()
+char* CFileBase::GetFileName()
 {
 	return m_filename;
 }
@@ -25,7 +25,7 @@ void CFileBase::Close()
 {
 	if (m_hFile)
 	{
-		CloseHandle(m_hFile);	
+		CloseHandle(m_hFile);
 		m_hFile = NULL;
 	}
 }
@@ -43,16 +43,19 @@ BOOL CFileBase::Create(const char* filename, EFileMode mode)
 		dwMode = GENERIC_READ | GENERIC_WRITE;
 		dwShareMode = FILE_SHARE_READ | FILE_SHARE_WRITE;
 	}
+
 	else
+	{
 		dwMode = GENERIC_READ;
+	}
 
 	m_hFile = CreateFile(filename,					// name of the file
-						 dwMode,					// desired access
-						 dwShareMode,				// share mode
-						 NULL,						// security attributes
-						 mode == FILEMODE_READ ? OPEN_EXISTING : OPEN_ALWAYS, // creation disposition
-						 FILE_ATTRIBUTE_NORMAL,		// flags and attr
-						 NULL);						// template file
+		dwMode,					// desired access
+		dwShareMode,				// share mode
+		NULL,						// security attributes
+		mode == FILEMODE_READ ? OPEN_EXISTING : OPEN_ALWAYS, // creation disposition
+		FILE_ATTRIBUTE_NORMAL,		// flags and attr
+		NULL);						// template file
 
 	if (m_hFile != INVALID_HANDLE_VALUE)
 	{
@@ -61,9 +64,9 @@ BOOL CFileBase::Create(const char* filename, EFileMode mode)
 		return true;
 	}
 
-/*	char buf[256];
-	GetCurrentDirectory(256, buf);
-	DWORD dwErr = GetLastError();*/
+	/*	char buf[256];
+		GetCurrentDirectory(256, buf);
+		DWORD dwErr = GetLastError();*/
 	m_hFile = NULL;
 	return false;
 }
@@ -81,7 +84,9 @@ void CFileBase::SeekCur(DWORD size)
 void CFileBase::Seek(DWORD offset)
 {
 	if (offset > m_dwSize)
+	{
 		offset = m_dwSize;
+	}
 
 	SetFilePointer(m_hFile, offset, NULL, FILE_BEGIN);
 }
@@ -95,9 +100,11 @@ BOOL CFileBase::Write(const void* src, int bytes)
 {
 	DWORD dwUseless;
 	BOOL ret = WriteFile(m_hFile, src, bytes, &dwUseless, NULL);
-	
+
 	if (!ret)
+	{
 		return false;
+	}
 
 	m_dwSize = GetFileSize(m_hFile, NULL);
 	return true;

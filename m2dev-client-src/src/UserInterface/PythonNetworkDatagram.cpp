@@ -163,12 +163,12 @@ BOOL CPythonNetworkDatagram::GetSenderPointer(DWORD dwID, CNetDatagramSender ** 
 // Walking
 
 void CPythonNetworkDatagram::SendCharacterStatePacket(DWORD dwVID, DWORD dwCmdTime, const TPixelPosition& c_rkPPosDst, float fDstRot, UINT eFunc, UINT uArg)
-{	
+{
 	fDstRot=fmod(fDstRot, 360.0f);
 
 	if (fDstRot<0)
 		fDstRot=360.0f-fDstRot;
-	
+
 	TPacketCCState kStatePacket;
 	kStatePacket.bHeader=HEADER_CC_STATE_WALKING;
 	kStatePacket.dwVID=dwVID;
@@ -191,7 +191,7 @@ BOOL CPythonNetworkDatagram::RecvStateWalkingPacket()
 	}
 
 	CInstanceBase * pkChrInst = CPythonCharacterManager::Instance().GetInstancePtr(kStatePacket.dwVID);
-	
+
 	if (!pkChrInst)
 	{
 		//Tracenf("CPythonNetworkDatagram::RecvStatePacket - NOT EXIST VID(kStateWaitingPacket.vid = %d)", kStatePacket.m_dwVID);
@@ -203,7 +203,7 @@ BOOL CPythonNetworkDatagram::RecvStateWalkingPacket()
 }
 
 CPythonNetworkDatagram::CPythonNetworkDatagram()
-{	
+{
 }
 
 CPythonNetworkDatagram::~CPythonNetworkDatagram()

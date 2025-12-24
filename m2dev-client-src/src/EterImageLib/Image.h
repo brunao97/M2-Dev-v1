@@ -21,6 +21,7 @@ struct TGA_HEADER
 	char colorBits;
 	char desc;
 };
+
 #define IMAGEDESC_ORIGIN_MASK		0x30
 #define IMAGEDESC_TOPLEFT			0x20
 #define IMAGEDESC_BOTLEFT			0x00
@@ -30,42 +31,42 @@ struct TGA_HEADER
 
 class CImage
 {
-	public:
-		CImage();
-		CImage(CImage & image);
+public:
+	CImage();
+	CImage(CImage& image);
 
-		virtual ~CImage();
-		
-		void				Destroy();
-		
-		void				Create(int width, int height);
+	virtual ~CImage();
 
-		void				Clear(DWORD color = 0);
-		
-		int					GetWidth() const;	
-		int					GetHeight() const;
-		
-		DWORD *				GetBasePointer();
-		DWORD *				GetLinePointer(int line);
-		
-		void				PutImage(int x, int y, CImage* pImage);
-		void				FlipTopToBottom();
-		
-		void				SetFileName(const char* c_szFileName);
-		
-		const std::string &	GetFileNameString();
+	void				Destroy();
 
-		bool				IsEmpty() const;
+	void				Create(int width, int height);
 
-	protected:
-		void				Initialize();
-		
-	protected:
-		DWORD *				m_pdwColors;
-		int					m_width;
-		int					m_height;
+	void				Clear(DWORD color = 0);
 
-		std::string			m_stFileName;
+	int					GetWidth() const;
+	int					GetHeight() const;
+
+	DWORD* GetBasePointer();
+	DWORD* GetLinePointer(int line);
+
+	void				PutImage(int x, int y, CImage* pImage);
+	void				FlipTopToBottom();
+
+	void				SetFileName(const char* c_szFileName);
+
+	const std::string& GetFileNameString();
+
+	bool				IsEmpty() const;
+
+protected:
+	void				Initialize();
+
+protected:
+	DWORD* m_pdwColors;
+	int					m_width;
+	int					m_height;
+
+	std::string			m_stFileName;
 };
 
 #endif

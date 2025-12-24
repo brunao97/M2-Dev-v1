@@ -10,11 +10,16 @@ bool CEffectElementBaseInstance::Update(float fElapsedTime)
 
 		return OnUpdate(fElapsedTime);
 	}
+
 	else
 	{
 		m_fRemainingTime -= fElapsedTime;
-		if (m_fRemainingTime<=0.0f)
+
+		if (m_fRemainingTime <= 0.0f)
+		{
 			m_bStart = true;
+		}
+
 		return true;
 	}
 }
@@ -22,19 +27,21 @@ bool CEffectElementBaseInstance::Update(float fElapsedTime)
 void CEffectElementBaseInstance::Render()
 {
 	if (!m_bStart)
+	{
 		return;
+	}
 
 	assert(mc_pmatLocal);
 
 	OnRender();
 }
 
-void CEffectElementBaseInstance::SetLocalMatrixPointer(const D3DXMATRIX * c_pMatrix)
+void CEffectElementBaseInstance::SetLocalMatrixPointer(const D3DXMATRIX* c_pMatrix)
 {
 	mc_pmatLocal = c_pMatrix;
 }
 
-void CEffectElementBaseInstance::SetDataPointer(CEffectElementBase * pElement)
+void CEffectElementBaseInstance::SetDataPointer(CEffectElementBase* pElement)
 {
 	m_pBase = pElement;
 
@@ -44,10 +51,16 @@ void CEffectElementBaseInstance::SetDataPointer(CEffectElementBase * pElement)
 	//add by ipkn, start time management
 
 	m_fRemainingTime = pElement->GetStartTime();
-	if (m_fRemainingTime<=0.0f)
+
+	if (m_fRemainingTime <= 0.0f)
+	{
 		m_bStart = true;
+	}
+
 	else
+	{
 		m_bStart = false;
+	}
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -58,10 +71,12 @@ bool CEffectElementBaseInstance::isActive()
 {
 	return m_isActive;
 }
+
 void CEffectElementBaseInstance::SetActive()
 {
 	m_isActive = true;
 }
+
 void CEffectElementBaseInstance::SetDeactive()
 {
 	m_isActive = false;
@@ -100,6 +115,7 @@ CEffectElementBaseInstance::CEffectElementBaseInstance()
 	, m_pBase(nullptr)
 {
 }
+
 CEffectElementBaseInstance::~CEffectElementBaseInstance()
 {
 }

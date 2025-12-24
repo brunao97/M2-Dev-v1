@@ -13,30 +13,34 @@ CFileLoaderThread::~CFileLoaderThread()
 	Destroy();
 }
 
-int CFileLoaderThread::Create(void * arg)
+int CFileLoaderThread::Create(void* arg)
 {
 	Arg(arg);
-	m_hThread = (HANDLE) _beginthreadex(NULL, 0, EntryPoint, this, 0, &m_uThreadID);
+	m_hThread = (HANDLE)_beginthreadex(NULL, 0, EntryPoint, this, 0, &m_uThreadID);
 
 	if (!m_hThread)
+	{
 		return false;
+	}
 
 	SetThreadPriority(m_hThread, THREAD_PRIORITY_NORMAL);
 	return true;
 }
 
-UINT CFileLoaderThread::Run(void * arg)
+UINT CFileLoaderThread::Run(void* arg)
 {
 	if (!Setup())
+	{
 		return 0;
+	}
 
 	return (Execute(arg));
 }
 
 /* Static */
-UINT CALLBACK CFileLoaderThread::EntryPoint(void * pThis)
+UINT CALLBACK CFileLoaderThread::EntryPoint(void* pThis)
 {
-	CFileLoaderThread * pThread = (CFileLoaderThread *) pThis;
+	CFileLoaderThread* pThread = (CFileLoaderThread*)pThis;
 	return pThread->Run(pThread->Arg());
 }
 
@@ -56,11 +60,14 @@ void CFileLoaderThread::Destroy()
 UINT CFileLoaderThread::Setup()
 {
 	m_hSemaphore = CreateSemaphore(NULL,		// no security attributes
-								   0,			// initial count
-								   65535,		// maximum count
-								   NULL);		// unnamed semaphore
+		0,			// initial count
+		65535,		// maximum count
+		NULL);		// unnamed semaphore
+
 	if (!m_hSemaphore)
+	{
 		return 0;
+	}
 
 	return 1;
 }
@@ -68,43 +75,46 @@ UINT CFileLoaderThread::Setup()
 void CFileLoaderThread::Shutdown()
 {
 	if (!m_hSemaphore)
+	{
 		return;
+	}
 
 	BOOL bRet;
-	
+
 	m_bShutdowned = true;
 
 	do
 	{
 		bRet = ReleaseSemaphore(m_hSemaphore, 1, NULL);
-	}
-	while (!bRet);
+	} while (!bRet);
 
 	WaitForSingleObject(m_hThread, 10000);	// 쓰레드가 종료 되기를 10초 기다림
 }
 
-UINT CFileLoaderThread::Execute(void * /*pvArg*/)
+UINT CFileLoaderThread::Execute(void* /*pvArg*/)
 {
 	while (!m_bShutdowned)
 	{
-		DWORD dwWaitResult; 
+		DWORD dwWaitResult;
 
 		dwWaitResult = WaitForSingleObject(m_hSemaphore, INFINITE);
 
 		if (m_bShutdowned)
+		{
 			break;
+		}
 
-		switch (dwWaitResult) 
-		{ 
-			case WAIT_OBJECT_0:
-				{
-					Process();
-				}
-				break;
+		switch (dwWaitResult)
+		{
+		case WAIT_OBJECT_0:
+		{
+			Process();
+		}
+		break;
 
-			case WAIT_TIMEOUT:
-				TraceError("CFileLoaderThread::Execute: Timeout occured while time-out interval is INIFITE");
-				break;
+		case WAIT_TIMEOUT:
+			TraceError("CFileLoaderThread::Execute: Timeout occured while time-out interval is INIFITE");
+			break;
 		}
 	}
 
@@ -112,9 +122,9 @@ UINT CFileLoaderThread::Execute(void * /*pvArg*/)
 	return 1;
 }
 
-void CFileLoaderThread::Request(std::string & c_rstFileName)	// called in main thread
+void CFileLoaderThread::Request(std::string& c_rstFileName)	// called in main thread
 {
-	TData * pData = new TData;
+	TData* pData = new TData;
 
 	pData->File.clear();
 	pData->stFileName = c_rstFileName;
@@ -126,12 +136,14 @@ void CFileLoaderThread::Request(std::string & c_rstFileName)	// called in main t
 	++m_iRestSemCount;
 
 	if (!ReleaseSemaphore(m_hSemaphore, m_iRestSemCount, NULL))
+	{
 		TraceError("CFileLoaderThread::Request: ReleaseSemaphore error");
+	}
 
 	--m_iRestSemCount;
 }
 
-bool CFileLoaderThread::Fetch(TData ** ppData)	// called in main thread
+bool CFileLoaderThread::Fetch(TData** ppData)	// called in main thread
 {
 	m_CompleteMutex.Lock();
 
@@ -158,7 +170,7 @@ void CFileLoaderThread::Process()	// called in loader thread
 		return;
 	}
 
-	TData * pData = m_pRequestDeque.front();
+	TData* pData = m_pRequestDeque.front();
 	m_pRequestDeque.pop_front();
 
 	m_RequestMutex.Unlock();

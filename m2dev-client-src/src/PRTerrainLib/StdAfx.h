@@ -20,7 +20,7 @@
 #include "ScriptLib/StdAfx.h"
 
 /* Fast Float<->Integer conversion */
-extern float		PR_FCNV;        
+extern float		PR_FCNV;
 extern long			PR_ICNV;
 
 //{{AFX_INSERT_LOCATION}}

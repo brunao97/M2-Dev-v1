@@ -16,7 +16,6 @@ void CPythonExceptionSender::Send()
 	//	Tracef(" CPythonExceptionSender::Send() - Invalid Socket");
 	//}
 
-
 	//DWORD arg = 1;
 	//ioctlsocket(s, FIONBIO, &arg);	// Non-blocking mode
 
@@ -46,7 +45,7 @@ void CPythonExceptionSender::Send()
 	//{
 	//	// send plain text
 	//	ret = send(s,(char*)(&m_strExceptionString[0])+total,length-total,0);
-	//	
+	//
 	//	if (ret<0)
 	//		break;
 
@@ -62,6 +61,7 @@ void CPythonExceptionSender::Send()
 CPythonExceptionSender::CPythonExceptionSender()
 {
 }
+
 CPythonExceptionSender::~CPythonExceptionSender()
 {
 }

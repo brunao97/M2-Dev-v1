@@ -54,14 +54,20 @@ public:
 	bool LoadScriptFile(const char* c_szFilename);
 	bool SaveScriptFile(const char* c_szFilename);
 
-	const D3DXVECTOR3 & GetAcceleration() { return m_v3Accel; }
+	const D3DXVECTOR3& GetAcceleration()
+	{
+		return m_v3Accel;
+	}
 
 	void SetBombEffect(const char* szEffectName);
 
-	DWORD AttachFlyEffect(int iType, const std::string & strFilename, float fRoll, float fArg1, float fArg2);
+	DWORD AttachFlyEffect(int iType, const std::string& strFilename, float fRoll, float fArg1, float fArg2);
 
-	TFlyingAttachData & GetAttachDataReference(int iIndex);
-	int GetAttachDataCount() { return m_AttachDataVector.size(); } 
+	TFlyingAttachData& GetAttachDataReference(int iIndex);
+	int GetAttachDataCount()
+	{
+		return m_AttachDataVector.size();
+	}
 
 	void DuplicateAttach(int iIndex);
 	void RemoveAttach(int iIndex);
@@ -102,10 +108,21 @@ protected:
 	std::vector<TFlyingAttachData> m_AttachDataVector;
 
 public:
-	static CFlyingData *  New() { return ms_kPool.Alloc(); }
-	static void Delete(CFlyingData * pData) { pData->Destroy(); ms_kPool.Free(pData); }
+	static CFlyingData* New()
+	{
+		return ms_kPool.Alloc();
+	}
 
-	static void DestroySystem() { ms_kPool.Destroy(); }
+	static void Delete(CFlyingData* pData)
+	{
+		pData->Destroy();
+		ms_kPool.Free(pData);
+	}
+
+	static void DestroySystem()
+	{
+		ms_kPool.Destroy();
+	}
 
 	static CDynamicPool<CFlyingData> ms_kPool;
 };

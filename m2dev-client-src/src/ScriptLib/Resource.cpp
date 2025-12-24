@@ -24,56 +24,56 @@
 
 #include "Resource.h"
 
-CResource * NewImage(const char* c_szFileName)
+CResource* NewImage(const char* c_szFileName)
 {
 	return new CGraphicImage(c_szFileName);
 }
 
-CResource * NewSubImage(const char* c_szFileName)
+CResource* NewSubImage(const char* c_szFileName)
 {
 	return new CGraphicSubImage(c_szFileName);
 }
 
-CResource * NewText(const char* c_szFileName)
+CResource* NewText(const char* c_szFileName)
 {
 	return new CGraphicText(c_szFileName);
 }
 
-CResource * NewThing(const char* c_szFileName)
+CResource* NewThing(const char* c_szFileName)
 {
 	return new CGraphicThing(c_szFileName);
 }
 
-CResource * NewEffectMesh(const char* c_szFileName)
+CResource* NewEffectMesh(const char* c_szFileName)
 {
 	return new CEffectMesh(c_szFileName);
 }
 
-CResource * NewAttributeData(const char* c_szFileName)
+CResource* NewAttributeData(const char* c_szFileName)
 {
 	return new CAttributeData(c_szFileName);
 }
 
-void CPythonResource::DumpFileList(const char * c_szFileName)
+void CPythonResource::DumpFileList(const char* c_szFileName)
 {
 	m_resManager.DumpFileListToTextFile(c_szFileName);
 }
 
 void CPythonResource::Destroy()
-{		
+{
 	CFlyingInstance::DestroySystem();
 	CActorInstance::DestroySystem();
 	CArea::DestroySystem();
 	CGraphicExpandedImageInstance::DestroySystem();
-	CGraphicImageInstance::DestroySystem();	
+	CGraphicImageInstance::DestroySystem();
 	CGraphicMarkInstance::DestroySystem();
 	CGraphicThingInstance::DestroySystem();
 	CGrannyModelInstance::DestroySystem();
 	CGraphicTextInstance::DestroySystem();
 	CEffectInstance::DestroySystem();
-	CWeaponTrace::DestroySystem();	
+	CWeaponTrace::DestroySystem();
 	CFlyTrace::DestroySystem();
-	
+
 	m_resManager.DestroyDeletingList();
 
 	CFlyingData::DestroySystem();
@@ -82,9 +82,9 @@ void CPythonResource::Destroy()
 	CEffectMesh::SEffectMeshData::DestroySystem();
 	CRaceData::DestroySystem();
 	NRaceData::DestroySystem();
-	CRaceMotionData::DestroySystem();	
+	CRaceMotionData::DestroySystem();
 
-	m_resManager.Destroy();	
+	m_resManager.Destroy();
 }
 
 CPythonResource::CPythonResource()
@@ -101,5 +101,5 @@ CPythonResource::CPythonResource()
 }
 
 CPythonResource::~CPythonResource()
-{	
+{
 }

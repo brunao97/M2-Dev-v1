@@ -11,14 +11,14 @@ enum EResourceTypes
 
 class CPythonResource : public CSingleton<CPythonResource>
 {
-	public:
-		CPythonResource();
-		virtual ~CPythonResource();
-		
-		void Destroy();
+public:
+	CPythonResource();
+	virtual ~CPythonResource();
 
-		void DumpFileList(const char * c_szFileName);
+	void Destroy();
 
-	protected:
-		CResourceManager m_resManager;
+	void DumpFileList(const char* c_szFileName);
+
+protected:
+	CResourceManager m_resManager;
 };

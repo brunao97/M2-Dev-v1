@@ -4,8 +4,11 @@
 PyObject* sndPlaySound2D(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szFileName;
+
 	if (!PyTuple_GetString(poArgs, 0, &szFileName))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().PlaySound2D(szFileName);
 	return Py_BuildNone();
@@ -14,17 +17,32 @@ PyObject* sndPlaySound2D(PyObject* poSelf, PyObject* poArgs)
 PyObject* sndPlaySound3D(PyObject* poSelf, PyObject* poArgs)
 {
 	float fx;
+
 	if (!PyTuple_GetFloat(poArgs, 0, &fx))
+	{
 		return Py_BuildException();
+	}
+
 	float fy;
+
 	if (!PyTuple_GetFloat(poArgs, 1, &fy))
+	{
 		return Py_BuildException();
+	}
+
 	float fz;
+
 	if (!PyTuple_GetFloat(poArgs, 2, &fz))
+	{
 		return Py_BuildException();
+	}
+
 	char* szFileName;
+
 	if (!PyTuple_GetString(poArgs, 3, &szFileName))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().PlaySound3D(szFileName, fx, fy, fz);
 	return Py_BuildNone();
@@ -33,8 +51,11 @@ PyObject* sndPlaySound3D(PyObject* poSelf, PyObject* poArgs)
 PyObject* sndFadeInMusic(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szFileName;
+
 	if (!PyTuple_GetString(poArgs, 0, &szFileName))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().FadeInMusic(szFileName, SoundEngine::Instance().GetMusicVolume());
 	return Py_BuildNone();
@@ -43,8 +64,11 @@ PyObject* sndFadeInMusic(PyObject* poSelf, PyObject* poArgs)
 PyObject* sndFadeOutMusic(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szFileName;
+
 	if (!PyTuple_GetString(poArgs, 0, &szFileName))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().FadeOutMusic(szFileName);
 	return Py_BuildNone();
@@ -59,12 +83,18 @@ PyObject* sndFadeOutAllMusic(PyObject* poSelf, PyObject* poArgs)
 PyObject* sndFadeLimitOutMusic(PyObject* poSelf, PyObject* poArgs)
 {
 	char* szFileName;
+
 	if (!PyTuple_GetString(poArgs, 0, &szFileName))
+	{
 		return Py_BuildException();
+	}
 
 	float fLimitVolume;
+
 	if (!PyTuple_GetFloat(poArgs, 1, &fLimitVolume))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().FadeOutMusic(szFileName, fLimitVolume);
 	return Py_BuildNone();
@@ -79,8 +109,11 @@ PyObject* sndStopAllSound(PyObject* poSelf, PyObject* poArgs)
 PyObject* sndSetMasterVolume(PyObject* poSelf, PyObject* poArgs)
 {
 	float fVolume;
+
 	if (!PyTuple_GetFloat(poArgs, 0, &fVolume))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().SetMasterVolume(fVolume);
 	return Py_BuildNone();
@@ -89,8 +122,11 @@ PyObject* sndSetMasterVolume(PyObject* poSelf, PyObject* poArgs)
 PyObject* sndSetMusicVolume(PyObject* poSelf, PyObject* poArgs)
 {
 	float fVolume;
+
 	if (!PyTuple_GetFloat(poArgs, 0, &fVolume))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().SetMusicVolume(fVolume);
 	return Py_BuildNone();
@@ -99,8 +135,11 @@ PyObject* sndSetMusicVolume(PyObject* poSelf, PyObject* poArgs)
 PyObject* sndSetSoundVolumef(PyObject* poSelf, PyObject* poArgs)
 {
 	float fVolume;
+
 	if (!PyTuple_GetFloat(poArgs, 0, &fVolume))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().SetSoundVolume(fVolume);
 	return Py_BuildNone();
@@ -109,8 +148,11 @@ PyObject* sndSetSoundVolumef(PyObject* poSelf, PyObject* poArgs)
 PyObject* sndSetSoundVolume(PyObject* poSelf, PyObject* poArgs)
 {
 	float volume;
+
 	if (!PyTuple_GetFloat(poArgs, 0, &volume))
+	{
 		return Py_BuildException();
+	}
 
 	SoundEngine::Instance().SetSoundVolume(volume / 100.0f);
 	return Py_BuildNone();

@@ -9,16 +9,16 @@
 class IIMEEventSink
 {
 public:
-	virtual bool	OnWM_CHAR( WPARAM wParam, LPARAM lParam )	= 0;
-	virtual void	OnUpdate()									= 0;
+	virtual bool	OnWM_CHAR(WPARAM wParam, LPARAM lParam) = 0;
+	virtual void	OnUpdate() = 0;
 
-	virtual void	OnChangeCodePage()							= 0;
+	virtual void	OnChangeCodePage() = 0;
 
-	virtual void	OnOpenCandidateList()						= 0;
-	virtual void	OnCloseCandidateList()						= 0;
+	virtual void	OnOpenCandidateList() = 0;
+	virtual void	OnCloseCandidateList() = 0;
 
-	virtual void	OnOpenReadingWnd()							= 0;
-	virtual void	OnCloseReadingWnd()							= 0;
+	virtual void	OnOpenReadingWnd() = 0;
+	virtual void	OnCloseReadingWnd() = 0;
 };
 
 class CIME
@@ -45,25 +45,25 @@ public:
 	void SetMax(int iMax);
 	void SetUserMax(int iMax);
 	void SetText(const char* c_szText, int len);
-	int GetText(std::string & rstrText, bool addCodePage=false);
+	int GetText(std::string& rstrText, bool addCodePage = false);
 	const char* GetCodePageText();
 	int GetCodePage();
 
 	// Candidate List
 	int  GetCandidateCount();
 	int  GetCandidatePageCount();
-	int  GetCandidate(DWORD index, std::string & rstrText);
+	int  GetCandidate(DWORD index, std::string& rstrText);
 	int  GetCandidateSelection();
 
 	// Reading Information
-	int GetReading(std::string & rstrText);
+	int GetReading(std::string& rstrText);
 	int GetReadingError();
 
 	void	SetInputMode(DWORD dwMode);
 	DWORD	GetInputMode();
 
 	bool	IsIMEEnabled();
-	void	EnableIME(bool bEnable=true);
+	void	EnableIME(bool bEnable = true);
 	void	DisableIME();
 
 	void	EnableCaptureInput();
@@ -78,7 +78,7 @@ public:
 
 	void	PasteTextFromClipBoard();
 	void	EnablePaste(bool bFlag);
-	void	PasteString(const char * str);
+	void	PasteString(const char* str);
 	static void	FinalizeString(bool bSend = false);
 
 	void	UseDefaultIME();
@@ -109,13 +109,13 @@ protected:
 protected:
 	static void CheckInputLocale();
 	static void CheckToggleState();
-	static void SetSupportLevel( DWORD dwImeLevel );
+	static void SetSupportLevel(DWORD dwImeLevel);
 
 	void	InsertString(wchar_t* szString, int iSize);
 
 	void	OnChar(wchar_t c);
 
-	UINT	GetCodePageFromLang( LANGID langid );
+	UINT	GetCodePageFromLang(LANGID langid);
 	void	ResultProcess(HIMC hImc);
 	void	CompositionProcessBuilding(HIMC hImc);
 	void	CompositionProcess(HIMC hImc);
@@ -129,13 +129,13 @@ protected:
 	bool	GetReadingWindowOrientation();
 	static	void	SetupImeApi();
 
-	static INPUTCONTEXT*	(WINAPI * _ImmLockIMC)( HIMC );
-	static BOOL		(WINAPI * _ImmUnlockIMC)( HIMC );
-	static LPVOID	(WINAPI * _ImmLockIMCC)( HIMCC );
-	static BOOL		(WINAPI * _ImmUnlockIMCC)( HIMCC );
+	static INPUTCONTEXT* (WINAPI* _ImmLockIMC) (HIMC);
+	static BOOL(WINAPI* _ImmUnlockIMC) (HIMC);
+	static LPVOID(WINAPI* _ImmLockIMCC) (HIMCC);
+	static BOOL(WINAPI* _ImmUnlockIMCC) (HIMCC);
 
-	static UINT		(WINAPI * _GetReadingString)( HIMC, UINT, LPWSTR, PINT, BOOL*, PUINT );
-	static BOOL		(WINAPI * _ShowReadingWindow)( HIMC, BOOL );
+	static UINT(WINAPI* _GetReadingString) (HIMC, UINT, LPWSTR, PINT, BOOL*, PUINT);
+	static BOOL(WINAPI* _ShowReadingWindow) (HIMC, BOOL);
 
 protected:
 	HIMC			m_hOrgIMC;
@@ -149,7 +149,6 @@ protected:
 	bool			m_bEnablePaste;
 	bool			m_bUseDefaultIME;
 
-
 public:
 	static bool				ms_bInitialized;
 	static bool				ms_bDisableIMECompletely;
@@ -161,7 +160,7 @@ public:
 
 	static HWND				ms_hWnd;
 	static HKL				ms_hklCurrent;
-	static char				ms_szKeyboardLayout[KL_NAMELENGTH+1];
+	static char				ms_szKeyboardLayout[KL_NAMELENGTH + 1];
 	static OSVERSIONINFOA	ms_stOSVI;
 
 	static HINSTANCE		ms_hImm32Dll;
@@ -190,9 +189,9 @@ public:
 	static std::vector<wchar_t>	ms_wstrReading;
 
 	// Indicator
-	static 	wchar_t*		ms_wszCurrentIndicator;
+	static 	wchar_t* ms_wszCurrentIndicator;
 
-	static IIMEEventSink*	ms_pEvent;
+	static IIMEEventSink* ms_pEvent;
 
 	wchar_t					m_wszComposition[IMESTR_MAXLEN];
 	static wchar_t			m_wText[IMESTR_MAXLEN];

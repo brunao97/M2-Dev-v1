@@ -22,19 +22,20 @@ void CAffectFlagContainer::CopyInstance(const CAffectFlagContainer& c_rkAffectCo
 
 void CAffectFlagContainer::CopyData(UINT uPos, UINT uByteSize, const void* c_pvData)
 {
-	const uint8_t* c_pbData=(const uint8_t*)c_pvData;
-	Element bMask=0x01;
+	const uint8_t* c_pbData = (const uint8_t*)c_pvData;
+	Element bMask = 0x01;
 
-	UINT uBitEnd=uPos+uByteSize*8;
-	for (UINT i=uPos; i<uBitEnd; ++i)
+	UINT uBitEnd = uPos + uByteSize * 8;
+
+	for (UINT i = uPos; i < uBitEnd; ++i)
 	{
 		Set(i, (*c_pbData & bMask) ? true : false);
-		bMask<<=1;
+		bMask <<= 1;
 
-		if (bMask==0)
+		if (bMask == 0)
 		{
 			++c_pbData;
-			bMask=0x01;
+			bMask = 0x01;
 		}
 	}
 }
@@ -45,6 +46,7 @@ void CAffectFlagContainer::ConvertToPosition(unsigned* uRetX, unsigned* uRetY) c
 	*uRetX = pos[0];
 	*uRetY = pos[1];
 }
+
 /*
 const void * CAffectFlagContainer::GetDataPtr(UINT uPos) const
 {
@@ -59,34 +61,43 @@ const void * CAffectFlagContainer::GetDataPtr(UINT uPos) const
 
 void CAffectFlagContainer::Set(UINT uPos, bool isSet)
 {
-	if (uPos/8>=BYTE_SIZE)
+	if (uPos / 8 >= BYTE_SIZE)
 	{
-		TraceError("CAffectFlagContainer::Set(uPos=%d>%d, isSet=%d", uPos, BYTE_SIZE*8, isSet);
+		TraceError("CAffectFlagContainer::Set(uPos=%d>%d, isSet=%d", uPos, BYTE_SIZE * 8, isSet);
 		return;
 	}
 
-	uint8_t& rElement=m_aElement[uPos/8];
+	uint8_t& rElement = m_aElement[uPos / 8];
 
-	uint8_t bMask= uint8_t(1<<(uPos&7));
+	uint8_t bMask = uint8_t(1 << (uPos & 7));
+
 	if (isSet)
-		rElement|=bMask;
+	{
+		rElement |= bMask;
+	}
+
 	else
-		rElement&=~bMask;
+	{
+		rElement &= ~bMask;
+	}
 }
 
 bool CAffectFlagContainer::IsSet(UINT uPos) const
 {
-	if (uPos/8>=BYTE_SIZE)
+	if (uPos / 8 >= BYTE_SIZE)
 	{
-		TraceError("CAffectFlagContainer::IsSet(uPos=%d>%d", uPos, BYTE_SIZE*8);
+		TraceError("CAffectFlagContainer::IsSet(uPos=%d>%d", uPos, BYTE_SIZE * 8);
 		return false;
 	}
 
-	const uint8_t& c_rElement=m_aElement[uPos/8];
+	const uint8_t& c_rElement = m_aElement[uPos / 8];
 
-	uint8_t bMask= uint8_t(1<<(uPos&7));
-	if (c_rElement&bMask)
+	uint8_t bMask = uint8_t(1 << (uPos & 7));
+
+	if (c_rElement & bMask)
+	{
 		return true;
+	}
 
 	return false;
 }

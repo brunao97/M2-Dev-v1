@@ -25,9 +25,9 @@ void CActorInstance::INSTANCEBASE_Transform()
 		m_x = m_pkHorse->NEW_GetCurPixelPositionRef().x;
 		m_y = -m_pkHorse->NEW_GetCurPixelPositionRef().y;
 		m_z = m_pkHorse->NEW_GetCurPixelPositionRef().z;
-		m_bNeedUpdateCollision = TRUE;			
+		m_bNeedUpdateCollision = TRUE;
 	}
-	
+
 	//DWORD t2=ELTimer_GetMSec();
 	Update();
 	//DWORD t3=ELTimer_GetMSec();
@@ -59,13 +59,13 @@ void CActorInstance::TEMP_Update()
 
 		if (t3-t1>3)
 		{
-			fprintf(fp, "AIU.Total %d (Time %f)\n", 
+			fprintf(fp, "AIU.Total %d (Time %f)\n",
 				t3-t1, ELTimer_GetMSec()/1000.0f);
 			fprintf(fp, "AIU.UP %d\n", t2-t1);
 			fprintf(fp, "AIU.UBS %d\n", t3-t2);
 			fprintf(fp, "-------------------------------- \n");
 			fflush(fp);
-		}			
+		}
 		fflush(fp);
 	}
 #endif
@@ -75,42 +75,47 @@ void CActorInstance::TEMP_Update()
 void CActorInstance::OnUpdate()
 {
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t1=ELTimer_GetMSec();
+	DWORD t1 = ELTimer_GetMSec();
 #endif
+
 	if (!IsParalysis())
+	{
 		CGraphicThingInstance::OnUpdate();
+	}
+
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t2=ELTimer_GetMSec();
+	DWORD t2 = ELTimer_GetMSec();
 #endif
 
 	UpdateAttachingInstances();
 
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t3=ELTimer_GetMSec();
+	DWORD t3 = ELTimer_GetMSec();
 #endif
 
 	__BlendAlpha_Update();
 
 #ifdef __PERFORMANCE_CHECKER__
-	DWORD t4=ELTimer_GetMSec();
+	DWORD t4 = ELTimer_GetMSec();
 	{
-		static FILE* fp=fopen("perf_actor_update2.txt", "w");
+		static FILE* fp = fopen("perf_actor_update2.txt", "w");
 
-		if (t4-t1>3)
+		if (t4 - t1 > 3)
 		{
-			fprintf(fp, "AIU2.Total %d (Time %f)\n", 
-				t4-t1, ELTimer_GetMSec()/1000.0f);
-			fprintf(fp, "AIU2.GU %d\n", t2-t1);
-			fprintf(fp, "AIU2.UAI %d\n", t3-t2);
-			fprintf(fp, "AIU2.BAU %d\n", t4-t3);
+			fprintf(fp, "AIU2.Total %d (Time %f)\n",
+				t4 - t1, ELTimer_GetMSec() / 1000.0f);
+			fprintf(fp, "AIU2.GU %d\n", t2 - t1);
+			fprintf(fp, "AIU2.UAI %d\n", t3 - t2);
+			fprintf(fp, "AIU2.BAU %d\n", t4 - t3);
 			fprintf(fp, "-------------------------------- \n");
 			fflush(fp);
 		}
+
 		fflush(fp);
 	}
+
 #endif
 }
-
 
 // 2004.07.05.myevan. 궁신탄영 맵에 끼이는 문제해결
 IBackground& CActorInstance::GetBackground()
@@ -118,37 +123,36 @@ IBackground& CActorInstance::GetBackground()
 	return IBackground::Instance();
 }
 
-
 void CActorInstance::SetMainInstance()
 {
-	m_isMain=true;
+	m_isMain = true;
 }
 
 void CActorInstance::SetParalysis(bool isParalysis)
 {
-	m_isParalysis=isParalysis;
+	m_isParalysis = isParalysis;
 }
 
 void CActorInstance::SetFaint(bool isFaint)
 {
-	m_isFaint=isFaint;
+	m_isFaint = isFaint;
 }
 
 void CActorInstance::SetSleep(bool isSleep)
 {
-	m_isSleep=isSleep;
+	m_isSleep = isSleep;
 
 	Stop();
 }
 
 void CActorInstance::SetResistFallen(bool isResistFallen)
 {
-	m_isResistFallen=isResistFallen;
+	m_isResistFallen = isResistFallen;
 }
 
 void CActorInstance::SetReachScale(float fScale)
 {
-	m_fReachScale=fScale;
+	m_fReachScale = fScale;
 }
 
 float CActorInstance::__GetReachScale()
@@ -164,11 +168,19 @@ float CActorInstance::__GetAttackSpeed()
 WORD CActorInstance::__GetCurrentComboType()
 {
 	if (IsBowMode())
+	{
 		return 0;
+	}
+
 	if (IsHandMode())
+	{
 		return 0;
+	}
+
 	if (__IsMountingHorse())
+	{
 		return 0;
+	}
 
 	return m_wcurComboType;
 }
@@ -180,15 +192,17 @@ void CActorInstance::SetComboType(WORD wComboType)
 
 void CActorInstance::SetAttackSpeed(float fAtkSpd)
 {
-	m_fAtkSpd=fAtkSpd;
+	m_fAtkSpd = fAtkSpd;
 }
 
 void CActorInstance::SetMoveSpeed(float fMovSpd)
 {
-	if (m_fMovSpd==fMovSpd)
+	if (m_fMovSpd == fMovSpd)
+	{
 		return;
+	}
 
-	m_fMovSpd=fMovSpd;
+	m_fMovSpd = fMovSpd;
 
 	if (__IsMoveMotion())
 	{
@@ -197,7 +211,7 @@ void CActorInstance::SetMoveSpeed(float fMovSpd)
 	}
 }
 
-void CActorInstance::SetFishingPosition(D3DXVECTOR3 & rv3Position)
+void CActorInstance::SetFishingPosition(D3DXVECTOR3& rv3Position)
 {
 	m_v3FishingPosition = rv3Position;
 }
@@ -209,6 +223,7 @@ void  CActorInstance::Move()
 	{
 		SetLoopMotion(CRaceMotionData::NAME_WALK, 0.15f, m_fMovSpd);
 	}
+
 	else
 	{
 		SetLoopMotion(CRaceMotionData::NAME_RUN, 0.15f, m_fMovSpd);
@@ -223,13 +238,13 @@ void  CActorInstance::Stop(float fBlendingTime)
 
 void CActorInstance::SetOwner(DWORD dwOwnerVID)
 {
-	m_fOwnerBaseTime=GetLocalTime();
-	m_dwOwnerVID=dwOwnerVID;
+	m_fOwnerBaseTime = GetLocalTime();
+	m_dwOwnerVID = dwOwnerVID;
 }
 
 void CActorInstance::SetActorType(UINT eType)
 {
-	m_eActorType=eType;
+	m_eActorType = eType;
 }
 
 UINT CActorInstance::GetActorType() const
@@ -239,114 +254,146 @@ UINT CActorInstance::GetActorType() const
 
 bool CActorInstance::IsHandMode()
 {
-	if (CRaceMotionData::MODE_GENERAL==GetMotionMode())
+	if (CRaceMotionData::MODE_GENERAL == GetMotionMode())
+	{
 		return true;
+	}
 
-	if (CRaceMotionData::MODE_HORSE==GetMotionMode())
+	if (CRaceMotionData::MODE_HORSE == GetMotionMode())
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsTwoHandMode()
 {
-	if (CRaceMotionData::MODE_TWOHAND_SWORD==GetMotionMode())
+	if (CRaceMotionData::MODE_TWOHAND_SWORD == GetMotionMode())
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsBowMode()
 {
-	if (CRaceMotionData::MODE_BOW==GetMotionMode())
+	if (CRaceMotionData::MODE_BOW == GetMotionMode())
+	{
 		return true;
+	}
 
-	if (CRaceMotionData::MODE_HORSE_BOW==GetMotionMode())
+	if (CRaceMotionData::MODE_HORSE_BOW == GetMotionMode())
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsPoly()
 {
-	if (TYPE_POLY==m_eActorType)
+	if (TYPE_POLY == m_eActorType)
+	{
 		return true;
+	}
 
-	if (TYPE_PC==m_eActorType)
+	if (TYPE_PC == m_eActorType)
 		if (m_eRace >= MAIN_RACE_MAX_NUM)
+		{
 			return TRUE;
+		}
 
 	return false;
 }
 
 bool CActorInstance::IsPC()
 {
-	if (TYPE_PC==m_eActorType)
+	if (TYPE_PC == m_eActorType)
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsNPC()
 {
-	if (TYPE_NPC==m_eActorType)
+	if (TYPE_NPC == m_eActorType)
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsEnemy()
 {
-	if (TYPE_ENEMY==m_eActorType)
+	if (TYPE_ENEMY == m_eActorType)
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsStone()
 {
-	if (TYPE_STONE==m_eActorType)
+	if (TYPE_STONE == m_eActorType)
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsWarp()
 {
-	if (TYPE_WARP==m_eActorType)
+	if (TYPE_WARP == m_eActorType)
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsGoto()
 {
-	if (TYPE_GOTO==m_eActorType)
+	if (TYPE_GOTO == m_eActorType)
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsBuilding()
 {
-	if (TYPE_BUILDING==m_eActorType)
+	if (TYPE_BUILDING == m_eActorType)
+	{
 		return true;
+	}
 
-	return false;	
+	return false;
 }
 
 bool CActorInstance::IsDoor()
 {
-	if (TYPE_DOOR==m_eActorType)
+	if (TYPE_DOOR == m_eActorType)
+	{
 		return true;
+	}
 
 	return false;
 }
 
 bool CActorInstance::IsObject()
 {
-	if (TYPE_OBJECT==m_eActorType)
+	if (TYPE_OBJECT == m_eActorType)
+	{
 		return true;
+	}
 
 	return false;
 }
@@ -365,10 +412,14 @@ void CActorInstance::DieEnd()
 void CActorInstance::Die()
 {
 	if (m_isRealDead)
+	{
 		return;
+	}
 
 	if (__IsMoveMotion())
+	{
 		Stop();
+	}
 
 	SetAdvancingRotation(GetRotation());
 
@@ -376,6 +427,7 @@ void CActorInstance::Die()
 	{
 		InterceptOnceMotion(CRaceMotionData::NAME_DEAD);
 	}
+
 	else
 	{
 		if (!__IsDieMotion())
@@ -435,16 +487,24 @@ BOOL CActorInstance::IsDamage()
 BOOL CActorInstance::IsAttacked()
 {
 	if (IsPushing())
+	{
 		return TRUE;
+	}
 
 	if (__IsDamageMotion())
+	{
 		return TRUE;
+	}
 
 	if (__IsKnockDownMotion())
+	{
 		return TRUE;
+	}
 
 	if (__IsDieMotion())
+	{
 		return TRUE;
+	}
 
 	return FALSE;
 }
@@ -462,7 +522,9 @@ void CActorInstance::__AccumulationMovement(float fRot)
 	// NOTE - 일단은 WAIT로 미끄러짐 방지
 	//        추후에는 RaceMotionData가 이동되는 모션인지에 대한 Flag를 갖고 있게끔 한다. - [levites]
 	if (CRaceMotionData::NAME_WAIT == __GetCurrentMotionIndex())
+	{
 		return;
+	}
 
 	D3DXMATRIX s_matRotationZ;
 	D3DXMatrixRotationZ(&s_matRotationZ, D3DXToRadian(fRot));
@@ -474,7 +536,9 @@ void CActorInstance::__AccumulationMovement(float fRot)
 void CActorInstance::AccumulationMovement()
 {
 	if (m_pkTree)
+	{
 		return;
+	}
 
 	if (m_pkHorse)
 	{
@@ -499,35 +563,39 @@ void CActorInstance::TransformProcess()
 	SetPosition(m_x, m_y, m_z);
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Process
 
-void CActorInstance::OnUpdateCollisionData(const CStaticCollisionDataVector * pscdVector)
+void CActorInstance::OnUpdateCollisionData(const CStaticCollisionDataVector* pscdVector)
 {
 	assert(pscdVector);
 	CStaticCollisionDataVector::const_iterator it;
-	for(it = pscdVector->begin();it!=pscdVector->end();++it)
+
+	for (it = pscdVector->begin(); it != pscdVector->end(); ++it)
 	{
-		const CStaticCollisionData & c_rColliData = *it;
-		const D3DXMATRIX & c_rMatrix = GetTransform();
+		const CStaticCollisionData& c_rColliData = *it;
+		const D3DXMATRIX& c_rMatrix = GetTransform();
 		AddCollision(&c_rColliData, &c_rMatrix);
 	}
 }
 
-void CActorInstance::OnUpdateHeighInstance(CAttributeInstance * pAttributeInstance)
+void CActorInstance::OnUpdateHeighInstance(CAttributeInstance* pAttributeInstance)
 {
 	assert(pAttributeInstance);
 	SetHeightInstance(pAttributeInstance);
 }
 
-bool CActorInstance::OnGetObjectHeight(float fX, float fY, float * pfHeight)
+bool CActorInstance::OnGetObjectHeight(float fX, float fY, float* pfHeight)
 {
 	if (!m_pHeightAttributeInstance)
+	{
 		return false;
+	}
 
 	if (TYPE_BUILDING != GetType())
+	{
 		return false;
+	}
 
 	return m_pHeightAttributeInstance->GetHeight(fX, fY, pfHeight) == 1 ? true : false;
 }
@@ -561,15 +629,21 @@ void CActorInstance::Stun()
 void CActorInstance::SetWalkMode()
 {
 	m_isWalking = TRUE;
+
 	if (CRaceMotionData::NAME_RUN == GET_MOTION_INDEX(m_kCurMotNode.dwMotionKey))
+	{
 		SetLoopMotion(CRaceMotionData::NAME_WALK, 0.15f, m_fMovSpd);
+	}
 }
 
 void CActorInstance::SetRunMode()
 {
 	m_isWalking = FALSE;
+
 	if (CRaceMotionData::NAME_WALK == GET_MOTION_INDEX(m_kCurMotNode.dwMotionKey))
+	{
 		SetLoopMotion(CRaceMotionData::NAME_RUN, 0.15f, m_fMovSpd);
+	}
 }
 
 MOTION_KEY CActorInstance::GetNormalAttackIndex()
@@ -598,7 +672,7 @@ void CActorInstance::AddMovement(float fx, float fy, float fz)
 
 const float gc_fActorSlideMoveSpeed = 5.0f;
 
-void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance * c_pActorInstance)
+void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance* c_pActorInstance)
 {
 	if (m_pkHorse)
 	{
@@ -610,61 +684,71 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance * c_pAc
 	// Sphere간 Collision이 생겼을 경우 이전위치로 RollBack하는 방식으로 바꿨다.
 	// 단 BGObject에 대해서만.
 
-	if (isAttacking() )
+	if (isAttacking())
+	{
 		return;
-	
+	}
+
 	UINT uActorType = c_pActorInstance->GetActorType();
-	if( (uActorType == TYPE_BUILDING) || (uActorType == TYPE_OBJECT) || (uActorType == TYPE_DOOR) || (uActorType == TYPE_STONE))
+
+	if ((uActorType == TYPE_BUILDING) || (uActorType == TYPE_OBJECT) || (uActorType == TYPE_DOOR) || (uActorType == TYPE_STONE))
 	{
 		BlockMovement();
 
 		//Movement초기화
-	/*	m_v3Movement = D3DXVECTOR3(0.f,0.f,0.f);
+		/*	m_v3Movement = D3DXVECTOR3(0.f,0.f,0.f);
 
-		TCollisionPointInstanceListIterator itMain = m_BodyPointInstanceList.begin();
-		for (; itMain != m_BodyPointInstanceList.end(); ++itMain)
-		{
-			CDynamicSphereInstanceVector & c_rMainSphereVector = (*itMain).SphereInstanceVector;
-			for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
+			TCollisionPointInstanceListIterator itMain = m_BodyPointInstanceList.begin();
+			for (; itMain != m_BodyPointInstanceList.end(); ++itMain)
 			{
-				CDynamicSphereInstance & c_rMainSphere = c_rMainSphereVector[i];
-				c_rMainSphere.v3Position =c_rMainSphere.v3LastPosition;
-			}
-		}*/
+				CDynamicSphereInstanceVector & c_rMainSphereVector = (*itMain).SphereInstanceVector;
+				for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
+				{
+					CDynamicSphereInstance & c_rMainSphere = c_rMainSphereVector[i];
+					c_rMainSphere.v3Position =c_rMainSphere.v3LastPosition;
+				}
+			}*/
 	}
+
 	else
 	{
-
 		float move_length = D3DXVec3Length(&m_v3Movement);
-		if (move_length>gc_fActorSlideMoveSpeed)
-			m_v3Movement*=gc_fActorSlideMoveSpeed/move_length;
+
+		if (move_length > gc_fActorSlideMoveSpeed)
+		{
+			m_v3Movement *= gc_fActorSlideMoveSpeed / move_length;
+		}
 
 		TCollisionPointInstanceListIterator itMain = m_BodyPointInstanceList.begin();
+
 		for (; itMain != m_BodyPointInstanceList.end(); ++itMain)
 		{
-			CDynamicSphereInstanceVector & c_rMainSphereVector = (*itMain).SphereInstanceVector;
+			CDynamicSphereInstanceVector& c_rMainSphereVector = (*itMain).SphereInstanceVector;
+
 			for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
 			{
-				CDynamicSphereInstance & c_rMainSphere = c_rMainSphereVector[i];
+				CDynamicSphereInstance& c_rMainSphere = c_rMainSphereVector[i];
 
 				TCollisionPointInstanceList::const_iterator itOpp = c_pActorInstance->m_BodyPointInstanceList.begin();
-				for(;itOpp != c_pActorInstance->m_BodyPointInstanceList.end();++itOpp)
+
+				for (; itOpp != c_pActorInstance->m_BodyPointInstanceList.end(); ++itOpp)
 				{
 					CSphereCollisionInstance s;
-					s.GetAttribute().fRadius=itOpp->SphereInstanceVector[0].fRadius;
-					s.GetAttribute().v3Position=itOpp->SphereInstanceVector[0].v3Position;
+					s.GetAttribute().fRadius = itOpp->SphereInstanceVector[0].fRadius;
+					s.GetAttribute().v3Position = itOpp->SphereInstanceVector[0].v3Position;
 					D3DXVECTOR3 v3Delta = s.GetCollisionMovementAdjust(c_rMainSphere);
-					m_v3Movement+=v3Delta;
-					c_rMainSphere.v3Position+=v3Delta;
+					m_v3Movement += v3Delta;
+					c_rMainSphere.v3Position += v3Delta;
 
-					if (v3Delta.x !=0.0f || v3Delta.y !=0.0f || v3Delta.z !=0.0f )
+					if (v3Delta.x != 0.0f || v3Delta.y != 0.0f || v3Delta.z != 0.0f)
 					{
 						move_length = D3DXVec3Length(&m_v3Movement);
-						if (move_length>gc_fActorSlideMoveSpeed)
+
+						if (move_length > gc_fActorSlideMoveSpeed)
 						{
-							m_v3Movement*=gc_fActorSlideMoveSpeed/move_length;
+							m_v3Movement *= gc_fActorSlideMoveSpeed / move_length;
 							c_rMainSphere.v3Position = c_rMainSphere.v3LastPosition;
-							c_rMainSphere.v3Position+=m_v3Movement;
+							c_rMainSphere.v3Position += m_v3Movement;
 						}
 					}
 				}
@@ -673,8 +757,7 @@ void CActorInstance::AdjustDynamicCollisionMovement(const CActorInstance * c_pAc
 	}
 }
 
-
-void CActorInstance::__AdjustCollisionMovement(const CGraphicObjectInstance * c_pGraphicObjectInstance)
+void CActorInstance::__AdjustCollisionMovement(const CGraphicObjectInstance* c_pGraphicObjectInstance)
 {
 	if (m_pkHorse)
 	{
@@ -684,33 +767,41 @@ void CActorInstance::__AdjustCollisionMovement(const CGraphicObjectInstance * c_
 
 	// Body는 하나임을 가정합니다.
 
-	if (m_v3Movement.x == 0.0f && m_v3Movement.y == 0.0f && m_v3Movement.z == 0.0f) 
+	if (m_v3Movement.x == 0.0f && m_v3Movement.y == 0.0f && m_v3Movement.z == 0.0f)
+	{
 		return;
+	}
 
 	float move_length = D3DXVec3Length(&m_v3Movement);
-	if (move_length>gc_fActorSlideMoveSpeed)
-		m_v3Movement*=gc_fActorSlideMoveSpeed/move_length;
+
+	if (move_length > gc_fActorSlideMoveSpeed)
+	{
+		m_v3Movement *= gc_fActorSlideMoveSpeed / move_length;
+	}
 
 	TCollisionPointInstanceListIterator itMain = m_BodyPointInstanceList.begin();
+
 	for (; itMain != m_BodyPointInstanceList.end(); ++itMain)
 	{
-		CDynamicSphereInstanceVector & c_rMainSphereVector = (*itMain).SphereInstanceVector;
+		CDynamicSphereInstanceVector& c_rMainSphereVector = (*itMain).SphereInstanceVector;
+
 		for (DWORD i = 0; i < c_rMainSphereVector.size(); ++i)
 		{
-			CDynamicSphereInstance & c_rMainSphere = c_rMainSphereVector[i];
+			CDynamicSphereInstance& c_rMainSphere = c_rMainSphereVector[i];
 
 			D3DXVECTOR3 v3Delta = c_pGraphicObjectInstance->GetCollisionMovementAdjust(c_rMainSphere);
-			m_v3Movement+=v3Delta;
-			c_rMainSphere.v3Position+=v3Delta;
+			m_v3Movement += v3Delta;
+			c_rMainSphere.v3Position += v3Delta;
 
-			if (v3Delta.x !=0.0f || v3Delta.y !=0.0f || v3Delta.z !=0.0f )
+			if (v3Delta.x != 0.0f || v3Delta.y != 0.0f || v3Delta.z != 0.0f)
 			{
 				move_length = D3DXVec3Length(&m_v3Movement);
-				if (move_length>gc_fActorSlideMoveSpeed)
+
+				if (move_length > gc_fActorSlideMoveSpeed)
 				{
-					m_v3Movement*=gc_fActorSlideMoveSpeed/move_length;
+					m_v3Movement *= gc_fActorSlideMoveSpeed / move_length;
 					c_rMainSphere.v3Position = c_rMainSphere.v3LastPosition;
-					c_rMainSphere.v3Position+=m_v3Movement;
+					c_rMainSphere.v3Position += m_v3Movement;
 				}
 			}
 
@@ -733,14 +824,24 @@ BOOL CActorInstance::IsMovement()
 {
 	if (m_pkHorse)
 		if (m_pkHorse->IsMovement())
+		{
 			return TRUE;
-		
+		}
+
 	if (0.0f != m_v3Movement.x)
+	{
 		return TRUE;
+	}
+
 	if (0.0f != m_v3Movement.y)
+	{
 		return TRUE;
+	}
+
 	if (0.0f != m_v3Movement.z)
+	{
 		return TRUE;
+	}
 
 	return FALSE;
 }
@@ -754,12 +855,13 @@ bool CActorInstance::IntersectDefendingSphere()
 {
 	for (TCollisionPointInstanceList::iterator it = m_DefendingPointInstanceList.begin(); it != m_DefendingPointInstanceList.end(); ++it)
 	{
-		CDynamicSphereInstanceVector & rSphereInstanceVector = (*it).SphereInstanceVector;
+		CDynamicSphereInstanceVector& rSphereInstanceVector = (*it).SphereInstanceVector;
 
 		CDynamicSphereInstanceVector::iterator it2 = rSphereInstanceVector.begin();
+
 		for (; it2 != rSphereInstanceVector.end(); ++it2)
 		{
-			CDynamicSphereInstance & rInstance = *it2;
+			CDynamicSphereInstance& rInstance = *it2;
 			D3DXVECTOR3 v3SpherePosition = rInstance.v3Position;
 			float fRadius = rInstance.fRadius;
 
@@ -771,12 +873,15 @@ bool CActorInstance::IntersectDefendingSphere()
 
 			D3DXVECTOR3 v3Distance = v3Orig - v3SpherePosition;
 			float b = D3DXVec3Dot(&v3Dir, &v3Distance);
-			float c = D3DXVec3Dot(&v3Distance, &v3Distance) - fRadius*fRadius;
+			float c = D3DXVec3Dot(&v3Distance, &v3Distance) - fRadius * fRadius;
 
-			if (b*b - c >= 0)
+			if (b * b - c >= 0)
+			{
 				return true;
+			}
 		}
 	}
+
 	return false;
 }
 
@@ -785,7 +890,7 @@ bool CActorInstance::__IsMountingHorse()
 	return NULL != m_pkHorse;
 }
 
-void CActorInstance::MountHorse(CActorInstance * pkHorse)
+void CActorInstance::MountHorse(CActorInstance* pkHorse)
 {
 	m_pkHorse = pkHorse;
 
@@ -797,12 +902,12 @@ void CActorInstance::MountHorse(CActorInstance * pkHorse)
 	}
 }
 
-void CActorInstance::__CreateTree(const char * c_szFileName)
+void CActorInstance::__CreateTree(const char* c_szFileName)
 {
 	__DestroyTree();
 
-	CSpeedTreeForestDirectX8& rkForest=CSpeedTreeForestDirectX8::Instance();
-	m_pkTree=rkForest.CreateInstance(m_x, m_y, m_z, GetCaseCRC32(c_szFileName, strlen(c_szFileName)), c_szFileName);
+	CSpeedTreeForestDirectX8& rkForest = CSpeedTreeForestDirectX8::Instance();
+	m_pkTree = rkForest.CreateInstance(m_x, m_y, m_z, GetCaseCRC32(c_szFileName, strlen(c_szFileName)), c_szFileName);
 	m_pkTree->SetPosition(m_x, m_y, m_z);
 	m_pkTree->UpdateBoundingSphere();
 	m_pkTree->UpdateCollisionData();
@@ -811,7 +916,9 @@ void CActorInstance::__CreateTree(const char * c_szFileName)
 void CActorInstance::__DestroyTree()
 {
 	if (!m_pkTree)
+	{
 		return;
+	}
 
 	CSpeedTreeForestDirectX8::Instance().DeleteInstance(m_pkTree);
 }
@@ -819,9 +926,14 @@ void CActorInstance::__DestroyTree()
 void CActorInstance::__SetTreePosition(float fx, float fy, float fz)
 {
 	if (!m_pkTree)
+	{
 		return;
+	}
+
 	if (m_x == fx && m_y == fy && m_z == fz)
+	{
 		return;
+	}
 
 	m_pkTree->SetPosition(fx, fy, fz);
 	m_pkTree->UpdateBoundingSphere();
@@ -855,7 +967,6 @@ void CActorInstance::Destroy()
 	__DestroyTree();
 	//m_PhysicsObject.SetActorInstance(NULL);
 
-
 	__Initialize();
 }
 
@@ -872,7 +983,6 @@ void CActorInstance::__InitializeRotationData()
 	m_rotX = 0.0f;
 	m_rotY = 0.0f;
 }
-
 
 void CActorInstance::__InitializeStateData()
 {
@@ -894,28 +1004,28 @@ void CActorInstance::__InitializeStateData()
 	m_iRenderMode = RENDER_MODE_NORMAL;
 	m_fAlphaValue = 0.0f;
 	m_AddColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
-	
-	m_dwMtrlColor=0xffffffff;
-	m_dwMtrlAlpha=0xff000000;
+
+	m_dwMtrlColor = 0xffffffff;
+	m_dwMtrlAlpha = 0xff000000;
 
 	m_dwBattleHitEffectID = 0;
 	m_dwBattleAttachEffectID = 0;
 }
 
 void CActorInstance::__InitializeMotionData()
-{	
+{
 	m_wcurMotionMode = CRaceMotionData::MODE_GENERAL;
 	m_wcurComboType = 0;
 
-	m_fReachScale=1.0f;
-	m_fMovSpd=1.0f;
-	m_fAtkSpd=1.0f;
+	m_fReachScale = 1.0f;
+	m_fMovSpd = 1.0f;
+	m_fAtkSpd = 1.0f;
 
 	m_fInvisibleTime = 0.0f;
 
-	m_kSplashArea.isEnableHitProcess=TRUE;
-	m_kSplashArea.uSkill=0;
-	m_kSplashArea.MotionKey=0;
+	m_kSplashArea.isEnableHitProcess = TRUE;
+	m_kSplashArea.uSkill = 0;
+	m_kSplashArea.MotionKey = 0;
 	m_kSplashArea.fDisappearingTime = 0.0f;
 	m_kSplashArea.SphereInstanceVector.clear();
 	m_kSplashArea.HittedInstanceMap.clear();
@@ -927,12 +1037,12 @@ void CActorInstance::__InitializeMotionData()
 
 void CActorInstance::__Initialize()
 {
-	m_pkCurRaceMotionData=NULL;
-	m_pkCurRaceData=NULL;
-	m_pkHorse=NULL;
-	m_pkTree=NULL;
+	m_pkCurRaceMotionData = NULL;
+	m_pkCurRaceData = NULL;
+	m_pkHorse = NULL;
+	m_pkTree = NULL;
 
-	m_fOwnerBaseTime=0.0f;
+	m_fOwnerBaseTime = 0.0f;
 
 	m_eActorType = TYPE_PC;
 	m_eRace = 0;
@@ -943,7 +1053,7 @@ void CActorInstance::__Initialize()
 	m_dwSelfVID = 0;
 	m_dwOwnerVID = 0;
 
-	m_pkEventHandler =  NULL;
+	m_pkEventHandler = NULL;
 
 	m_PhysicsObject.Initialize();
 
@@ -964,7 +1074,7 @@ void CActorInstance::__Initialize()
 
 	__BlendAlpha_Initialize();
 
-	ClearFlyTargeter();	
+	ClearFlyTargeter();
 }
 
 CActorInstance::CActorInstance()

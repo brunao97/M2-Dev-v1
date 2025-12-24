@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 			continue;
 
 		std::filesystem::path relative_path = std::filesystem::relative(entry.path(), input);
-		
+
 		TPackFileEntry& file_entry = entries[relative_path];
 		memset(&file_entry, 0, sizeof(file_entry));
 		file_entry.file_size = entry.file_size();
@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 
 		std::transform(rp_str.begin(), rp_str.end(), rp_str.begin(), [](unsigned char c) {
 			return static_cast<char>(std::tolower(c));
-		});
+			});
 
 		rp_str.copy(file_entry.file_name, sizeof(file_entry.file_name) - 1);
 	}
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 	CryptoPP::AutoSeededRandomPool rnd;
 	rnd.GenerateBlock(header.iv, sizeof(header.iv));
 
-	ofs.write((const char*) &header, sizeof(header));
+	ofs.write((const char*)&header, sizeof(header));
 	ofs.seekp(header.data_begin, std::ios::beg);
 
 	CryptoPP::CTR_Mode<CryptoPP::Camellia>::Encryption encryption;
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
 		compressed_buffer.resize(compress_bound);
 
 		entry.compressed_size = ZSTD_compress(compressed_buffer.data(), compress_bound, buffer.data(), entry.file_size, 17);
-		if(ZSTD_isError(entry.compressed_size)) {
+		if (ZSTD_isError(entry.compressed_size)) {
 			std::cerr << "Failed to compress input file: " << (input / path) << " error: " << ZSTD_getErrorName(entry.compressed_size) << std::endl;
 			return EXIT_FAILURE;
 		}
@@ -129,7 +129,7 @@ int main(int argc, char* argv[])
 
 	ofs.seekp(sizeof(TPackFileHeader), std::ios::beg);
 	encryption.Resynchronize(header.iv, sizeof(header.iv));
-	
+
 	for (auto& [path, entry] : entries) {
 		TPackFileEntry tmp = entry;
 		encryption.ProcessData((uint8_t*)&tmp, (uint8_t*)&tmp, sizeof(TPackFileEntry));

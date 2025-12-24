@@ -10,7 +10,7 @@
 #else
 
 CGuildMarkUploader::CGuildMarkUploader()
- : m_pbySymbolBuf(NULL)
+	: m_pbySymbolBuf(NULL)
 {
 	SetRecvBufferSize(1024);
 	SetSendBufferSize(1024);
@@ -61,25 +61,29 @@ bool CGuildMarkUploader::__Load(const char* c_szFileName, UINT* peError)
 	int width, height, channels;
 	unsigned char* data = stbi_load(c_szFileName, &width, &height, &channels, 4); // force RGBA
 
-	if (!data) {
+	if (!data)
+	{
 		*peError = ERROR_LOAD;
 		return false;
 	}
 
-	if (width != SGuildMark::WIDTH) {
+	if (width != SGuildMark::WIDTH)
+	{
 		stbi_image_free(data);
 		*peError = ERROR_WIDTH;
 		return false;
 	}
 
-	if (height != SGuildMark::HEIGHT) {
+	if (height != SGuildMark::HEIGHT)
+	{
 		stbi_image_free(data);
 		*peError = ERROR_HEIGHT;
 		return false;
 	}
 
 	// Copy into our mark buffer (BGRA expected)
-	for (uint32_t i = 0; i < width * height; ++i) {
+	for (uint32_t i = 0; i < width * height; ++i)
+	{
 		const uint8_t R = data[i * 4 + 0];
 		const uint8_t G = data[i * 4 + 1];
 		const uint8_t B = data[i * 4 + 2];
@@ -97,18 +101,21 @@ bool CGuildMarkUploader::__LoadSymbol(const char* c_szFileName, UINT* peError)
 	int width, height, channels;
 	unsigned char* data = stbi_load(c_szFileName, &width, &height, &channels, 4);
 
-	if (!data) {
+	if (!data)
+	{
 		*peError = ERROR_LOAD;
 		return false;
 	}
 
-	if (width != 64) {
+	if (width != 64)
+	{
 		stbi_image_free(data);
 		*peError = ERROR_WIDTH;
 		return false;
 	}
 
-	if (height != 128) {
+	if (height != 128)
+	{
 		stbi_image_free(data);
 		*peError = ERROR_HEIGHT;
 		return false;
@@ -118,7 +125,9 @@ bool CGuildMarkUploader::__LoadSymbol(const char* c_szFileName, UINT* peError)
 
 	// Now read raw file into m_pbySymbolBuf (same as original code did)
 	FILE* file = fopen(c_szFileName, "rb");
-	if (!file) {
+
+	if (!file)
+	{
 		*peError = ERROR_LOAD;
 		return false;
 	}
@@ -143,18 +152,20 @@ bool CGuildMarkUploader::Connect(const CNetworkAddress& c_rkNetAddr, DWORD dwHan
 
 	if (!CNetworkStream::Connect(c_rkNetAddr))
 	{
-		*peError=ERROR_CONNECT;
+		*peError = ERROR_CONNECT;
 		return false;
 	}
 
-	m_dwSendType=SEND_TYPE_MARK;
-	m_dwHandle=dwHandle;
-	m_dwRandomKey=dwRandomKey;
-	m_dwGuildID=dwGuildID;
+	m_dwSendType = SEND_TYPE_MARK;
+	m_dwHandle = dwHandle;
+	m_dwRandomKey = dwRandomKey;
+	m_dwGuildID = dwGuildID;
 
 	if (!__Load(c_szFileName, peError))
+	{
 		return false;
-		
+	}
+
 	//if (!__Save(CGraphicMarkInstance::GetImageFileName().c_str()))
 	//	return false;
 	//CGraphicMarkInstance::ReloadImageFile();
@@ -165,21 +176,23 @@ bool CGuildMarkUploader::ConnectToSendSymbol(const CNetworkAddress& c_rkNetAddr,
 {
 	__OfflineState_Set();
 	SetRecvBufferSize(1024);
-	SetSendBufferSize(64*1024);
+	SetSendBufferSize(64 * 1024);
 
 	if (!CNetworkStream::Connect(c_rkNetAddr))
 	{
-		*peError=ERROR_CONNECT;
+		*peError = ERROR_CONNECT;
 		return false;
 	}
 
-	m_dwSendType=SEND_TYPE_SYMBOL;
-	m_dwHandle=dwHandle;
-	m_dwRandomKey=dwRandomKey;
-	m_dwGuildID=dwGuildID;
+	m_dwSendType = SEND_TYPE_SYMBOL;
+	m_dwHandle = dwHandle;
+	m_dwRandomKey = dwRandomKey;
+	m_dwGuildID = dwGuildID;
 
 	if (!__LoadSymbol(c_szFileName, peError))
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -236,9 +249,9 @@ bool CGuildMarkUploader::__StateProcess()
 {
 	switch (m_eState)
 	{
-		case STATE_LOGIN:
-			return __LoginState_Process();
-			break;
+	case STATE_LOGIN:
+		return __LoginState_Process();
+		break;
 	}
 
 	return true;
@@ -251,34 +264,45 @@ void CGuildMarkUploader::__OfflineState_Set()
 
 void CGuildMarkUploader::__CompleteState_Set()
 {
-	m_eState=STATE_COMPLETE;
+	m_eState = STATE_COMPLETE;
 
 	__OfflineState_Set();
 }
 
-
 void CGuildMarkUploader::__LoginState_Set()
 {
-	m_eState=STATE_LOGIN;
+	m_eState = STATE_LOGIN;
 }
 
 bool CGuildMarkUploader::__LoginState_Process()
 {
 	if (!__AnalyzePacket(HEADER_GC_PHASE, sizeof(TPacketGCPhase), &CGuildMarkUploader::__LoginState_RecvPhase))
+	{
 		return false;
+	}
 
 	if (!__AnalyzePacket(HEADER_GC_HANDSHAKE, sizeof(TPacketGCHandshake), &CGuildMarkUploader::__LoginState_RecvHandshake))
+	{
 		return false;
+	}
 
 	if (!__AnalyzePacket(HEADER_GC_PING, sizeof(TPacketGCPing), &CGuildMarkUploader::__LoginState_RecvPing))
+	{
 		return false;
+	}
 
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
+
 	if (!__AnalyzePacket(HEADER_GC_KEY_AGREEMENT, sizeof(TPacketKeyAgreement), &CGuildMarkUploader::__LoginState_RecvKeyAgreement))
+	{
 		return false;
+	}
 
 	if (!__AnalyzePacket(HEADER_GC_KEY_AGREEMENT_COMPLETED, sizeof(TPacketKeyAgreementCompleted), &CGuildMarkUploader::__LoginState_RecvKeyAgreementCompleted))
+	{
 		return false;
+	}
+
 #endif
 
 	return true;
@@ -287,31 +311,41 @@ bool CGuildMarkUploader::__LoginState_Process()
 bool CGuildMarkUploader::__SendMarkPacket()
 {
 	TPacketCGMarkUpload kPacketMarkUpload;
-	kPacketMarkUpload.header=HEADER_CG_MARK_UPLOAD;
-	kPacketMarkUpload.gid=m_dwGuildID;
+	kPacketMarkUpload.header = HEADER_CG_MARK_UPLOAD;
+	kPacketMarkUpload.gid = m_dwGuildID;
 
 	assert(sizeof(kPacketMarkUpload.image) == sizeof(m_kMark.m_apxBuf));
 	memcpy(kPacketMarkUpload.image, m_kMark.m_apxBuf, sizeof(kPacketMarkUpload.image));
 
 	if (!Send(sizeof(kPacketMarkUpload), &kPacketMarkUpload))
+	{
 		return false;
+	}
 
 	return true;
 }
+
 bool CGuildMarkUploader::__SendSymbolPacket()
 {
 	if (!m_pbySymbolBuf)
+	{
 		return false;
+	}
 
 	TPacketCGSymbolUpload kPacketSymbolUpload;
-	kPacketSymbolUpload.header=HEADER_CG_GUILD_SYMBOL_UPLOAD;
-	kPacketSymbolUpload.handle=m_dwGuildID;
-	kPacketSymbolUpload.size=sizeof(TPacketCGSymbolUpload) + m_dwSymbolBufSize;
+	kPacketSymbolUpload.header = HEADER_CG_GUILD_SYMBOL_UPLOAD;
+	kPacketSymbolUpload.handle = m_dwGuildID;
+	kPacketSymbolUpload.size = sizeof(TPacketCGSymbolUpload) + m_dwSymbolBufSize;
 
 	if (!Send(sizeof(TPacketCGSymbolUpload), &kPacketSymbolUpload))
+	{
 		return false;
+	}
+
 	if (!Send(m_dwSymbolBufSize, m_pbySymbolBuf))
+	{
 		return false;
+	}
 
 #ifdef _DEBUG
 	printf("__SendSymbolPacket : [GuildID:%d/PacketSize:%d/BufSize:%d/CRC:%d]\n", m_dwGuildID, kPacketSymbolUpload.size, m_dwSymbolBufSize, m_dwSymbolCRC32);
@@ -326,10 +360,13 @@ bool CGuildMarkUploader::__SendSymbolPacket()
 bool CGuildMarkUploader::__LoginState_RecvPhase()
 {
 	TPacketGCPhase kPacketPhase;
-	if (!Recv(sizeof(kPacketPhase), &kPacketPhase))
-		return false;
 
-	if (kPacketPhase.phase==PHASE_LOGIN)
+	if (!Recv(sizeof(kPacketPhase), &kPacketPhase))
+	{
+		return false;
+	}
+
+	if (kPacketPhase.phase == PHASE_LOGIN)
 	{
 #ifndef _IMPROVED_PACKET_ENCRYPTION_
 		const char* key = LocaleService_GetSecurityKey();
@@ -339,12 +376,17 @@ bool CGuildMarkUploader::__LoginState_RecvPhase()
 		if (SEND_TYPE_MARK == m_dwSendType)
 		{
 			if (!__SendMarkPacket())
+			{
 				return false;
+			}
 		}
+
 		else if (SEND_TYPE_SYMBOL == m_dwSendType)
 		{
 			if (!__SendSymbolPacket())
+			{
 				return false;
+			}
 		}
 	}
 
@@ -354,16 +396,22 @@ bool CGuildMarkUploader::__LoginState_RecvPhase()
 bool CGuildMarkUploader::__LoginState_RecvHandshake()
 {
 	TPacketGCHandshake kPacketHandshake;
+
 	if (!Recv(sizeof(kPacketHandshake), &kPacketHandshake))
+	{
 		return false;
+	}
 
 	{
 		TPacketCGMarkLogin kPacketMarkLogin;
-		kPacketMarkLogin.header=HEADER_CG_MARK_LOGIN;
-		kPacketMarkLogin.handle=m_dwHandle;
-		kPacketMarkLogin.random_key=m_dwRandomKey;
+		kPacketMarkLogin.header = HEADER_CG_MARK_LOGIN;
+		kPacketMarkLogin.handle = m_dwHandle;
+		kPacketMarkLogin.random_key = m_dwRandomKey;
+
 		if (!Send(sizeof(kPacketMarkLogin), &kPacketMarkLogin))
+		{
 			return false;
+		}
 	}
 
 	return true;
@@ -372,25 +420,36 @@ bool CGuildMarkUploader::__LoginState_RecvHandshake()
 bool CGuildMarkUploader::__LoginState_RecvPing()
 {
 	TPacketGCPing kPacketPing;
+
 	if (!Recv(sizeof(kPacketPing), &kPacketPing))
+	{
 		return false;
+	}
 
 	TPacketCGPong kPacketPong;
 	kPacketPong.bHeader = HEADER_CG_PONG;
 
 	if (!Send(sizeof(TPacketCGPong), &kPacketPong))
+	{
 		return false;
+	}
 
 	if (IsSecurityMode())
+	{
 		return SendSequence();
+	}
+
 	else
+	{
 		return true;
+	}
 }
 
 #ifdef _IMPROVED_PACKET_ENCRYPTION_
 bool CGuildMarkUploader::__LoginState_RecvKeyAgreement()
 {
 	TPacketKeyAgreement packet;
+
 	if (!Recv(sizeof(packet), &packet))
 	{
 		return false;
@@ -401,12 +460,14 @@ bool CGuildMarkUploader::__LoginState_RecvKeyAgreement()
 	TPacketKeyAgreement packetToSend;
 	size_t dataLength = TPacketKeyAgreement::MAX_DATA_LEN;
 	size_t agreedLength = Prepare(packetToSend.data, &dataLength);
+
 	if (agreedLength == 0)
 	{
 		// 초기화 실패
 		Disconnect();
 		return false;
 	}
+
 	assert(dataLength <= TPacketKeyAgreement::MAX_DATA_LEN);
 
 	if (Activate(packet.wAgreedLength, packet.data, packet.wDataLength))
@@ -421,20 +482,24 @@ bool CGuildMarkUploader::__LoginState_RecvKeyAgreement()
 			Tracen(" CAccountConnector::__AuthState_RecvKeyAgreement - SendKeyAgreement Error");
 			return false;
 		}
+
 		Tracenf("KEY_AGREEMENT SEND %u", packetToSend.wDataLength);
 	}
+
 	else
 	{
 		// 키 협상 실패
 		Disconnect();
 		return false;
 	}
+
 	return true;
 }
 
 bool CGuildMarkUploader::__LoginState_RecvKeyAgreementCompleted()
 {
 	TPacketKeyAgreementCompleted packet;
+
 	if (!Recv(sizeof(packet), &packet))
 	{
 		return false;
@@ -446,20 +511,29 @@ bool CGuildMarkUploader::__LoginState_RecvKeyAgreementCompleted()
 
 	return true;
 }
+
 #endif // _IMPROVED_PACKET_ENCRYPTION_
 
-bool CGuildMarkUploader::__AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CGuildMarkUploader::*pfnDispatchPacket)())
+bool CGuildMarkUploader::__AnalyzePacket(UINT uHeader, UINT uPacketSize, bool (CGuildMarkUploader::* pfnDispatchPacket)())
 {
 	BYTE bHeader;
-	if (!Peek(sizeof(bHeader), &bHeader))
-		return true;
 
-	if (bHeader!=uHeader)
+	if (!Peek(sizeof(bHeader), &bHeader))
+	{
 		return true;
+	}
+
+	if (bHeader != uHeader)
+	{
+		return true;
+	}
 
 	if (!Peek(uPacketSize))
+	{
 		return true;
+	}
 
 	return (this->*pfnDispatchPacket)();
 }
+
 #endif

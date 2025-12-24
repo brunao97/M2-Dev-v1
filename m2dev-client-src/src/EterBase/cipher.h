@@ -12,49 +12,65 @@ class KeyAgreement;
 
 //THEMIDA
 // Communication channel encryption handler.
-class Cipher {
- public:
-  explicit Cipher();
-  ~Cipher();
+class Cipher
+{
+public:
+	explicit Cipher();
+	~Cipher();
 
-  void CleanUp();
+	void CleanUp();
 
-  // Returns agreed value length in CryptoPP::bytes, or zero on failure.
-  size_t Prepare(void* buffer, size_t* length);
-  // Try to activate cipher algorithm with agreement data received from peer.
-  bool Activate(bool polarity, size_t agreed_length,
-                const void* buffer, size_t length);
+	// Returns agreed value length in CryptoPP::bytes, or zero on failure.
+	size_t Prepare(void* buffer, size_t* length);
+	// Try to activate cipher algorithm with agreement data received from peer.
+	bool Activate(bool polarity, size_t agreed_length,
+		const void* buffer, size_t length);
 
-  // Encrypts the given block of data. (no padding required)
-  void Encrypt(void* buffer, size_t length) {
-    assert(activated_);
-    if (!activated_) {
-      return;
-    }
-    encoder_->ProcessData((CryptoPP::byte*)buffer, (const CryptoPP::byte*)buffer, length);
-  }
-  // Decrypts the given block of data. (no padding required)
-  void Decrypt(void* buffer, size_t length) {
-    assert(activated_);
-    if (!activated_) {
-      return;
-    }
-    decoder_->ProcessData((CryptoPP::byte*)buffer, (const CryptoPP::byte*)buffer, length);
-  }
+	// Encrypts the given block of data. (no padding required)
+	void Encrypt(void* buffer, size_t length)
+	{
+		assert(activated_);
 
-  bool activated() const { return activated_; }
-  
-  void set_activated(bool value) { activated_ = value; }
+		if (!activated_)
+		{
+			return;
+		}
 
- private:
-  bool SetUp(bool polarity);
+		encoder_->ProcessData((CryptoPP::byte*)buffer, (const CryptoPP::byte*)buffer, length);
+	}
 
-  bool activated_;
+	// Decrypts the given block of data. (no padding required)
+	void Decrypt(void* buffer, size_t length)
+	{
+		assert(activated_);
 
-  CryptoPP::SymmetricCipher* encoder_;
-  CryptoPP::SymmetricCipher* decoder_;
+		if (!activated_)
+		{
+			return;
+		}
 
-  KeyAgreement* key_agreement_;
+		decoder_->ProcessData((CryptoPP::byte*)buffer, (const CryptoPP::byte*)buffer, length);
+	}
+
+	bool activated() const
+	{
+		return activated_;
+	}
+
+	void set_activated(bool value)
+	{
+		activated_ = value;
+	}
+
+private:
+	bool SetUp(bool polarity);
+
+	bool activated_;
+
+	CryptoPP::SymmetricCipher* encoder_;
+	CryptoPP::SymmetricCipher* decoder_;
+
+	KeyAgreement* key_agreement_;
 };
 
 #endif // _IMPROVED_PACKET_ENCRYPTION_

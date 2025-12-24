@@ -10,48 +10,50 @@
 class CLightData : public CEffectElementBase
 {
 	friend class CLightInstance;
-	public:
-		CLightData();
-		virtual ~CLightData();
+public:
+	CLightData();
+	virtual ~CLightData();
 
-		void GetRange(float fTime, float& rRange);
-		float GetDuration();
-		BOOL isLoop()
-		{
-			return m_bLoopFlag;
-		}
-		int GetLoopCount()
-		{
-			return m_iLoopCount;
-		}
-		void InitializeLight(D3DLIGHT9& light);
+	void GetRange(float fTime, float& rRange);
+	float GetDuration();
+	BOOL isLoop()
+	{
+		return m_bLoopFlag;
+	}
 
-	protected:
-		void OnClear();
-		bool OnIsData();
+	int GetLoopCount()
+	{
+		return m_iLoopCount;
+	}
 
-		BOOL OnLoadScript(CTextFileLoader & rTextFileLoader);
+	void InitializeLight(D3DLIGHT9& light);
 
-	protected:
-		float m_fMaxRange;
-		float m_fDuration;
-		TTimeEventTableFloat m_TimeEventTableRange;
-		
-		D3DXCOLOR m_cAmbient;
-		D3DXCOLOR m_cDiffuse;
+protected:
+	void OnClear();
+	bool OnIsData();
 
-		BOOL m_bLoopFlag;
-		int m_iLoopCount;
+	BOOL OnLoadScript(CTextFileLoader& rTextFileLoader);
 
-		float m_fAttenuation0;
-		float m_fAttenuation1;
-		float m_fAttenuation2;
+protected:
+	float m_fMaxRange;
+	float m_fDuration;
+	TTimeEventTableFloat m_TimeEventTableRange;
 
-	public:
-		static void DestroySystem();
+	D3DXCOLOR m_cAmbient;
+	D3DXCOLOR m_cDiffuse;
 
-		static CLightData* New();
-		static void Delete(CLightData* pkData);
+	BOOL m_bLoopFlag;
+	int m_iLoopCount;
 
-		static CDynamicPool<CLightData>		ms_kPool;
+	float m_fAttenuation0;
+	float m_fAttenuation1;
+	float m_fAttenuation2;
+
+public:
+	static void DestroySystem();
+
+	static CLightData* New();
+	static void Delete(CLightData* pkData);
+
+	static CDynamicPool<CLightData>		ms_kPool;
 };

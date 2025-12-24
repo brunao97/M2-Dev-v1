@@ -18,17 +18,17 @@ public:
 
 	enum ECreateReturnValues
 	{
-		CREATE_OK				= (1 << 0),
-		CREATE_NO_DIRECTX		= (1 << 1),
-		CREATE_GET_DEVICE_CAPS	= (1 << 2),
+		CREATE_OK = (1 << 0),
+		CREATE_NO_DIRECTX = (1 << 1),
+		CREATE_GET_DEVICE_CAPS = (1 << 2),
 		CREATE_GET_DEVICE_CAPS2 = (1 << 3),
-		CREATE_DEVICE			= (1 << 4),
-		CREATE_REFRESHRATE		= (1 << 5),
-		CREATE_ENUM				= (1 << 6), // 2003. 01. 09. myevan 모드 리스트 얻기 실패
-		CREATE_DETECT			= (1 << 7), // 2003. 01. 09. myevan 모드 선택 실패
-		CREATE_NO_TNL			= (1 << 8),
-		CREATE_BAD_DRIVER		= (1 << 9),
-		CREATE_FORMAT			= (1 << 10),
+		CREATE_DEVICE = (1 << 4),
+		CREATE_REFRESHRATE = (1 << 5),
+		CREATE_ENUM = (1 << 6), // 2003. 01. 09. myevan 모드 리스트 얻기 실패
+		CREATE_DETECT = (1 << 7), // 2003. 01. 09. myevan 모드 선택 실패
+		CREATE_NO_TNL = (1 << 8),
+		CREATE_BAD_DRIVER = (1 << 9),
+		CREATE_FORMAT = (1 << 10),
 	};
 
 	CGraphicDevice();
@@ -42,19 +42,19 @@ public:
 	EDeviceState	GetDeviceState();
 	bool			Reset();
 
-	void			EnableWebBrowserMode(const RECT& c_rcWebPage);		
+	void			EnableWebBrowserMode(const RECT& c_rcWebPage);
 	void			DisableWebBrowserMode();
 	void			MoveWebBrowserRect(const RECT& c_rcWebPage);
 
 	bool			ResizeBackBuffer(UINT uWidth, UINT uHeight);
-	void			RegisterWarningString(UINT uiMsg, const char * c_szString);
+	void			RegisterWarningString(UINT uiMsg, const char* c_szString);
 
 protected:
 	void __Initialize();
 	void __WarningMessage(HWND hWnd, UINT uiMsg);
 
 	void __InitializeDefaultIndexBufferList();
-	void __DestroyDefaultIndexBufferList();	
+	void __DestroyDefaultIndexBufferList();
 	bool __CreateDefaultIndexBufferList();
 	bool __CreateDefaultIndexBuffer(UINT eDefIB, UINT uIdxCount, const WORD* c_awIndices);
 
@@ -70,5 +70,5 @@ protected:
 protected:
 	DWORD						m_uBackBufferCount;
 	std::map<UINT, std::string>	m_kMap_strWarningMessage;
-	CStateManager*				m_pStateManager;
+	CStateManager* m_pStateManager;
 };

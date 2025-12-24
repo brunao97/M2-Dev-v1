@@ -16,7 +16,6 @@ typedef	struct	_FVF_POINT
 #define	D3DFVF_POINT (D3DFVF_XYZ)
 #endif
 
-
 typedef	struct	_FVF_PT
 {
 	float	x, y, z;
@@ -41,7 +40,12 @@ typedef	struct	_FVF_PDT
 inline FVF_PDT _FVF_PDT(float x, float y, float z, DWORD dif, float u, float v)
 {
 	FVF_PDT	result;
-	result.x = x; result.y = y; result.z = z; result.color = dif; result.tu = u; result.tv = v;
+	result.x = x;
+	result.y = y;
+	result.z = z;
+	result.color = dif;
+	result.tu = u;
+	result.tv = v;
 	return	result;
 }
 
@@ -50,15 +54,13 @@ enum EEffectType
 	EFFECT_TYPE_PARTICLE = 1,
 	EFFECT_TYPE_ANIMATION_TEXTURE = 2,
 	EFFECT_TYPE_MESH = 3,
-	EFFECT_TYPE_SIMPLE_LIGHT		= 4,
+	EFFECT_TYPE_SIMPLE_LIGHT = 4,
 };
-
-
 
 enum EMeshBillBoardType
 {
 	MESH_BILLBOARD_TYPE_NONE,
-		
+
 	MESH_BILLBOARD_TYPE_ALL,
 	MESH_BILLBOARD_TYPE_Y,
 
@@ -71,14 +73,13 @@ enum EBillBoardType
 
 	BILLBOARD_TYPE_ALL,
 	BILLBOARD_TYPE_Y,
-	
+
 	BILLBOARD_TYPE_LIE, // 바닥에 누은 형상
 
 	BILLBOARD_TYPE_2FACE, //     / and
-	BILLBOARD_TYPE_3FACE, //     / and 
+	BILLBOARD_TYPE_3FACE, //     / and
 
 	//BILLBOARD_TYPE_RAY, // 잔상
-
 };
 
 enum EMovingType
@@ -99,19 +100,19 @@ struct CTimeEvent
 };
 
 template <typename T>
-bool operator<(const CTimeEvent<T>& lhs, const CTimeEvent<T>& rhs)
+bool operator< (const CTimeEvent<T>& lhs, const CTimeEvent<T>& rhs)
 {
 	return lhs.m_fTime < rhs.m_fTime;
 }
 
 template <typename T>
-bool operator<(const CTimeEvent<T>& lhs, const float& rhs)
+bool operator< (const CTimeEvent<T>& lhs, const float& rhs)
 {
 	return lhs.m_fTime < rhs;
 }
 
 template <typename T>
-bool operator<(const float& lhs, const CTimeEvent<T>& rhs)
+bool operator< (const float& lhs, const CTimeEvent<T>& rhs)
 {
 	return lhs < rhs.m_fTime;
 }
@@ -152,7 +153,7 @@ T BlendSingleValue(float time,
 	const float perc = (time - low.m_fTime) / timeDiff;
 
 	const T valueDiff = high.m_Value - low.m_Value;
-	return static_cast<T>(low.m_Value + perc * valueDiff);
+	return static_cast<T> (low.m_Value + perc * valueDiff);
 }
 
 inline D3DXVECTOR3 BlendSingleValue(float time, const TEffectPosition& low, const TEffectPosition& high)
@@ -161,7 +162,9 @@ inline D3DXVECTOR3 BlendSingleValue(float time, const TEffectPosition& low, cons
 	const float perc = (time - low.m_fTime) / timeDiff;
 
 	if (low.m_iMovingType == MOVING_TYPE_DIRECT)
+	{
 		return low.m_Value + ((high.m_Value - low.m_Value) * perc);
+	}
 
 	if (low.m_iMovingType == MOVING_TYPE_BEZIER_CURVE)
 	{
@@ -181,19 +184,27 @@ auto GetTimeEventBlendValue(float time,
 	const std::vector<T>& vec) -> typename T::value_type
 {
 	if (vec.empty())
+	{
 		return typename T::value_type();
+	}
 
 	// Single element is easy...
 	if (vec.begin() + 1 == vec.end())
+	{
 		return vec.front().m_Value;
+	}
 
 	// All elements are greater than |time| - pick the smallest
 	if (time < vec.front().m_fTime)
+	{
 		return vec.front().m_Value;
+	}
 
 	// All elements are smaller than |time| - pick the greatest
 	if (time > vec.back().m_fTime)
+	{
 		return vec.back().m_Value;
+	}
 
 	// The two checks above make sure that result doesn't contain vec.end()
 	// (We could simply check for vec.end() ourself, but above code lets us
@@ -202,7 +213,9 @@ auto GetTimeEventBlendValue(float time,
 
 	// We have one or more equal elements - pick the first
 	if (result.first != result.second)
+	{
 		return result.first->m_Value;
+	}
 
 	// We need first to point to an element smaller than |time|
 	// (Note that decrementing first is safe here, we already accounted for
@@ -211,13 +224,13 @@ auto GetTimeEventBlendValue(float time,
 	return BlendSingleValue(time, *result.first, *result.second);
 }
 
-extern BOOL GetTokenTimeEventFloat(CTextFileLoader & rTextFileLoader, const char * c_szKey, TTimeEventTableFloat * pTimeEventTableFloat);
+extern BOOL GetTokenTimeEventFloat(CTextFileLoader& rTextFileLoader, const char* c_szKey, TTimeEventTableFloat* pTimeEventTableFloat);
 //extern void InsertItemTimeEventFloat(TTimeEventTableFloat * pTable, float fTime, float fValue);
 
 template <typename T>
-void InsertItemTimeEvent(std::vector<CTimeEvent<T> >* pTable, float fTime, T fValue)
+void InsertItemTimeEvent(std::vector<CTimeEvent<T>>* pTable, float fTime, T fValue)
 {
-	typedef std::vector<CTimeEvent<T> >::iterator iterator;
+	typedef std::vector<CTimeEvent<T>>::iterator iterator;
 
 	iterator itor = std::lower_bound(pTable->begin(), pTable->end(), fTime);
 

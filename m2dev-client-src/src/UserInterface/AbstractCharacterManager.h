@@ -6,10 +6,11 @@ class CInstanceBase;
 
 class IAbstractCharacterManager : public TAbstractSingleton<IAbstractCharacterManager>
 {
-	public:
-		IAbstractCharacterManager() {}
-		virtual ~IAbstractCharacterManager() {}
+public:
+	IAbstractCharacterManager() {}
 
-		virtual void Destroy() = 0;
-		virtual CInstanceBase *						GetInstancePtr(DWORD dwVID) = 0;
+	virtual ~IAbstractCharacterManager() {}
+
+	virtual void Destroy() = 0;
+	virtual CInstanceBase* GetInstancePtr(DWORD dwVID) = 0;
 };

@@ -61,27 +61,27 @@ public:
 	CPoly();
 	virtual ~CPoly();
 
-	int		Analyze(const char * pszStr = NULL);
+	int		Analyze(const char* pszStr = NULL);
 	float	Eval();
 	void	SetRandom(int iRandomType);
-	void	SetStr(const std::string & str);
-	int		SetVar(const std::string & strName, double dVar);
+	void	SetStr(const std::string& str);
+	int		SetVar(const std::string& strName, double dVar);
 	int		GetVarCount();
-	const char * GetVarName(unsigned int dwIndex);
+	const char* GetVarName(unsigned int dwIndex);
 	void	Clear();
 
-    protected:
+protected:
 	int		my_irandom(double start, double end);
 	double		my_frandom(double start, double end);
 
 	void		init();
-	int		insert(const std::string & s, int tok);
-	int		find(const std::string & s);
-	void		emit(int t,int tval);
-	void		match(int t); 
-	void		expo(); 
-	void		factor(); 
-	void		term(); 
+	int		insert(const std::string& s, int tok);
+	int		find(const std::string& s);
+	void		emit(int t, int tval);
+	void		match(int t);
+	void		expo();
+	void		factor();
+	void		term();
 	int		iToken;
 	double		iNumToken;
 	int		iLookAhead;
@@ -95,7 +95,7 @@ public:
 	// NOTE: list is slight faster than vector, why?!
 	std::vector<int>		tokenBase;
 	std::vector<double>		numBase;
-	std::vector<CSymTable *>	lSymbol;
+	std::vector<CSymTable*>	lSymbol;
 	std::vector<int>		SymbolIndex;
 	int					STSize;
 	int					MathSymbolCount;
@@ -103,4 +103,4 @@ public:
 	int					m_iRandomType;
 };
 
-#endif 
+#endif

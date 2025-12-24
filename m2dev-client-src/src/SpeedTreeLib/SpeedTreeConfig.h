@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////  
+///////////////////////////////////////////////////////////////////////
 //	SpeedTreeRT runtime configuration #defines
 //
 //	(c) 2003 IDV, Inc.
@@ -49,13 +49,12 @@ const float	c_afLightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 const float	c_afLightSpecular[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 const float	c_afLightGlobalAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
-
 // setup lighting (enable ONE of the two below)
 #define WRAPPER_USE_STATIC_LIGHTING
 //#define WRAPPER_USE_DYNAMIC_LIGHTING
 
 #if defined WRAPPER_USE_STATIC_LIGHTING && defined WRAPPER_USE_DYNAMIC_LIGHTING
-	#error Please define exactly one lighting mode
+#error Please define exactly one lighting mode
 #endif
 
 // setup wind (enable ONE of the three below)
@@ -64,11 +63,11 @@ const float	c_afLightGlobalAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 #define WRAPPER_USE_NO_WIND
 
 #if defined WRAPPER_USE_GPU_WIND && defined WRAPPER_USE_CPU_WIND
-	#error Please define exactly one lighting mode
+#error Please define exactly one lighting mode
 #elif defined WRAPPER_USE_GPU_WIND && defined WRAPPER_USE_NO_WIND
-	#error Please define exactly one lighting mode
+#error Please define exactly one lighting mode
 #elif defined WRAPPER_USE_CPU_WIND && defined WRAPPER_USE_NO_WIND
-	#error Please define exactly one lighting mode
+#error Please define exactly one lighting mode
 #endif
 
 // leaf placement algorithm (enable ONE of the two below)
@@ -76,7 +75,7 @@ const float	c_afLightGlobalAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 //#define WRAPPER_USE_CPU_LEAF_PLACEMENT
 
 #if defined WRAPPER_USE_GPU_LEAF_PLACEMENT && defined WRAPPER_USE_CPU_LEAF_PLACEMENT
-	#error Please define exactly one leaf placement algorithm
+#error Please define exactly one leaf placement algorithm
 #endif
 
 // texture coordinates (enable this define for DirectX-based engines)
@@ -87,7 +86,7 @@ const float	c_afLightGlobalAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 #define WRAPPER_UP_POS_Z
 
 #if defined WRAPPER_UP_POS_Y && defined WRAPPER_UP_POS_Z
-	#error Please define exactly one up vector
+#error Please define exactly one up vector
 #endif
 
 // loading from STF or clones/instances? (enable ONE of the two below)
@@ -95,10 +94,10 @@ const float	c_afLightGlobalAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 #define WRAPPER_FOREST_FROM_INSTANCES
 
 #if defined WRAPPER_FOREST_FROM_STF && defined WRAPPER_FOREST_FROM_INSTANCES
-	#error Please define exactly one loading mechanism
+#error Please define exactly one loading mechanism
 #endif
 
-// billboard modes 
+// billboard modes
 #define WRAPPER_BILLBOARD_MODE
 //#define WRAPPER_RENDER_HORIZONTAL_BILLBOARD
 
@@ -110,11 +109,11 @@ const float	c_afLightGlobalAmbient[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 // derived constants
 #ifdef WRAPPER_USE_GPU_WIND
-	#define BRANCHES_USE_SHADERS
-	#define FRONDS_USE_SHADERS
-	#define LEAVES_USE_SHADERS
+#define BRANCHES_USE_SHADERS
+#define FRONDS_USE_SHADERS
+#define LEAVES_USE_SHADERS
 #endif
 
 #ifdef WRAPPER_USE_GPU_LEAF_PLACEMENT
-	#define LEAVES_USE_SHADERS
+#define LEAVES_USE_SHADERS
 #endif

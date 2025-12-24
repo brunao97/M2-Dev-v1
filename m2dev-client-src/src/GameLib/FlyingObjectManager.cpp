@@ -19,25 +19,28 @@ CFlyingManager::~CFlyingManager()
 void CFlyingManager::__DestroyFlyingInstanceList()
 {
 	TFlyingInstanceList::iterator i;
-	for(i = m_kLst_pkFlyInst.begin(); i!=m_kLst_pkFlyInst.end(); ++i)
+
+	for (i = m_kLst_pkFlyInst.begin(); i != m_kLst_pkFlyInst.end(); ++i)
 	{
-		CFlyingInstance* pkFlyInst=*i;
-		CFlyingInstance::Delete(pkFlyInst);		
+		CFlyingInstance* pkFlyInst = *i;
+		CFlyingInstance::Delete(pkFlyInst);
 	}
+
 	m_kLst_pkFlyInst.clear();
 }
 
 void CFlyingManager::__DestroyFlyingDataMap()
 {
 	TFlyingDataMap::iterator i;
-	for(i = m_kMap_pkFlyData.begin(); i != m_kMap_pkFlyData.end(); ++i)
+
+	for (i = m_kMap_pkFlyData.begin(); i != m_kMap_pkFlyData.end(); ++i)
 	{
-		CFlyingData* pkFlyData=i->second;
+		CFlyingData* pkFlyData = i->second;
 		CFlyingData::Delete(pkFlyData);
 	}
+
 	m_kMap_pkFlyData.clear();
 }
-
 
 void CFlyingManager::DeleteAllInstances()
 {
@@ -45,25 +48,26 @@ void CFlyingManager::DeleteAllInstances()
 }
 
 void CFlyingManager::Destroy()
-{		
+{
 	__DestroyFlyingInstanceList();
 	__DestroyFlyingDataMap();
-	
+
 	m_pMapManager = 0;
 }
 
 bool CFlyingManager::RegisterFlyingData(const char* c_szFilename)
 {
 	std::string s;
-	StringPath(c_szFilename,s);
-	DWORD dwRetCRC = GetCaseCRC32(s.c_str(),s.size());
+	StringPath(c_szFilename, s);
+	DWORD dwRetCRC = GetCaseCRC32(s.c_str(), s.size());
 
 	if (m_kMap_pkFlyData.find(dwRetCRC) != m_kMap_pkFlyData.end())
 	{
 		return false;
 	}
-	
-	CFlyingData * pFlyingData = CFlyingData::New();
+
+	CFlyingData* pFlyingData = CFlyingData::New();
+
 	if (!pFlyingData->LoadScriptFile(c_szFilename))
 	{
 		Tracenf("CEffectManager::RegisterFlyingData %s - Failed to load flying data file", c_szFilename);
@@ -71,15 +75,15 @@ bool CFlyingManager::RegisterFlyingData(const char* c_szFilename)
 		return false;
 	}
 
-	m_kMap_pkFlyData.insert(std::make_pair(dwRetCRC,pFlyingData));	
+	m_kMap_pkFlyData.insert(std::make_pair(dwRetCRC, pFlyingData));
 	return true;
 }
 
-bool CFlyingManager::RegisterFlyingData(const char* c_szFilename, DWORD & r_dwRetCRC)
+bool CFlyingManager::RegisterFlyingData(const char* c_szFilename, DWORD& r_dwRetCRC)
 {
 	std::string s;
-	StringPath(c_szFilename,s);
-	r_dwRetCRC = GetCaseCRC32(s.c_str(),s.size());
+	StringPath(c_szFilename, s);
+	r_dwRetCRC = GetCaseCRC32(s.c_str(), s.size());
 
 	if (m_kMap_pkFlyData.find(r_dwRetCRC) != m_kMap_pkFlyData.end())
 	{
@@ -87,33 +91,33 @@ bool CFlyingManager::RegisterFlyingData(const char* c_szFilename, DWORD & r_dwRe
 		return false;
 	}
 
-	CFlyingData * pFlyingData = CFlyingData::New();
+	CFlyingData* pFlyingData = CFlyingData::New();
+
 	if (!pFlyingData->LoadScriptFile(c_szFilename))
 	{
 		TraceError("CEffectManager::RegisterFlyingData %s - Failed to load flying data file", c_szFilename);
 		CFlyingData::Delete(pFlyingData);
 		return false;
-		
 	}
 
-	m_kMap_pkFlyData.insert(std::make_pair(r_dwRetCRC,pFlyingData));
+	m_kMap_pkFlyData.insert(std::make_pair(r_dwRetCRC, pFlyingData));
 	return true;
 }
 
-CFlyingInstance * CFlyingManager::CreateFlyingInstanceFlyTarget(const DWORD dwID,
-																const D3DXVECTOR3 & v3StartPosition,
-																const CFlyTarget & cr_FlyTarget,
-																bool canAttack)
+CFlyingInstance* CFlyingManager::CreateFlyingInstanceFlyTarget(const DWORD dwID,
+	const D3DXVECTOR3& v3StartPosition,
+	const CFlyTarget& cr_FlyTarget,
+	bool canAttack)
 {
 	if (m_kMap_pkFlyData.find(dwID) == m_kMap_pkFlyData.end())
 	{
 		//TraceError("CFlyingManager::CreateFlyingInstanceFlyTarget - No data with CRC [%d]", dwID);
 		return NULL;
 	}
-	
-	CFlyingInstance * pFlyingInstance = CFlyingInstance::New();
+
+	CFlyingInstance* pFlyingInstance = CFlyingInstance::New();
 	pFlyingInstance->Create(m_kMap_pkFlyData[dwID], v3StartPosition, cr_FlyTarget, canAttack);
-	
+
 	m_kLst_pkFlyInst.push_back(pFlyingInstance);
 
 	pFlyingInstance->ID = m_IDCounter++;
@@ -122,21 +126,23 @@ CFlyingInstance * CFlyingManager::CreateFlyingInstanceFlyTarget(const DWORD dwID
 
 void CFlyingManager::Update()
 {
-	TFlyingInstanceList::iterator i=m_kLst_pkFlyInst.begin();
+	TFlyingInstanceList::iterator i = m_kLst_pkFlyInst.begin();
 
-	while (i!=m_kLst_pkFlyInst.end())
+	while (i != m_kLst_pkFlyInst.end())
 	{
-		CFlyingInstance* pkFlyInst=*i;
+		CFlyingInstance* pkFlyInst = *i;
+
 		if (!pkFlyInst->Update())
 		{
 			CFlyingInstance::Delete(pkFlyInst);
-			i=m_kLst_pkFlyInst.erase(i);
+			i = m_kLst_pkFlyInst.erase(i);
 		}
+
 		else
 		{
 			++i;
 		}
-	}	
+	}
 }
 
 void CFlyingManager::Render()
@@ -148,9 +154,10 @@ void CFlyingManager::Render()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-bool CFlyingManager::RegisterIndexedFlyData(DWORD dwIndex, BYTE byType, const char * c_szFileName)
+bool CFlyingManager::RegisterIndexedFlyData(DWORD dwIndex, BYTE byType, const char* c_szFileName)
 {
 	DWORD dwCRC;
+
 	if (!RegisterFlyingData(c_szFileName, dwCRC))
 	{
 		TraceError("CFlyingManager::RegisterIndexFlyData(dwIndex=%d, c_szFileName=%s) - Failed to load flying data file", dwIndex, c_szFileName);
@@ -165,7 +172,7 @@ bool CFlyingManager::RegisterIndexedFlyData(DWORD dwIndex, BYTE byType, const ch
 	return true;
 }
 
-void CFlyingManager::CreateIndexedFly(DWORD dwIndex, CActorInstance * pStartActor, CActorInstance * pEndActor)
+void CFlyingManager::CreateIndexedFly(DWORD dwIndex, CActorInstance* pStartActor, CActorInstance* pEndActor)
 {
 	if (m_kMap_dwIndexFlyData.end() == m_kMap_dwIndexFlyData.find(dwIndex))
 	{
@@ -176,39 +183,42 @@ void CFlyingManager::CreateIndexedFly(DWORD dwIndex, CActorInstance * pStartActo
 	TPixelPosition posStart;
 	pStartActor->GetPixelPosition(&posStart);
 
-	TIndexFlyData & rIndexFlyData = m_kMap_dwIndexFlyData[dwIndex];
+	TIndexFlyData& rIndexFlyData = m_kMap_dwIndexFlyData[dwIndex];
+
 	switch (rIndexFlyData.byType)
 	{
-		case INDEX_FLY_TYPE_NORMAL:
-		{
-			CreateFlyingInstanceFlyTarget(rIndexFlyData.dwCRC,
-											D3DXVECTOR3(posStart.x, posStart.y, posStart.z),
-											pEndActor,
-											false);
-			break;
-		}
-		case INDEX_FLY_TYPE_FIRE_CRACKER:
-		{
-			float fRot = fmod(pStartActor->GetRotation() - 90.0f + 360.0f, 360.0f) + frandom(-30.0f, 30.0f);
+	case INDEX_FLY_TYPE_NORMAL:
+	{
+		CreateFlyingInstanceFlyTarget(rIndexFlyData.dwCRC,
+			D3DXVECTOR3(posStart.x, posStart.y, posStart.z),
+			pEndActor,
+			false);
+		break;
+	}
 
-			float fDistance = frandom(2000.0f, 5000.0f);
-			float fxRand = fDistance * cosf(D3DXToRadian(fRot));
-			float fyRand = fDistance * sinf(D3DXToRadian(fRot));
-			float fzRand = frandom(1000.0f, 2500.0f);
+	case INDEX_FLY_TYPE_FIRE_CRACKER:
+	{
+		float fRot = fmod(pStartActor->GetRotation() - 90.0f + 360.0f, 360.0f) + frandom(-30.0f, 30.0f);
 
-			CreateFlyingInstanceFlyTarget(rIndexFlyData.dwCRC,
-											D3DXVECTOR3(posStart.x, posStart.y, posStart.z+200),
-											D3DXVECTOR3(posStart.x + fxRand, posStart.y + fyRand, posStart.z + fzRand),
-											false);
-			break;
-		}
-		case INDEX_FLY_TYPE_AUTO_FIRE:
-		{
-			CreateFlyingInstanceFlyTarget(rIndexFlyData.dwCRC,
-											D3DXVECTOR3(posStart.x, posStart.y, posStart.z+100.0f),
-											pEndActor,
-											false);
-			break;
-		}
+		float fDistance = frandom(2000.0f, 5000.0f);
+		float fxRand = fDistance * cosf(D3DXToRadian(fRot));
+		float fyRand = fDistance * sinf(D3DXToRadian(fRot));
+		float fzRand = frandom(1000.0f, 2500.0f);
+
+		CreateFlyingInstanceFlyTarget(rIndexFlyData.dwCRC,
+			D3DXVECTOR3(posStart.x, posStart.y, posStart.z + 200),
+			D3DXVECTOR3(posStart.x + fxRand, posStart.y + fyRand, posStart.z + fzRand),
+			false);
+		break;
+	}
+
+	case INDEX_FLY_TYPE_AUTO_FIRE:
+	{
+		CreateFlyingInstanceFlyTarget(rIndexFlyData.dwCRC,
+			D3DXVECTOR3(posStart.x, posStart.y, posStart.z + 100.0f),
+			pEndActor,
+			false);
+		break;
+	}
 	}
 }

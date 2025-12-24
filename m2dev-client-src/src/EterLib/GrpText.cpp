@@ -41,7 +41,7 @@ bool CGraphicText::OnLoad(int /*iSize*/, const void* /*c_pvBuf*/)
 	// 굴림.fnt		"굴림" 폰트 기본 사이즈 12 로 로딩
 	// 굴림:18.fnt  "굴림" 폰트 사이즈 18 로 로딩
 	// 굴림:14i.fnt "굴림" 폰트 사이즈 14 & 이탤릭으로 로딩
-	const char * p = strrchr(GetFileName(), ':');
+	const char* p = strrchr(GetFileName(), ':');
 
 	if (p)
 	{
@@ -51,16 +51,22 @@ bool CGraphicText::OnLoad(int /*iSize*/, const void* /*c_pvBuf*/)
 		static char num[8];
 
 		int i = 0;
+
 		while (*p && isdigit(*p))
 		{
 			num[i++] = *(p++);
 		}
 
 		num[i] = '\0';
-		if(*p == 'i')
+
+		if (*p == 'i')
+		{
 			bItalic = true;
+		}
+
 		size = atoi(num);
 	}
+
 	else
 	{
 		p = strrchr(GetFileName(), '.');
@@ -70,14 +76,19 @@ bool CGraphicText::OnLoad(int /*iSize*/, const void* /*c_pvBuf*/)
 			assert(!"CGraphicText::OnLoadFromFile there is no extension (ie: .fnt)");
 			strName[0] = '\0';
 		}
+
 		else
+		{
 			strncpy(strName, GetFileName(), MIN(31, p - GetFileName()));
-		
+		}
+
 		size = 12;
 	}
 
 	if (!m_fontTexture.Create(strName, size, bItalic))
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -95,7 +106,9 @@ bool CGraphicText::OnIsEmpty() const
 bool CGraphicText::OnIsType(TType type)
 {
 	if (CGraphicText::Type() == type)
+	{
 		return true;
-	
+	}
+
 	return CResource::OnIsType(type);
 }

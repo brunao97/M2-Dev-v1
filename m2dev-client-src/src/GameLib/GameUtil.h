@@ -2,8 +2,8 @@
 
 //   Collision Detection
 // Dynamic VS Dynamic
-bool DetectCollisionDynamicSphereVSDynamicSphere(const CDynamicSphereInstance & c_rSphere1, const CDynamicSphereInstance & c_rSphere2);
-bool DetectCollisionDynamicZCylinderVSDynamicZCylinder(const CDynamicSphereInstance & c_rSphere1, const CDynamicSphereInstance & c_rSphere2);
+bool DetectCollisionDynamicSphereVSDynamicSphere(const CDynamicSphereInstance& c_rSphere1, const CDynamicSphereInstance& c_rSphere2);
+bool DetectCollisionDynamicZCylinderVSDynamicZCylinder(const CDynamicSphereInstance& c_rSphere1, const CDynamicSphereInstance& c_rSphere2);
 // Dynamic VS Static
 //bool DetectCollisionDynamicSphereVSStaticPlane(const CDynamicSphereInstance & c_rSphere, const TPlaneData & c_rPlaneData);
 //bool DetectCollisionDynamicSphereVSStaticSphere(const CDynamicSphereInstance & c_rSphere, const TSphereData & c_rSphereData);

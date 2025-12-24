@@ -1,8 +1,7 @@
 #include "StdAfx.h"
 #include "EffectElementBase.h"
 
-
-void CEffectElementBase::GetPosition(float fTime, D3DXVECTOR3 & rPosition)
+void CEffectElementBase::GetPosition(float fTime, D3DXVECTOR3& rPosition)
 {
 	rPosition = GetTimeEventBlendValue(fTime, m_TimeEventTablePosition);
 }
@@ -49,23 +48,27 @@ void CEffectElementBase::Clear()
 	OnClear();
 }
 
-BOOL CEffectElementBase::LoadScript(CTextFileLoader & rTextFileLoader)
+BOOL CEffectElementBase::LoadScript(CTextFileLoader& rTextFileLoader)
 {
-	CTokenVector * pTokenVector;
-	if (!rTextFileLoader.GetTokenFloat("starttime",&m_fStartTime))
+	CTokenVector* pTokenVector;
+
+	if (!rTextFileLoader.GetTokenFloat("starttime", &m_fStartTime))
 	{
 		m_fStartTime = 0.0f;
 	}
+
 	if (rTextFileLoader.GetTokenVector("timeeventposition", &pTokenVector))
-	{	
+	{
 		m_TimeEventTablePosition.clear();
-		
+
 		DWORD dwIndex = 0;
+
 		for (DWORD i = 0; i < pTokenVector->size(); ++dwIndex)
 		{
 			TEffectPosition EffectPosition;
 			EffectPosition.m_fTime = atof(pTokenVector->at(i++).c_str());
-			if (pTokenVector->at(i)=="MOVING_TYPE_BEZIER_CURVE")
+
+			if (pTokenVector->at(i) == "MOVING_TYPE_BEZIER_CURVE")
 			{
 				i++;
 
@@ -79,6 +82,7 @@ BOOL CEffectElementBase::LoadScript(CTextFileLoader & rTextFileLoader)
 				EffectPosition.m_vecControlPoint.y = atof(pTokenVector->at(i++).c_str());
 				EffectPosition.m_vecControlPoint.z = atof(pTokenVector->at(i++).c_str());
 			}
+
 			else if (pTokenVector->at(i) == "MOVING_TYPE_DIRECT")
 			{
 				i++;
@@ -89,8 +93,9 @@ BOOL CEffectElementBase::LoadScript(CTextFileLoader & rTextFileLoader)
 				EffectPosition.m_Value.y = atof(pTokenVector->at(i++).c_str());
 				EffectPosition.m_Value.z = atof(pTokenVector->at(i++).c_str());
 
-				EffectPosition.m_vecControlPoint = D3DXVECTOR3(0.0f,0.0f,0.0f);
+				EffectPosition.m_vecControlPoint = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			}
+
 			else
 			{
 				return FALSE;
@@ -98,8 +103,8 @@ BOOL CEffectElementBase::LoadScript(CTextFileLoader & rTextFileLoader)
 
 			m_TimeEventTablePosition.push_back(EffectPosition);
 		}
-	}	
-	
+	}
+
 	return OnLoadScript(rTextFileLoader);
 }
 
@@ -112,6 +117,7 @@ CEffectElementBase::CEffectElementBase()
 {
 	m_fStartTime = 0.0f;
 }
+
 CEffectElementBase::~CEffectElementBase()
 {
 }

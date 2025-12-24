@@ -18,18 +18,19 @@ bool PyTuple_GetObject(PyObject* poArgs, int pos, PyObject** ret);
 bool PyTuple_GetBoolean(PyObject* poArgs, int pos, bool* ret);
 
 template <typename T>
-bool PyTuple_GetPointer(PyObject* poArgs, int pos, T** ret) {
+bool PyTuple_GetPointer(PyObject* poArgs, int pos, T** ret)
+{
 	return PyTuple_GetUnsignedLongLong(poArgs, pos, (unsigned long long*)ret);
 }
 
 bool PyCallClassMemberFunc(PyObject* poClass, const char* c_szFunc, PyObject* poArgs);
 bool PyCallClassMemberFunc(PyObject* poClass, const char* c_szFunc, PyObject* poArgs, bool* pisRet);
-bool PyCallClassMemberFunc(PyObject* poClass, const char* c_szFunc, PyObject* poArgs, long * plRetValue);
+bool PyCallClassMemberFunc(PyObject* poClass, const char* c_szFunc, PyObject* poArgs, long* plRetValue);
 
 bool PyCallClassMemberFunc_ByPyString(PyObject* poClass, PyObject* poFuncName, PyObject* poArgs);
 bool PyCallClassMemberFunc(PyObject* poClass, PyObject* poFunc, PyObject* poArgs);
 
-PyObject * Py_BuildException(const char * c_pszErr = NULL, ...);
-PyObject * Py_BadArgument();
-PyObject * Py_BuildNone();
-PyObject * Py_BuildEmptyTuple();
+PyObject* Py_BuildException(const char* c_pszErr = NULL, ...);
+PyObject* Py_BadArgument();
+PyObject* Py_BuildNone();
+PyObject* Py_BuildEmptyTuple();

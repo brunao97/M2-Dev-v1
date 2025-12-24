@@ -20,10 +20,14 @@ bool NSound::LoadSoundInformationPiece(const char* c_szFileName, NSound::TSoundD
 	strResult = c_szFileName;
 
 	CTextFileLoader* pkTextFileLoader = CTextFileLoader::Cache(c_szFileName);
+
 	if (!pkTextFileLoader)
+	{
 		return false;
+	}
 
 	CTextFileLoader& rkTextFileLoader = *pkTextFileLoader;
+
 	if (rkTextFileLoader.IsEmpty())
 	{
 		SetResultString((strResult + " Can not open file for reading").c_str());
@@ -33,6 +37,7 @@ bool NSound::LoadSoundInformationPiece(const char* c_szFileName, NSound::TSoundD
 	rkTextFileLoader.SetTop();
 
 	int iCount;
+
 	if (!rkTextFileLoader.GetTokenInteger("sounddatacount", &iCount))
 	{
 		SetResultString((strResult + " File format error, SoundDataCount Unable to find.").c_str());
@@ -43,10 +48,12 @@ bool NSound::LoadSoundInformationPiece(const char* c_szFileName, NSound::TSoundD
 	rSoundDataVector.resize(iCount);
 
 	char szSoundDataHeader[32 + 1];
+
 	for (uint32_t i = 0; i < rSoundDataVector.size(); ++i)
 	{
 		_snprintf_s(szSoundDataHeader, sizeof(szSoundDataHeader), "sounddata%02d", i);
 		CTokenVector* pTokenVector;
+
 		if (!rkTextFileLoader.GetTokenVector(szSoundDataHeader, &pTokenVector))
 		{
 			SetResultString((strResult + " File format error: " + szSoundDataHeader + " Unable to find").c_str());
@@ -60,11 +67,13 @@ bool NSound::LoadSoundInformationPiece(const char* c_szFileName, NSound::TSoundD
 		}
 
 		rSoundDataVector[i].fTime = (float)atof(pTokenVector->at(0).c_str());
+
 		if (c_szPathHeader)
 		{
 			rSoundDataVector[i].strSoundFileName = c_szPathHeader;
 			rSoundDataVector[i].strSoundFileName += pTokenVector->at(1).c_str();
 		}
+
 		else
 		{
 			rSoundDataVector[i].strSoundFileName = pTokenVector->at(1).c_str();
@@ -85,6 +94,7 @@ bool NSound::SaveSoundInformationPiece(const char* c_szFileName, NSound::TSoundD
 		{
 			_unlink(c_szFileName);		// erase.
 		}
+
 		return true;
 	}
 
@@ -120,13 +130,16 @@ bool NSound::SaveSoundInformationPiece(const char* c_szFileName, NSound::TSoundD
 void NSound::DataToInstance(const TSoundDataVector& c_rSoundDataVector, TSoundInstanceVector* pSoundInstanceVector)
 {
 	if (c_rSoundDataVector.empty())
+	{
 		return;
+	}
 
 	uint32_t dwFPS = 60;
 	const float c_fFrameTime = 1.0f / float(dwFPS);
 
 	pSoundInstanceVector->clear();
 	pSoundInstanceVector->resize(c_rSoundDataVector.size());
+
 	for (uint32_t i = 0; i < c_rSoundDataVector.size(); ++i)
 	{
 		const TSoundData& c_rSoundData = c_rSoundDataVector[i];

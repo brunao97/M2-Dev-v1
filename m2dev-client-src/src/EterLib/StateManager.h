@@ -171,24 +171,34 @@ public:
 		DWORD i, y;
 
 		for (i = 0; i < STATEMANAGER_MAX_RENDERSTATES; i++)
+		{
 			m_RenderStates[i] = gs_DefaultRenderStates[i];
+		}
 
 		for (i = 0; i < STATEMANAGER_MAX_STAGES; i++)
 			for (y = 0; y < STATEMANAGER_MAX_TEXTURESTATES; y++)
+			{
 				m_TextureStates[i][y] = 0x7FFFFFFF;
+			}
 
 		for (i = 0; i < STATEMANAGER_MAX_STREAMS; i++)
+		{
 			m_StreamData[i] = CStreamData();
+		}
 
 		m_IndexData = CIndexData();
 
 		for (i = 0; i < STATEMANAGER_MAX_STAGES; i++)
+		{
 			m_Textures[i] = NULL;
+		}
 
-		// Matrices and constants are not cached, just restored.  It's silly to check all the 
+		// Matrices and constants are not cached, just restored.  It's silly to check all the
 		// data elements (by which time the driver could have been sent them).
 		for (i = 0; i < STATEMANAGER_MAX_TRANSFORMSTATES; i++)
+		{
 			D3DXMatrixIdentity(&m_Matrices[i]);
+		}
 
 		m_dwPixelShader = 0;
 		m_dwVertexShader = 0;

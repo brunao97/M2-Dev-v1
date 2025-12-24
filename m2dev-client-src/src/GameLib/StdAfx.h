@@ -38,7 +38,6 @@
 //#include "FlyingData.h"
 //#include "FlyingInstance.h"
 
-
 // Octree
 //#include "Octree.h"
 
@@ -67,6 +66,5 @@
 
 // Game Event Manager
 //#include "GameEventManager.h"
-
 
 #endif

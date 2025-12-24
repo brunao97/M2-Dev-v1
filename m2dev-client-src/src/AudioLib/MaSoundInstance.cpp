@@ -9,7 +9,8 @@ bool MaSoundInstance::InitFromBuffer(ma_engine& engine, const std::vector<uint8_
 	{
 		ma_decoder_config decoderConfig = ma_decoder_config_init_default();
 		ma_result result = ma_decoder_init_memory(buffer.data(), buffer.size(),
-												  &decoderConfig, &m_Decoder);
+			&decoderConfig, &m_Decoder);
+
 		if (!MD_ASSERT(result == MA_SUCCESS))
 		{
 			TraceError("Failed to initialize decoder memory.");
@@ -20,6 +21,7 @@ bool MaSoundInstance::InitFromBuffer(ma_engine& engine, const std::vector<uint8_
 		soundConfig.pDataSource = &m_Decoder;
 
 		result = ma_sound_init_ex(&engine, &soundConfig, &m_Sound);
+
 		if (!MD_ASSERT(result == MA_SUCCESS))
 		{
 			TraceError("Failed to initialize sound.");
@@ -29,6 +31,7 @@ bool MaSoundInstance::InitFromBuffer(ma_engine& engine, const std::vector<uint8_
 		m_Identity = identity;
 		m_Initialized = true;
 	}
+
 	return m_Initialized;
 }
 
@@ -39,6 +42,7 @@ bool MaSoundInstance::InitFromFile(ma_engine& engine, const std::string& filePat
 	{
 		ma_decoder_config decoderConfig = ma_decoder_config_init_default();
 		ma_result result = ma_decoder_init_file(filePathOnDisk.c_str(), &decoderConfig, &m_Decoder);
+
 		if (!MD_ASSERT(result == MA_SUCCESS))
 		{
 			TraceError("Failed to initialize sound file decoder.");
@@ -49,6 +53,7 @@ bool MaSoundInstance::InitFromFile(ma_engine& engine, const std::string& filePat
 		soundConfig.pDataSource = &m_Decoder;
 
 		result = ma_sound_init_ex(&engine, &soundConfig, &m_Sound);
+
 		if (!MD_ASSERT(result == MA_SUCCESS))
 		{
 			TraceError("Failed to initialize sound.");
@@ -58,6 +63,7 @@ bool MaSoundInstance::InitFromFile(ma_engine& engine, const std::string& filePat
 		m_Identity = filePathOnDisk;
 		m_Initialized = true;
 	}
+
 	return m_Initialized;
 }
 
@@ -68,6 +74,7 @@ void MaSoundInstance::Destroy()
 		ma_sound_uninit(&m_Sound);
 		ma_decoder_uninit(&m_Decoder);
 	}
+
 	m_Initialized = false;
 	m_Identity = "";
 	m_FadeTargetVolume = 0.0f;
@@ -141,6 +148,7 @@ void MaSoundInstance::Config3D(bool toggle, float minDist, float maxDist)
 void MaSoundInstance::Fade(float toVolume, float secDurationFromMinMax)
 {
 	m_FadeTargetVolume = std::clamp<float>(toVolume, 0.0f, 1.0f);
+
 	if (m_FadeTargetVolume != GetVolume())
 	{
 		const float rate = 1.0f / CS_CLIENT_FPS / secDurationFromMinMax;
@@ -165,13 +173,18 @@ void MaSoundInstance::Update()
 	{
 		float targetVolume = std::clamp<float>(m_FadeTargetVolume, 0.0f, 1.0f);
 		float volume = std::clamp<float>(GetVolume() + m_FadeRatePerFrame, 0.0f, 1.0f);
+
 		if ((m_FadeRatePerFrame > 0.0f && volume >= targetVolume) || (m_FadeRatePerFrame < 0.0f && volume <= targetVolume))
 		{
 			volume = m_FadeTargetVolume;
 			m_FadeRatePerFrame = 0.0f;
+
 			if (m_FadeTargetVolume <= 0.0f)
+			{
 				ma_sound_stop(&m_Sound);
+			}
 		}
+
 		ma_sound_set_volume(&m_Sound, volume);
 	}
 }

@@ -9,19 +9,19 @@
 BOOL g_bShowOverInWindowName = FALSE;
 
 namespace UI
-{	
+{
 	static PyObject* gs_poEmptyTuple = NULL;
 
-	PyObject * BuildEmptyTuple()
+	PyObject* BuildEmptyTuple()
 	{
 		Py_INCREF(gs_poEmptyTuple);
 		return gs_poEmptyTuple;
 	}
 
 	std::set<CWindow*> gs_kSet_pkWnd;
-	
+
 	CWindowManager::CWindowManager()
-		: 
+		:
 		m_pActiveWindow(NULL),
 		m_pPointWindow(NULL),
 		m_pLeftCaptureWindow(NULL),
@@ -36,16 +36,16 @@ namespace UI
 		m_iHres(0),
 		m_iVres(0),
 		m_bOnceIgnoreMouseLeftButtonUpEventFlag(FALSE)
-	{		
+	{
 		m_pRootWindow = new CWindow(NULL);
 		m_pRootWindow->SetName("root");
 		m_pRootWindow->Show();
 
-		const char * layerTbl[] = {"GAME","UI_BOTTOM","UI","TOP_MOST","CURTAIN"};
+		const char* layerTbl[] = { "GAME", "UI_BOTTOM", "UI", "TOP_MOST", "CURTAIN" };
 
-		for(DWORD layer = 0; layer < sizeof(layerTbl)/sizeof(layerTbl[0]); layer++)
+		for (DWORD layer = 0; layer < sizeof(layerTbl) / sizeof(layerTbl[0]); layer++)
 		{
-			CWindow * pLayer = new CLayer(NULL);
+			CWindow* pLayer = new CLayer(NULL);
 			pLayer->SetName(layerTbl[layer]);
 			pLayer->Show();
 			m_LayerWindowMap.insert(TLayerContainer::value_type(layerTbl[layer], pLayer));
@@ -60,7 +60,7 @@ namespace UI
 	}
 
 	CWindowManager::~CWindowManager()
-	{		
+	{
 		Py_DECREF(gs_poEmptyTuple);
 
 		stl_wipe_second(m_LayerWindowMap);
@@ -77,25 +77,26 @@ namespace UI
 		__ClearReserveDeleteWindowList();
 #ifdef __WINDOW_LEAK_CHECK__
 		std::set<CWindow*>::iterator i;
-		for (i=gs_kSet_pkWnd.begin(); i!=gs_kSet_pkWnd.end(); ++i)
+
+		for (i = gs_kSet_pkWnd.begin(); i != gs_kSet_pkWnd.end(); ++i)
 		{
-			CWindow* pkWnd=*i;
+			CWindow* pkWnd = *i;
 			Logf(1, "CWindowManager::Destroy LOST WINDOW %s\n", pkWnd->GetName());
 		}
-#endif		
 
+#endif
 	}
 
-	void CWindowManager::SetMouseHandler(PyObject * poMouseHandler)
+	void CWindowManager::SetMouseHandler(PyObject* poMouseHandler)
 	{
 		m_poMouseHandler = poMouseHandler;
 	}
 
-	CWindow * CWindowManager::RegisterWindow(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterWindow(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CWindow(po);
+		CWindow* pWin = new CWindow(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 #ifdef __WINDOW_LEAK_CHECK__
 		gs_kSet_pkWnd.insert(pWin);
@@ -103,96 +104,87 @@ namespace UI
 		return (pWin);
 	}
 
-	CWindow *	CWindowManager::__NewWindow(PyObject * po, DWORD dwWndType)
+	CWindow* CWindowManager::__NewWindow(PyObject* po, DWORD dwWndType)
 	{
-		switch(dwWndType)
+		switch (dwWndType)
 		{
-			case WT_SLOT:
-				return new CSlotWindow(po);
-				break;
-			case WT_GRIDSLOT:
-				return new CGridSlotWindow(po);
-				break;
-			case WT_TEXTLINE:
-				return new CTextLine(po);
-				break;
-			case WT_MARKBOX:
-				return new CMarkBox(po);
-				break;
-			case WT_IMAGEBOX:
-				return new CImageBox(po);
-				break;
-			case WT_EXP_IMAGEBOX:
-				return new CExpandedImageBox(po);
-				break;
-			case WT_ANI_IMAGEBOX:
-				return new CAniImageBox(po);
-				break;
-			case WT_BUTTON:
-				return new CButton(po);
-				break;
-			case WT_RATIOBUTTON:
-				return new CRadioButton(po);
-				break;
-			case WT_TOGGLEBUTTON:
-				return new CToggleButton(po);
-				break;
-			case WT_DRAGBUTTON:
-				return new CDragButton(po);
-				break;
-			case WT_BOX:
-				return new CBox(po);
-				break;
-			case WT_BAR:
-				return new CBar(po);
-				break;
-			case WT_LINE:
-				return new CLine(po);
-				break;
-			case WT_BAR3D:
-				return new CBar3D(po);
-				break;
-			case WT_NUMLINE:
-				return new CNumberLine(po);
-				break;
-			default:
-				assert(!"CWindowManager::__NewWindow");
-				break;
-		}	
-		return new CWindow(po);				
+		case WT_SLOT:
+			return new CSlotWindow(po);
+			break;
+
+		case WT_GRIDSLOT:
+			return new CGridSlotWindow(po);
+			break;
+
+		case WT_TEXTLINE:
+			return new CTextLine(po);
+			break;
+
+		case WT_MARKBOX:
+			return new CMarkBox(po);
+			break;
+
+		case WT_IMAGEBOX:
+			return new CImageBox(po);
+			break;
+
+		case WT_EXP_IMAGEBOX:
+			return new CExpandedImageBox(po);
+			break;
+
+		case WT_ANI_IMAGEBOX:
+			return new CAniImageBox(po);
+			break;
+
+		case WT_BUTTON:
+			return new CButton(po);
+			break;
+
+		case WT_RATIOBUTTON:
+			return new CRadioButton(po);
+			break;
+
+		case WT_TOGGLEBUTTON:
+			return new CToggleButton(po);
+			break;
+
+		case WT_DRAGBUTTON:
+			return new CDragButton(po);
+			break;
+
+		case WT_BOX:
+			return new CBox(po);
+			break;
+
+		case WT_BAR:
+			return new CBar(po);
+			break;
+
+		case WT_LINE:
+			return new CLine(po);
+			break;
+
+		case WT_BAR3D:
+			return new CBar3D(po);
+			break;
+
+		case WT_NUMLINE:
+			return new CNumberLine(po);
+			break;
+
+		default:
+			assert(!"CWindowManager::__NewWindow");
+			break;
+		}
+
+		return new CWindow(po);
 	}
 
-	CWindow *	CWindowManager::RegisterTypeWindow(PyObject * po, DWORD dwWndType, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterTypeWindow(PyObject* po, DWORD dwWndType, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = __NewWindow(po, dwWndType);
-		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
-
-#ifdef __WINDOW_LEAK_CHECK__
-		gs_kSet_pkWnd.insert(pWin);
-#endif		
-		return pWin;
-	}
-
-	CWindow * CWindowManager::RegisterSlotWindow(PyObject * po, const char * c_szLayer)
-	{
-		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
-
-		CWindow * pWin = new CSlotWindow(po);
-		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
-
-#ifdef __WINDOW_LEAK_CHECK__
-		gs_kSet_pkWnd.insert(pWin);
-#endif		
-		return pWin;
-	}
-
-	CWindow * CWindowManager::RegisterGridSlotWindow(PyObject * po, const char * c_szLayer)
-	{
-		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
-
-		CWindow * pWin = new CGridSlotWindow(po);
+		CWindow* pWin = __NewWindow(po, dwWndType);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -201,11 +193,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterTextLine(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterSlotWindow(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CTextLine(po);
+		CWindow* pWin = new CSlotWindow(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -214,11 +206,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterImageBox(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterGridSlotWindow(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CImageBox(po);
+		CWindow* pWin = new CGridSlotWindow(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -227,11 +219,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterMarkBox(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterTextLine(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CMarkBox(po);
+		CWindow* pWin = new CTextLine(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -240,11 +232,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterExpandedImageBox(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterImageBox(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CExpandedImageBox(po);
+		CWindow* pWin = new CImageBox(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -253,11 +245,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterAniImageBox(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterMarkBox(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CAniImageBox(po);
+		CWindow* pWin = new CMarkBox(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -266,11 +258,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterButton(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterExpandedImageBox(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CButton(po);
+		CWindow* pWin = new CExpandedImageBox(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -279,11 +271,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterRadioButton(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterAniImageBox(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CRadioButton(po);
+		CWindow* pWin = new CAniImageBox(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -292,11 +284,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterToggleButton(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterButton(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CToggleButton(po);
+		CWindow* pWin = new CButton(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -305,11 +297,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterDragButton(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterRadioButton(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CDragButton(po);
+		CWindow* pWin = new CRadioButton(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -318,11 +310,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterBox(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterToggleButton(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CBox(po);
+		CWindow* pWin = new CToggleButton(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -331,11 +323,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterBar(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterDragButton(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CBar(po);
+		CWindow* pWin = new CDragButton(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -344,11 +336,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterLine(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterBox(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CLine(po);
+		CWindow* pWin = new CBox(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -357,11 +349,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterBar3D(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterBar(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CBar3D(po);
+		CWindow* pWin = new CBar(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -370,11 +362,11 @@ namespace UI
 		return pWin;
 	}
 
-	CWindow * CWindowManager::RegisterNumberLine(PyObject * po, const char * c_szLayer)
+	CWindow* CWindowManager::RegisterLine(PyObject* po, const char* c_szLayer)
 	{
 		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
 
-		CWindow * pWin = new CNumberLine(po);
+		CWindow* pWin = new CLine(po);
 		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
 
 #ifdef __WINDOW_LEAK_CHECK__
@@ -383,37 +375,77 @@ namespace UI
 		return pWin;
 	}
 
-	void CWindowManager::NotifyDestroyWindow(CWindow * pWindow)
+	CWindow* CWindowManager::RegisterBar3D(PyObject* po, const char* c_szLayer)
+	{
+		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
+
+		CWindow* pWin = new CBar3D(po);
+		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
+
+#ifdef __WINDOW_LEAK_CHECK__
+		gs_kSet_pkWnd.insert(pWin);
+#endif
+		return pWin;
+	}
+
+	CWindow* CWindowManager::RegisterNumberLine(PyObject* po, const char* c_szLayer)
+	{
+		assert(m_LayerWindowMap.end() != m_LayerWindowMap.find(c_szLayer));
+
+		CWindow* pWin = new CNumberLine(po);
+		m_LayerWindowMap[c_szLayer]->AddChild(pWin);
+
+#ifdef __WINDOW_LEAK_CHECK__
+		gs_kSet_pkWnd.insert(pWin);
+#endif
+		return pWin;
+	}
+
+	void CWindowManager::NotifyDestroyWindow(CWindow* pWindow)
 	{
 		if (pWindow == m_pActiveWindow)
+		{
 			m_pActiveWindow = NULL;
+		}
 
 		if (pWindow == m_pPointWindow)
+		{
 			m_pPointWindow = NULL;
+		}
 
 		if (pWindow == m_pLeftCaptureWindow)
+		{
 			m_pLeftCaptureWindow = NULL;
+		}
 
 		if (pWindow == m_pMiddleCaptureWindow)
+		{
 			m_pMiddleCaptureWindow = NULL;
+		}
 
 		if (pWindow == m_pRightCaptureWindow)
+		{
 			m_pRightCaptureWindow = NULL;
+		}
 
 		if (pWindow == m_pLockWindow)
+		{
 			m_pLockWindow = NULL;
+		}
 
 		m_LockWindowList.remove(pWindow);
 		m_ActiveWindowList.remove(pWindow);
 		m_PickAlwaysWindowList.remove(pWindow);
 
 		TKeyCaptureWindowMap::iterator itor = m_KeyCaptureWindowMap.begin();
+
 		for (; itor != m_KeyCaptureWindowMap.end();)
 		{
 			if (pWindow == itor->second)
 			{
 				itor = m_KeyCaptureWindowMap.erase(itor);
 			}
+
 			else
 			{
 				++itor;
@@ -421,14 +453,16 @@ namespace UI
 		}
 	}
 
-	void CWindowManager::DestroyWindow(CWindow * pWin)
+	void CWindowManager::DestroyWindow(CWindow* pWin)
 	{
 		NotifyDestroyWindow(pWin);
+
 		if (pWin->HasParent())
 		{
-			CWindow * pParentWin = pWin->GetParent();
+			CWindow* pParentWin = pWin->GetParent();
 			pParentWin->DeleteChild(pWin);
 		}
+
 		pWin->Clear();
 		m_ReserveDeleteWindowList.push_back(pWin);
 	}
@@ -437,8 +471,11 @@ namespace UI
 	{
 		long ldx = abs(m_lMouseX - m_lPickedX);
 		long ldy = abs(m_lMouseY - m_lPickedY);
-		if (ldx+ldy < 10)
+
+		if (ldx + ldy < 10)
+		{
 			return FALSE;
+		}
 
 		return TRUE;
 	}
@@ -463,7 +500,7 @@ namespace UI
 		return m_dwAttachingSlotNumber;
 	}
 
-	void CWindowManager::GetAttachingIconSize(BYTE * pbyWidth, BYTE * pbyHeight)
+	void CWindowManager::GetAttachingIconSize(BYTE* pbyWidth, BYTE* pbyHeight)
 	{
 		*pbyWidth = m_byAttachingIconWidth;
 		*pbyHeight = m_byAttachingIconHeight;
@@ -488,17 +525,21 @@ namespace UI
 	void CWindowManager::DeattachIcon()
 	{
 		SetAttachingFlag(FALSE);
+
 		if (m_poMouseHandler)
+		{
 			PyCallClassMemberFunc(m_poMouseHandler, "DeattachObject", BuildEmptyTuple());
+		}
 	}
 
-	void CWindowManager::SetParent(CWindow * pWindow, CWindow * pParentWindow)
+	void CWindowManager::SetParent(CWindow* pWindow, CWindow* pParentWindow)
 	{
 		if (!pWindow)
 		{
 			assert(!"CWindowManager::SetParent - There is no self window!");
 			return;
 		}
+
 		if (!pParentWindow)
 		{
 			assert(!"There is no parent window");
@@ -507,10 +548,12 @@ namespace UI
 
 		if (pWindow->HasParent())
 		{
-			CWindow * pOldParentWindow = pWindow->GetParent();
+			CWindow* pOldParentWindow = pWindow->GetParent();
 
 			if (pParentWindow == pOldParentWindow)
+			{
 				return;
+			}
 
 			pOldParentWindow->DeleteChild(pWindow);
 		}
@@ -518,7 +561,7 @@ namespace UI
 		pParentWindow->AddChild(pWindow);
 	}
 
-	void CWindowManager::SetPickAlways(CWindow * pWindow)
+	void CWindowManager::SetPickAlways(CWindow* pWindow)
 	{
 		m_PickAlwaysWindowList.push_back(pWindow);
 	}
@@ -529,18 +572,22 @@ namespace UI
 		m_iIgnoreEndTime = timeGetTime() + 500;
 	}
 
-	void CWindowManager::LockWindow(CWindow * pWin)
+	void CWindowManager::LockWindow(CWindow* pWin)
 	{
 		if (m_pActiveWindow)
+		{
 			m_pActiveWindow->OnKillFocus();
+		}
 
 		// 이미 락된 윈도우리스트안에 있다면 제거한다..
 		m_LockWindowList.remove(pWin);
 
 		if (m_pLockWindow)
 		{
-			if (m_pLockWindow==pWin)
+			if (m_pLockWindow == pWin)
+			{
 				return;
+			}
 
 			m_LockWindowList.push_back(m_pLockWindow);
 		}
@@ -555,23 +602,29 @@ namespace UI
 			if (m_LockWindowList.empty())
 			{
 				m_pLockWindow = NULL;
+
 				if (m_pActiveWindow)
+				{
 					m_pActiveWindow->OnSetFocus();
+				}
 			}
+
 			else
 			{
 				m_pLockWindow = m_LockWindowList.back();
 				m_LockWindowList.pop_back();
-			}			
+			}
 		}
 	}
 
-	void CWindowManager::ActivateWindow(CWindow * pWin)
+	void CWindowManager::ActivateWindow(CWindow* pWin)
 	{
 		m_ActiveWindowList.remove(pWin);
 
 		if (pWin == m_pActiveWindow)
+		{
 			return;
+		}
 
 		if (m_pActiveWindow)
 		{
@@ -598,6 +651,7 @@ namespace UI
 				m_pActiveWindow->OnKillFocus();
 				m_pActiveWindow = NULL;
 			}
+
 			else
 			{
 				m_pActiveWindow->OnKillFocus();
@@ -610,37 +664,46 @@ namespace UI
 		}
 	}
 
-	void CWindowManager::SetTop(CWindow * pWin)
+	void CWindowManager::SetTop(CWindow* pWin)
 	{
 		if (!pWin->HasParent())
+		{
 			return;
+		}
 
-		CWindow * pParentWindow = pWin->GetParent();
+		CWindow* pParentWindow = pWin->GetParent();
 		pParentWindow->SetTop(pWin);
 
 		// NOTE : Capture가 리셋된다..? - [levites]
 		// NOTE : 인벤토리에서 아이템을 드래그 해서 밖에다 놓을때 캡춰가 남아서 창의 버튼을 두번 눌러야 하는 버그를 위해 추가
-//		ResetCapture();
+		//		ResetCapture();
 	}
 
 	void CWindowManager::SetTopUIWindow()
 	{
 		if (m_pLockWindow)
+		{
 			return;
+		}
 
 		// GameLayer에 속해 있는 윈도우가 피킹 됐다면 무조건 SetTop을 해준다.
 		TLayerContainer::iterator itor = m_LayerWindowMap.find("UI");
+
 		if (itor == m_LayerWindowMap.end())
+		{
 			return;
-		CWindow * pGameLayer = itor->second;
-		CWindow * pTopWindow = pGameLayer->PickTopWindow(m_lMouseX, m_lMouseY);
+		}
+
+		CWindow* pGameLayer = itor->second;
+		CWindow* pTopWindow = pGameLayer->PickTopWindow(m_lMouseX, m_lMouseY);
+
 		if (pTopWindow)
 		{
 			SetTop(pTopWindow);
 		}
 	}
 
-	CWindow * CWindowManager::GetActivateWindow()
+	CWindow* CWindowManager::GetActivateWindow()
 	{
 		return m_pActiveWindow;
 	}
@@ -658,23 +721,25 @@ namespace UI
 		std::function<void(CWindow*)> recurse;
 
 		recurse = [&](CWindow* pWin)
-		{
-			if (!pWin)
-				return;
-
-			// If this is a slot window, call its helper
-			if (pWin->IsType(UI::CSlotWindow::Type()))
 			{
-				UI::CSlotWindow * pSlotWin = static_cast<UI::CSlotWindow*>(pWin);
-				pSlotWin->ClearStoredSlotCoolTime(dwKey, dwSlotIndex);
-			}
+				if (!pWin)
+				{
+					return;
+				}
 
-			// Visit children
-			for (CWindow* pChild : pWin->GetChildList())
-			{
-				recurse(pChild);
-			}
-		};
+				// If this is a slot window, call its helper
+				if (pWin->IsType(UI::CSlotWindow::Type()))
+				{
+					UI::CSlotWindow* pSlotWin = static_cast<UI::CSlotWindow*> (pWin);
+					pSlotWin->ClearStoredSlotCoolTime(dwKey, dwSlotIndex);
+				}
+
+				// Visit children
+				for (CWindow* pChild : pWin->GetChildList())
+				{
+					recurse(pChild);
+				}
+			};
 
 		// Walk all layer roots
 		for (CWindow* pLayer : m_LayerWindowList)
@@ -685,8 +750,10 @@ namespace UI
 
 	void CWindowManager::SetResolution(int hres, int vres)
 	{
-		if (hres<=0 || vres<=0)
+		if (hres <= 0 || vres <= 0)
+		{
 			return;
+		}
 
 		m_iHres = hres;
 		m_iVres = vres;
@@ -694,13 +761,13 @@ namespace UI
 
 	float CWindowManager::GetAspect()
 	{
-		return (m_iHres)/float(m_iVres);
+		return (m_iHres) / float(m_iVres);
 	}
 
 	void CWindowManager::SetScreenSize(long lWidth, long lHeight)
 	{
-		m_lWidth	= lWidth;
-		m_lHeight	= lHeight;
+		m_lWidth = lWidth;
+		m_lHeight = lHeight;
 
 		for (TLayerContainer::iterator itor = m_LayerWindowMap.begin(); itor != m_LayerWindowMap.end(); ++itor)
 		{
@@ -712,20 +779,20 @@ namespace UI
 	{
 		for (TWindowContainer::iterator itor = m_ReserveDeleteWindowList.begin(); itor != m_ReserveDeleteWindowList.end(); ++itor)
 		{
-			CWindow * pWin = *itor;
+			CWindow* pWin = *itor;
 #ifdef __WINDOW_LEAK_CHECK__
 			gs_kSet_pkWnd.erase(pWin);
 #endif
 			delete pWin;
 		}
-		m_ReserveDeleteWindowList.clear();
 
-	}	
+		m_ReserveDeleteWindowList.clear();
+	}
 
 	void CWindowManager::Update()
 	{
 		__ClearReserveDeleteWindowList();
-		
+
 		m_pRootWindow->Update();
 	}
 
@@ -734,7 +801,7 @@ namespace UI
 		m_pRootWindow->Render();
 	}
 
-	CWindow * CWindowManager::__PickWindow(long x, long y)
+	CWindow* CWindowManager::__PickWindow(long x, long y)
 	{
 		if (m_pLockWindow)
 		{
@@ -743,19 +810,24 @@ namespace UI
 
 		for (TWindowContainer::iterator itor = m_PickAlwaysWindowList.begin(); itor != m_PickAlwaysWindowList.end(); ++itor)
 		{
-			CWindow * pWindow = *itor;
+			CWindow* pWindow = *itor;
+
 			if (pWindow->IsRendering())
-			if (pWindow->IsIn(x, y))
-				return pWindow;
+				if (pWindow->IsIn(x, y))
+				{
+					return pWindow;
+				}
 		}
 
 		for (TWindowContainer::reverse_iterator ritor = m_LayerWindowList.rbegin(); ritor != m_LayerWindowList.rend(); ++ritor)
 		{
-			CWindow * pLayer = *ritor;
-			CWindow * pPickedWindow = pLayer->PickWindow(x, y);
+			CWindow* pLayer = *ritor;
+			CWindow* pPickedWindow = pLayer->PickWindow(x, y);
 
 			if (pPickedWindow != pLayer)
+			{
 				return pPickedWindow;
+			}
 		}
 
 		return NULL;
@@ -763,17 +835,21 @@ namespace UI
 
 	void CWindowManager::SetMousePosition(long x, long y)
 	{
-		if (m_iHres==0)
+		if (m_iHres == 0)
+		{
 			return;
+		}
 
-		if (m_iVres==0)
+		if (m_iVres == 0)
+		{
 			return;
+		}
 
 		m_lMouseX = m_lWidth * x / m_iHres;
 		m_lMouseY = m_lHeight * y / m_iVres;
 	}
 
-	void CWindowManager::GetMousePosition(long & rx, long & ry)
+	void CWindowManager::GetMousePosition(long& rx, long& ry)
 	{
 		rx = m_lMouseX;
 		ry = m_lMouseY;
@@ -784,19 +860,25 @@ namespace UI
 		if (IsAttaching())
 		{
 			if (x > m_lWidth)
+			{
 				x = m_lWidth;
+			}
+
 			if (y > m_lHeight)
+			{
 				y = m_lHeight;
+			}
 		}
 
 		SetMousePosition(x, y);
-		CWindow * pPointWindow = __PickWindow(m_lMouseX, m_lMouseY);
+		CWindow* pPointWindow = __PickWindow(m_lMouseX, m_lMouseY);
 
 		if (g_bShowOverInWindowName)
 		{
 			if (pPointWindow)
 			{
 				static std::string strPickWindowName = "";
+
 				if (0 != strPickWindowName.compare(pPointWindow->GetName()))
 				{
 					Tracef(" OverInWindowName [%s]\n", pPointWindow->GetName());
@@ -807,12 +889,13 @@ namespace UI
 
 		if (m_pLeftCaptureWindow)
 		{
-			CWindow * pWin = m_pLeftCaptureWindow;
+			CWindow* pWin = m_pLeftCaptureWindow;
 
 			if (pWin->IsFlag(CWindow::FLAG_MOVABLE))
 			{
 				long x = m_lMouseX - m_lDragX;
 				long y = m_lMouseY - m_lDragY;
+
 				if (pWin->HasParent())
 				{
 					x -= pWin->GetParent()->GetRect().left;
@@ -821,10 +904,12 @@ namespace UI
 
 				long lx, ly;
 				pWin->GetPosition(&lx, &ly);
+
 				if (pWin->IsFlag(CWindow::FLAG_RESTRICT_X))
 				{
 					x = lx;
 				}
+
 				if (pWin->IsFlag(CWindow::FLAG_RESTRICT_Y))
 				{
 					y = ly;
@@ -838,19 +923,30 @@ namespace UI
 					limitRect.bottom = m_lHeight - limitRect.bottom;
 
 					if (x < limitRect.left)
+					{
 						x = limitRect.left;
+					}
+
 					else if (x + pWin->GetWidth() >= limitRect.right)
+					{
 						x = limitRect.right - pWin->GetWidth();
+					}
 
 					if (y < limitRect.top)
+					{
 						y = limitRect.top;
+					}
+
 					else if (y + pWin->GetHeight() >= limitRect.bottom)
+					{
 						y = limitRect.bottom - pWin->GetHeight();
+					}
 				}
 
 				pWin->SetPosition(x, y);
 				pWin->OnMoveWindow(x, y);
 			}
+
 			else if (m_pLeftCaptureWindow->IsFlag(CWindow::FLAG_DRAGABLE))
 			{
 				long x = m_lMouseX - m_lDragX;
@@ -862,16 +958,25 @@ namespace UI
 		if (m_pPointWindow != pPointWindow)
 		{
 #ifdef _DEBUG
+
 			if (pPointWindow && pPointWindow->GetName())
+			{
 				Tracenf("PointWindow: %s", pPointWindow->GetName());
+			}
+
 #endif
+
 			if (m_pPointWindow)
+			{
 				m_pPointWindow->OnMouseOverOut();
+			}
 
 			m_pPointWindow = pPointWindow;
 
 			if (m_pPointWindow)
+			{
 				m_pPointWindow->OnMouseOverIn();
+			}
 		}
 
 		if (m_pPointWindow)
@@ -887,18 +992,24 @@ namespace UI
 		/////
 
 		SetMousePosition(x, y);
-		CWindow * pWin = GetPointWindow();
+		CWindow* pWin = GetPointWindow();
 
 		if (!pWin)
+		{
 			return;
+		}
 
 		// Attach
 		if (pWin->IsFlag(CWindow::FLAG_ATTACH))
+		{
 			pWin = pWin->GetRoot();
+		}
 
 		// Drag
 		if (!pWin->IsFlag(CWindow::FLAG_NOT_CAPTURE))
+		{
 			m_pLeftCaptureWindow = pWin;
+		}
 
 		m_lDragX = m_lMouseX - pWin->GetRect().left;
 		m_lDragY = m_lMouseY - pWin->GetRect().top;
@@ -933,9 +1044,12 @@ namespace UI
 			}
 		}
 
-		CWindow * pWin = GetPointWindow();
+		CWindow* pWin = GetPointWindow();
+
 		if (pWin)
+		{
 			pWin->OnMouseLeftButtonUp();
+		}
 
 		m_pLeftCaptureWindow = NULL;
 	}
@@ -944,9 +1058,12 @@ namespace UI
 	{
 		SetMousePosition(x, y);
 
-		CWindow * pWin = GetPointWindow();
+		CWindow* pWin = GetPointWindow();
+
 		if (!pWin)
+		{
 			return;
+		}
 
 		pWin->OnMouseLeftButtonDoubleClick();
 	}
@@ -958,17 +1075,24 @@ namespace UI
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		SetMousePosition(x, y);
-		CWindow * pWin = GetPointWindow();
+		CWindow* pWin = GetPointWindow();
+
 		if (!pWin)
+		{
 			return;
+		}
 
 		// Attach
 		if (pWin->IsFlag(CWindow::FLAG_ATTACH))
+		{
 			pWin = pWin->GetRoot();
+		}
 
 		// Drag
 		if (!pWin->IsFlag(CWindow::FLAG_NOT_CAPTURE))
+		{
 			m_pRightCaptureWindow = pWin;
+		}
 
 		pWin->OnMouseRightButtonDown();
 	}
@@ -984,9 +1108,12 @@ namespace UI
 			}
 		}
 
-		CWindow * pWin = GetPointWindow();
+		CWindow* pWin = GetPointWindow();
+
 		if (pWin)
+		{
 			pWin->OnMouseRightButtonUp();
+		}
 
 		m_pRightCaptureWindow = NULL;
 		DeattachIcon();
@@ -996,7 +1123,8 @@ namespace UI
 	{
 		SetMousePosition(x, y);
 
-		CWindow * pWin = GetPointWindow();
+		CWindow* pWin = GetPointWindow();
+
 		if (pWin)
 		{
 			pWin->OnMouseRightButtonDoubleClick();
@@ -1007,9 +1135,12 @@ namespace UI
 	{
 		SetMousePosition(x, y);
 
-		CWindow * pWin = GetPointWindow();
+		CWindow* pWin = GetPointWindow();
+
 		if (!pWin)
+		{
 			return;
+		}
 
 		m_pMiddleCaptureWindow = pWin;
 
@@ -1029,9 +1160,12 @@ namespace UI
 			}
 		}
 
-		CWindow * pWin = GetPointWindow();
+		CWindow* pWin = GetPointWindow();
+
 		if (!pWin)
+		{
 			return;
+		}
 
 		pWin->OnMouseMiddleButtonUp();
 		m_pMiddleCaptureWindow = NULL;
@@ -1047,9 +1181,14 @@ namespace UI
 		}
 
 		if (!m_pActiveWindow)
+		{
 			return;
+		}
+
 		if (!m_pActiveWindow->IsRendering())
+		{
 			return;
+		}
 
 		m_pActiveWindow->OnIMEUpdate();
 	}
@@ -1061,30 +1200,36 @@ namespace UI
 			m_pLockWindow->OnIMETabEvent();
 			return;
 		}
+
 		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsRendering())
-		{
-			if (m_pActiveWindow->OnIMETabEvent())
-				return;
-		}
+			if (m_pActiveWindow->IsRendering())
+			{
+				if (m_pActiveWindow->OnIMETabEvent())
+				{
+					return;
+				}
+			}
 
 		if (!m_pRootWindow->RunIMETabEvent())
 		{
 			if (!m_ActiveWindowList.empty())
 			{
-				CWindow * pWindow = *(m_ActiveWindowList.begin());
+				CWindow* pWindow = *(m_ActiveWindowList.begin());
 				ActivateWindow(pWindow);
 
 				/////////////////////////////////////////////
 
-				CWindow * pParentWindow = pWindow;
-				CWindow * pCurrentWindow = pWindow->GetParent();
+				CWindow* pParentWindow = pWindow;
+				CWindow* pCurrentWindow = pWindow->GetParent();
 
 				DWORD dwMaxLoopCount = 20;
+
 				for (DWORD i = 0; i < dwMaxLoopCount; ++i)
 				{
 					if (!pParentWindow)
+					{
 						break;
+					}
 
 					if (pParentWindow == m_LayerWindowMap["GAME"])
 					{
@@ -1106,12 +1251,15 @@ namespace UI
 			m_pLockWindow->OnIMEReturnEvent();
 			return;
 		}
+
 		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsRendering())
-		{
-			if (m_pActiveWindow->OnIMEReturnEvent())
-				return;
-		}
+			if (m_pActiveWindow->IsRendering())
+			{
+				if (m_pActiveWindow->OnIMEReturnEvent())
+				{
+					return;
+				}
+			}
 
 		m_pRootWindow->RunIMEReturnEvent();
 	}
@@ -1123,12 +1271,15 @@ namespace UI
 			m_pLockWindow->OnKeyDown(vkey);
 			return;
 		}
+
 		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsRendering())
-		{
-			if (m_pActiveWindow->OnIMEKeyDownEvent(vkey))
-				return;
-		}
+			if (m_pActiveWindow->IsRendering())
+			{
+				if (m_pActiveWindow->OnIMEKeyDownEvent(vkey))
+				{
+					return;
+				}
+			}
 
 		// NOTE : 전체로 돌리지 않고 Activate되어있는 EditLine에만 보내는 이벤트
 	}
@@ -1136,12 +1287,15 @@ namespace UI
 	void CWindowManager::RunChangeCodePage()
 	{
 		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsRendering())
-		{
-			if (m_pActiveWindow->OnIMEChangeCodePage())
-				return;
-		}
+			if (m_pActiveWindow->IsRendering())
+			{
+				if (m_pActiveWindow->OnIMEChangeCodePage())
+				{
+					return;
+				}
+			}
 	}
+
 	void CWindowManager::RunOpenCandidate()
 	{
 		if (m_pLockWindow)
@@ -1149,12 +1303,15 @@ namespace UI
 			m_pLockWindow->OnIMEOpenCandidateListEvent();
 			return;
 		}
+
 		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsRendering())
-		{
-			if (m_pActiveWindow->OnIMEOpenCandidateListEvent())
-				return;
-		}
+			if (m_pActiveWindow->IsRendering())
+			{
+				if (m_pActiveWindow->OnIMEOpenCandidateListEvent())
+				{
+					return;
+				}
+			}
 	}
 
 	void CWindowManager::RunCloseCandidate()
@@ -1164,12 +1321,15 @@ namespace UI
 			m_pLockWindow->OnIMECloseCandidateListEvent();
 			return;
 		}
+
 		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsRendering())
-		{
-			if (m_pActiveWindow->OnIMECloseCandidateListEvent())
-				return;
-		}
+			if (m_pActiveWindow->IsRendering())
+			{
+				if (m_pActiveWindow->OnIMECloseCandidateListEvent())
+				{
+					return;
+				}
+			}
 	}
 
 	void CWindowManager::RunOpenReading()
@@ -1179,12 +1339,15 @@ namespace UI
 			m_pLockWindow->OnIMEOpenReadingWndEvent();
 			return;
 		}
+
 		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsRendering())
-		{
-			if (m_pActiveWindow->OnIMEOpenReadingWndEvent())
-				return;
-		}
+			if (m_pActiveWindow->IsRendering())
+			{
+				if (m_pActiveWindow->OnIMEOpenReadingWndEvent())
+				{
+					return;
+				}
+			}
 	}
 
 	void CWindowManager::RunCloseReading()
@@ -1194,13 +1357,17 @@ namespace UI
 			m_pLockWindow->OnIMECloseReadingWndEvent();
 			return;
 		}
+
 		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsRendering())
-		{
-			if (m_pActiveWindow->OnIMECloseReadingWndEvent())
-				return;
-		}
+			if (m_pActiveWindow->IsRendering())
+			{
+				if (m_pActiveWindow->OnIMECloseReadingWndEvent())
+				{
+					return;
+				}
+			}
 	}
+
 	// IME
 
 	void CWindowManager::RunKeyDown(int vkey)
@@ -1211,32 +1378,38 @@ namespace UI
 			m_KeyCaptureWindowMap.insert(std::make_pair(vkey, m_pLockWindow));
 			return;
 		}
-		if (m_pActiveWindow)
-		if (m_pActiveWindow->IsShow())
-		{
-			if (m_pActiveWindow->OnKeyDown(vkey))
-			{
-				m_KeyCaptureWindowMap.insert(std::make_pair(vkey, m_pActiveWindow));
-				return;
-			}
-		}
 
-		CWindow * pKeyCaptureWindow = m_pRootWindow->RunKeyDownEvent(vkey);
+		if (m_pActiveWindow)
+			if (m_pActiveWindow->IsShow())
+			{
+				if (m_pActiveWindow->OnKeyDown(vkey))
+				{
+					m_KeyCaptureWindowMap.insert(std::make_pair(vkey, m_pActiveWindow));
+					return;
+				}
+			}
+
+		CWindow* pKeyCaptureWindow = m_pRootWindow->RunKeyDownEvent(vkey);
+
 		if (pKeyCaptureWindow)
-		if (m_ReserveDeleteWindowList.end() == std::find(m_ReserveDeleteWindowList.begin(), m_ReserveDeleteWindowList.end(), pKeyCaptureWindow))
-		{
-			m_KeyCaptureWindowMap.insert(TKeyCaptureWindowMap::value_type(vkey, pKeyCaptureWindow));
-		}
+			if (m_ReserveDeleteWindowList.end() == std::find(m_ReserveDeleteWindowList.begin(), m_ReserveDeleteWindowList.end(), pKeyCaptureWindow))
+			{
+				m_KeyCaptureWindowMap.insert(TKeyCaptureWindowMap::value_type(vkey, pKeyCaptureWindow));
+			}
 	}
 
 	void CWindowManager::RunKeyUp(int vkey)
 	{
 		TKeyCaptureWindowMap::iterator itor = m_KeyCaptureWindowMap.find(vkey);
+
 		if (m_KeyCaptureWindowMap.end() != itor)
 		{
-			CWindow * pKeyCaptureWindow = itor->second;
+			CWindow* pKeyCaptureWindow = itor->second;
+
 			if (pKeyCaptureWindow)
+			{
 				pKeyCaptureWindow->OnKeyUp(vkey);
+			}
 
 			m_KeyCaptureWindowMap.erase(itor);
 			return;
@@ -1251,7 +1424,9 @@ namespace UI
 		if (m_pActiveWindow)
 		{
 			if (m_pActiveWindow->OnKeyUp(vkey))
+			{
 				return;
+			}
 		}
 
 		m_pRootWindow->RunKeyUpEvent(vkey);
@@ -1275,10 +1450,13 @@ namespace UI
 			m_pLockWindow->OnPressExitKey();
 			return;
 		}
+
 		if (m_pActiveWindow)
 		{
 			if (m_pActiveWindow->OnPressExitKey())
+			{
 				return;
+			}
 		}
 
 		m_pRootWindow->RunPressExitKeyEvent();

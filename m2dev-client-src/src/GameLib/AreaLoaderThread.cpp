@@ -16,7 +16,6 @@
 
 TEMP_CAreaLoaderThread::TEMP_CAreaLoaderThread() : m_bShutdowned(false), m_pArg(NULL), m_hThread(NULL), m_uThreadID(0)
 {
-
 }
 
 TEMP_CAreaLoaderThread::~TEMP_CAreaLoaderThread()
@@ -24,30 +23,34 @@ TEMP_CAreaLoaderThread::~TEMP_CAreaLoaderThread()
 	Destroy();
 }
 
-bool TEMP_CAreaLoaderThread::Create(void * arg)
+bool TEMP_CAreaLoaderThread::Create(void* arg)
 {
 	Arg(arg);
-	m_hThread = (HANDLE) _beginthreadex(NULL, 0, EntryPoint, this, 0, &m_uThreadID);
+	m_hThread = (HANDLE)_beginthreadex(NULL, 0, EntryPoint, this, 0, &m_uThreadID);
 
 	if (!m_hThread)
+	{
 		return false;
+	}
 
 	SetThreadPriority(m_hThread, THREAD_PRIORITY_NORMAL);
 	return true;
 }
 
-UINT TEMP_CAreaLoaderThread::Run(void * arg)
+UINT TEMP_CAreaLoaderThread::Run(void* arg)
 {
 	if (!Setup())
+	{
 		return 0;
+	}
 
 	return (Execute(arg));
 }
 
 /* Static */
-UINT CALLBACK TEMP_CAreaLoaderThread::EntryPoint(void * pThis)
+UINT CALLBACK TEMP_CAreaLoaderThread::EntryPoint(void* pThis)
 {
-	TEMP_CAreaLoaderThread * pThread = (TEMP_CAreaLoaderThread *) pThis;
+	TEMP_CAreaLoaderThread* pThread = (TEMP_CAreaLoaderThread*)pThis;
 	return pThread->Run(pThread->Arg());
 }
 
@@ -60,23 +63,23 @@ void TEMP_CAreaLoaderThread::Destroy()
 		m_hSemaphore = NULL;
 	}
 
-/*
-	while(!m_pTerrainRequestDeque.empty())
-	{
-		CTerrain * pTerrain = m_pTerrainRequestDeque.front();
-		delete pTerrain;
-		pTerrain = NULL;
-		m_pTerrainRequestDeque.pop_front();
-	}
+	/*
+		while(!m_pTerrainRequestDeque.empty())
+		{
+			CTerrain * pTerrain = m_pTerrainRequestDeque.front();
+			delete pTerrain;
+			pTerrain = NULL;
+			m_pTerrainRequestDeque.pop_front();
+		}
 
-	while(!m_pTerrainCompleteDeque.empty())
-	{
-		CTerrain * pTerrain = m_pTerrainCompleteDeque.front();
-		delete pTerrain;
-		pTerrain = NULL;
-		m_pTerrainCompleteDeque.pop_front();
-	}
-*/
+		while(!m_pTerrainCompleteDeque.empty())
+		{
+			CTerrain * pTerrain = m_pTerrainCompleteDeque.front();
+			delete pTerrain;
+			pTerrain = NULL;
+			m_pTerrainCompleteDeque.pop_front();
+		}
+	*/
 
 	/*stl_wipe(m_pTerrainRequestDeque);
 	stl_wipe(m_pTerrainCompleteDeque);
@@ -87,11 +90,14 @@ void TEMP_CAreaLoaderThread::Destroy()
 UINT TEMP_CAreaLoaderThread::Setup()
 {
 	m_hSemaphore = CreateSemaphore(NULL,		// no security attributes
-								   0,			// initial count
-								   65535,		// maximum count
-								   NULL);		// unnamed semaphore
+		0,			// initial count
+		65535,		// maximum count
+		NULL);		// unnamed semaphore
+
 	if (!m_hSemaphore)
+	{
 		return 0;
+	}
 
 	return 1;
 }
@@ -99,44 +105,55 @@ UINT TEMP_CAreaLoaderThread::Setup()
 void TEMP_CAreaLoaderThread::Shutdown()
 {
 	if (!m_hSemaphore)
+	{
 		return;
+	}
 
 	BOOL bRet;
-	
+
 	m_bShutdowned = true;
 
 	do
 	{
 		bRet = ReleaseSemaphore(m_hSemaphore, 1, NULL);
-	}
-	while (!bRet);
+	} while (!bRet);
 
 	WaitForSingleObject(m_hThread, 10000);	// 쓰레드가 종료 되기를 10초 기다림
 }
 
-UINT TEMP_CAreaLoaderThread::Execute(void * pvArg)
+UINT TEMP_CAreaLoaderThread::Execute(void* pvArg)
 {
 	bool bProcessTerrain = true;
+
 	while (!m_bShutdowned)
 	{
-		DWORD dwWaitResult; 
+		DWORD dwWaitResult;
 
 		dwWaitResult = WaitForSingleObject(m_hSemaphore, INFINITE);
 
 		if (m_bShutdowned)
+		{
+			break;
+		}
+
+		switch (dwWaitResult)
+		{
+		case WAIT_OBJECT_0:
+			if (bProcessTerrain)
+			{
+				ProcessTerrain();
+			}
+
+			else
+			{
+				ProcessArea();
+			}
+
 			break;
 
-		switch (dwWaitResult) 
-		{ 
-			case WAIT_OBJECT_0:
-				if (bProcessTerrain)
-					ProcessTerrain();
-				else
-					ProcessArea();
-				break;
-			case WAIT_TIMEOUT:
-				TraceError("TEMP_CAreaLoaderThread::Execute: Timeout occured while time-out interval is INIFITE");
-				break;
+		case WAIT_TIMEOUT:
+			TraceError("TEMP_CAreaLoaderThread::Execute: Timeout occured while time-out interval is INIFITE");
+			break;
 		}
 	}
 
@@ -144,7 +161,7 @@ UINT TEMP_CAreaLoaderThread::Execute(void * pvArg)
 	return 1;
 }
 
-void TEMP_CAreaLoaderThread::Request(CTerrain * pTerrain)	// called in main thread
+void TEMP_CAreaLoaderThread::Request(CTerrain* pTerrain)	// called in main thread
 {
 	m_TerrainRequestMutex.Lock();
 	m_pTerrainRequestDeque.push_back(pTerrain);
@@ -153,12 +170,14 @@ void TEMP_CAreaLoaderThread::Request(CTerrain * pTerrain)	// called in main thre
 	++m_iRestSemCount;
 
 	if (!ReleaseSemaphore(m_hSemaphore, m_iRestSemCount, NULL))
+	{
 		TraceError("TEMP_CAreaLoaderThread::Request: ReleaseSemaphore error");
+	}
 
 	--m_iRestSemCount;
 }
 
-bool TEMP_CAreaLoaderThread::Fetch(CTerrain ** ppTerrain)	// called in main thread
+bool TEMP_CAreaLoaderThread::Fetch(CTerrain** ppTerrain)	// called in main thread
 {
 	m_TerrainCompleteMutex.Lock();
 
@@ -175,7 +194,7 @@ bool TEMP_CAreaLoaderThread::Fetch(CTerrain ** ppTerrain)	// called in main thre
 	return true;
 }
 
-void TEMP_CAreaLoaderThread::Request(CArea * pArea)	// called in main thread
+void TEMP_CAreaLoaderThread::Request(CArea* pArea)	// called in main thread
 {
 	m_AreaRequestMutex.Lock();
 	m_pAreaRequestDeque.push_back(pArea);
@@ -184,12 +203,14 @@ void TEMP_CAreaLoaderThread::Request(CArea * pArea)	// called in main thread
 	++m_iRestSemCount;
 
 	if (!ReleaseSemaphore(m_hSemaphore, m_iRestSemCount, NULL))
+	{
 		TraceError("TEMP_CAreaLoaderThread::Request: ReleaseSemaphore error");
+	}
 
 	--m_iRestSemCount;
 }
 
-bool TEMP_CAreaLoaderThread::Fetch(CArea ** ppArea)	// called in main thread
+bool TEMP_CAreaLoaderThread::Fetch(CArea** ppArea)	// called in main thread
 {
 	m_AreaCompleteMutex.Lock();
 
@@ -216,7 +237,7 @@ void TEMP_CAreaLoaderThread::ProcessArea()	// called in loader thread
 		return;
 	}
 
-	CArea * pArea = m_pAreaRequestDeque.front();
+	CArea* pArea = m_pAreaRequestDeque.front();
 	m_pAreaRequestDeque.pop_front();
 
 	Tracef("TEMP_CAreaLoaderThread::ProcessArea() RequestDeque Size : %d\n", m_pAreaRequestDeque.size());
@@ -227,11 +248,11 @@ void TEMP_CAreaLoaderThread::ProcessArea()	// called in loader thread
 	// Area Load
 	WORD wAreaCoordX, wAreaCoordY;
 	pArea->GetCoordinate(&wAreaCoordX, &wAreaCoordY);
-	DWORD dwID = (DWORD) (wAreaCoordX) * 1000L + (DWORD) (wAreaCoordY);
+	DWORD dwID = (DWORD)(wAreaCoordX) * 1000L + (DWORD)(wAreaCoordY);
 
-	const std::string & c_rStrMapName = pArea->GetOwner()->GetName();
+	const std::string& c_rStrMapName = pArea->GetOwner()->GetName();
 
-	char szAreaPathName[64+1];
+	char szAreaPathName[64 + 1];
 	_snprintf(szAreaPathName, sizeof(szAreaPathName), "%s\\%06u\\", c_rStrMapName.c_str(), dwID);
 
 	pArea->Load(szAreaPathName);
@@ -255,7 +276,7 @@ void TEMP_CAreaLoaderThread::ProcessTerrain()	// called in loader thread
 		return;
 	}
 
-	CTerrain * pTerrain = m_pTerrainRequestDeque.front();
+	CTerrain* pTerrain = m_pTerrainRequestDeque.front();
 	m_pTerrainRequestDeque.pop_front();
 
 	Tracef("TEMP_CAreaLoaderThread::ProcessTerrain() RequestDeque Size : %d\n", m_pTerrainRequestDeque.size());
@@ -266,47 +287,55 @@ void TEMP_CAreaLoaderThread::ProcessTerrain()	// called in loader thread
 	// Terrain Load
 	WORD wCoordX, wCoordY;
 	pTerrain->GetCoordinate(&wCoordX, &wCoordY);
-	DWORD dwID = (DWORD) (wCoordX) * 1000L + (DWORD) (wCoordY);
+	DWORD dwID = (DWORD)(wCoordX) * 1000L + (DWORD)(wCoordY);
 
-	const std::string & c_rStrMapName = pTerrain->GetOwner()->GetName();
+	const std::string& c_rStrMapName = pTerrain->GetOwner()->GetName();
 	char filename[256];
 	sprintf(filename, "%s\\%06u\\AreaProperty.txt", c_rStrMapName.c_str(), dwID);
-	
+
 	CTokenVectorMap stTokenVectorMap;
-	
+
 	if (!LoadMultipleTextData(filename, stTokenVectorMap))
+	{
 		return;
-	
+	}
+
 	Sleep(g_iLoadingDelayTime);
 
 	if (stTokenVectorMap.end() == stTokenVectorMap.find("scripttype"))
+	{
 		return;
-	
+	}
+
 	if (stTokenVectorMap.end() == stTokenVectorMap.find("areaname"))
+	{
 		return;
-	
-	const std::string & c_rstrType = stTokenVectorMap["scripttype"][0];
-	const std::string & c_rstrAreaName = stTokenVectorMap["areaname"][0];
-	
+	}
+
+	const std::string& c_rstrType = stTokenVectorMap["scripttype"][0];
+	const std::string& c_rstrAreaName = stTokenVectorMap["areaname"][0];
+
 	if (c_rstrType != "AreaProperty")
+	{
 		return;
-	
-	char szRawHeightFieldname[64+1];
-	char szWaterMapName[64+1];
-	char szAttrMapName[64+1];
-	char szShadowTexName[64+1];
-	char szShadowMapName[64+1];
-	char szMiniMapTexName[64+1];
-	char szSplatName[64+1];
-	
+	}
+
+	char szRawHeightFieldname[64 + 1];
+	char szWaterMapName[64 + 1];
+	char szAttrMapName[64 + 1];
+	char szShadowTexName[64 + 1];
+	char szShadowMapName[64 + 1];
+	char szMiniMapTexName[64 + 1];
+	char szSplatName[64 + 1];
+
 	_snprintf(szRawHeightFieldname, sizeof(szRawHeightFieldname), "%s\\%06u\\height.raw", c_rStrMapName.c_str(), dwID);
 	_snprintf(szSplatName, sizeof(szSplatName), "%s\\%06u\\tile.raw", c_rStrMapName.c_str(), dwID);
 	_snprintf(szAttrMapName, sizeof(szAttrMapName), "%s\\%06u\\attr.atr", c_rStrMapName.c_str(), dwID);
 	_snprintf(szWaterMapName, sizeof(szWaterMapName), "%s\\%06u\\water.wtr", c_rStrMapName.c_str(), dwID);
 	_snprintf(szShadowTexName, sizeof(szShadowTexName), "%s\\%06u\\shadowmap.dds", c_rStrMapName.c_str(), dwID);
 	_snprintf(szShadowMapName, sizeof(szShadowMapName), "%s\\%06u\\shadowmap.raw", c_rStrMapName.c_str(), dwID);
-	_snprintf(szMiniMapTexName,	sizeof(szMiniMapTexName), "%s\\%06u\\minimap.dds", c_rStrMapName.c_str(), dwID);
-	
+	_snprintf(szMiniMapTexName, sizeof(szMiniMapTexName), "%s\\%06u\\minimap.dds", c_rStrMapName.c_str(), dwID);
+
 	pTerrain->CopySettingFromGlobalSetting();
 
 	pTerrain->LoadWaterMap(szWaterMapName);
