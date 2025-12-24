@@ -3,7 +3,6 @@
 #include "char.h"
 #include "item.h"
 #include "item_manager.h"
-#include "over9refine.h"
 #include "log.h"
 
 #undef sys_err
@@ -35,7 +34,7 @@ namespace quest
 		{
 			return 1;
 		}
-		DWORD cell = (DWORD) lua_tonumber(L, 1);
+		DWORD cell = (DWORD)lua_tonumber(L, 1);
 
 		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 		LPITEM item = ch ? ch->GetInventoryItem(cell) : NULL;
@@ -58,7 +57,7 @@ namespace quest
 		{
 			return 1;
 		}
-		DWORD id = (DWORD) lua_tonumber(L, 1);
+		DWORD id = (DWORD)lua_tonumber(L, 1);
 		LPITEM item = ITEM_MANAGER::instance().Find(id);
 
 		if (!item)
@@ -92,7 +91,8 @@ namespace quest
 		if (item != NULL) {
 			if (q.GetCurrentCharacterPtr() == item->GetOwner()) {
 				ITEM_MANAGER::instance().RemoveItem(item);
-			} else {
+			}
+			else {
 				sys_err("Tried to remove invalid item %p", get_pointer(item));
 			}
 			q.ClearCurrentItem();
@@ -106,15 +106,15 @@ namespace quest
 		CQuestManager& q = CQuestManager::instance();
 		if (q.GetCurrentItem() && lua_isnumber(L, 1))
 		{
-			int idx = (int) lua_tonumber(L, 1);
+			int idx = (int)lua_tonumber(L, 1);
 			if (idx < 0 || idx >= ITEM_SOCKET_MAX_NUM)
-				lua_pushnumber(L,0);
+				lua_pushnumber(L, 0);
 			else
 				lua_pushnumber(L, q.GetCurrentItem()->GetSocket(idx));
 		}
 		else
 		{
-			lua_pushnumber(L,0);
+			lua_pushnumber(L, 0);
 		}
 		return 1;
 	}
@@ -122,11 +122,11 @@ namespace quest
 	int item_set_socket(lua_State* L)
 	{
 		CQuestManager& q = CQuestManager::instance();
-		if (q.GetCurrentItem() && lua_isnumber(L,1) && lua_isnumber(L,2))
+		if (q.GetCurrentItem() && lua_isnumber(L, 1) && lua_isnumber(L, 2))
 		{
-			int idx = (int) lua_tonumber(L, 1);
-			int value = (int) lua_tonumber(L, 2);
-			if (idx >=0 && idx < ITEM_SOCKET_MAX_NUM)
+			int idx = (int)lua_tonumber(L, 1);
+			int value = (int)lua_tonumber(L, 2);
+			if (idx >= 0 && idx < ITEM_SOCKET_MAX_NUM)
 				q.GetCurrentItem()->SetSocket(idx, value);
 		}
 		return 0;
@@ -137,7 +137,7 @@ namespace quest
 		CQuestManager& q = CQuestManager::instance();
 		LPITEM item = q.GetCurrentItem();
 
-		if (item) 
+		if (item)
 			lua_pushnumber(L, item->GetVnum());
 		else
 			lua_pushnumber(L, 0);
@@ -163,7 +163,7 @@ namespace quest
 			return 1;
 		}
 
-		long lCheckFlag = (long) lua_tonumber(L, 1);	
+		long lCheckFlag = (long)lua_tonumber(L, 1);
 		lua_pushboolean(L, IS_SET(item->GetFlag(), lCheckFlag));
 
 		return 1;
@@ -187,7 +187,7 @@ namespace quest
 			return 1;
 		}
 
-		int index = (int) lua_tonumber(L, 1);
+		int index = (int)lua_tonumber(L, 1);
 
 		if (index < 0 || index >= ITEM_VALUES_MAX_NUM)
 		{
@@ -309,7 +309,7 @@ namespace quest
 	{
 		DWORD vnum = 0;
 		if (lua_isnumber(L, 1))
-			vnum = (DWORD) lua_tonumber(L, 1);
+			vnum = (DWORD)lua_tonumber(L, 1);
 
 		TItemTable* pTable = ITEM_MANAGER::instance().GetTable(vnum);
 		if (pTable)
@@ -337,53 +337,7 @@ namespace quest
 		return 1;
 	}
 
-	int item_can_over9refine(lua_State* L)
-	{
-		LPITEM item = CQuestManager::instance().GetCurrentItem();
-
-		if ( item == NULL ) return 0;
-
-		lua_pushnumber(L, COver9RefineManager::instance().canOver9Refine(item->GetVnum()));
-
-		return 1;
-	}
-
-	int item_change_to_over9(lua_State* L)
-	{
-		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-		LPITEM item = CQuestManager::instance().GetCurrentItem();
-
-		if ( ch == NULL || item == NULL ) return 0;
-
-		lua_pushboolean(L, COver9RefineManager::instance().Change9ToOver9(ch, item));
-		
-		return 1;
-	}
-	
-	int item_over9refine(lua_State* L)
-	{
-		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
-		LPITEM item = CQuestManager::instance().GetCurrentItem();
-
-		if ( ch == NULL || item == NULL ) return 0;
-
-		lua_pushboolean(L, COver9RefineManager::instance().Over9Refine(ch, item));
-		
-		return 1;
-	}
-
-	int item_get_over9_material_vnum(lua_State* L)
-	{
-		if ( lua_isnumber(L, 1) == true )
-		{
-			lua_pushnumber(L, COver9RefineManager::instance().GetMaterialVnum((DWORD)lua_tonumber(L, 1)));
-			return 1;
-		}
-
-		return 0;
-	}
-
-	int item_get_level_limit (lua_State* L)
+	int item_get_level_limit(lua_State* L)
 	{
 		CQuestManager& q = CQuestManager::instance();
 
@@ -393,7 +347,7 @@ namespace quest
 			{
 				return 0;
 			}
-			lua_pushnumber(L, q.GetCurrentItem() -> GetLevelLimit());
+			lua_pushnumber(L, q.GetCurrentItem()->GetLevelLimit());
 			return 1;
 		}
 		return 0;
@@ -412,7 +366,7 @@ namespace quest
 
 		return 0;
 	}
-	
+
 	int item_copy_and_give_before_remove(lua_State* L)
 	{
 		lua_pushboolean(L, 0);
@@ -436,12 +390,12 @@ namespace quest
 
 			ITEM_MANAGER::instance().RemoveItem(pItem, "REMOVE (COPY SUCCESS)");
 
-			pkNewItem->AddToCharacter(pChar, TItemPos(INVENTORY, bCell)); 
+			pkNewItem->AddToCharacter(pChar, TItemPos(INVENTORY, bCell));
 			ITEM_MANAGER::instance().FlushDelayedSave(pkNewItem);
 			pkNewItem->AttrLog();
 
 			// ¼º°ø!
-			lua_pushboolean(L, 1);			
+			lua_pushboolean(L, 1);
 		}
 
 		return 1;
@@ -449,7 +403,6 @@ namespace quest
 
 	void RegisterITEMFunctionTable()
 	{
-
 		luaL_reg item_functions[] =
 		{
 			{ "get_id",		item_get_id		},
@@ -471,10 +424,6 @@ namespace quest
 			{ "get_refine_vnum",	item_get_refine_vnum	},
 			{ "get_level",		item_get_level		},
 			{ "next_refine_vnum",	item_next_refine_vnum	},
-			{ "can_over9refine",	item_can_over9refine	},
-			{ "change_to_over9",		item_change_to_over9	},
-			{ "over9refine",		item_over9refine	},
-			{ "get_over9_material_vnum",		item_get_over9_material_vnum	},
 			{ "get_level_limit", 				item_get_level_limit },
 			{ "start_realtime_expire", 			item_start_realtime_expire },
 			{ "copy_and_give_before_remove",	item_copy_and_give_before_remove},
