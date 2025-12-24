@@ -5,7 +5,6 @@
 #include "buffer_manager.h"
 
 extern int test_server;
-extern int speed_server;
 
 namespace quest
 {
@@ -26,26 +25,26 @@ namespace quest
 	extern void RegisterArenaFunctionTable();
 	extern void RegisterGlobalFunctionTable(lua_State* L);
 	extern void RegisterForkedFunctionTable();
-	extern void RegisterMonarchFunctionTable(); 
+	extern void RegisterMonarchFunctionTable();
 	extern void RegisterOXEventFunctionTable();
 	extern void RegisterMgmtFunctionTable();
 	extern void RegisterBattleArenaFunctionTable();
 	extern void RegisterDanceEventFunctionTable();
 	extern void RegisterDragonLairFunctionTable();
-	extern void RegisterSpeedServerFunctionTable();
 	extern void RegisterDragonSoulFunctionTable();
 
-	extern void combine_lua_string(lua_State* L, std::ostringstream &s);
-	
+	extern void combine_lua_string(lua_State* L, std::ostringstream& s);
+
 	struct FSetWarpLocation
 	{
-		long map_index; 
+		long map_index;
 		long x;
 		long y;
 
-		FSetWarpLocation (long _map_index, long _x, long _y) :
-			map_index (_map_index), x (_x), y (_y)
-		{}
+		FSetWarpLocation(long _map_index, long _x, long _y) :
+			map_index(_map_index), x(_x), y(_y)
+		{
+		}
 		void operator () (LPCHARACTER ch);
 	};
 
@@ -112,12 +111,12 @@ namespace quest
 		long 	m_x;
 		long	m_y;
 
-		warp_all_to_map_my_empire_event_info() 
-		: m_bEmpire( 0 )
-		, m_lMapIndexFrom( 0 )
-		, m_lMapIndexTo( 0 )
-		, m_x( 0 )
-		, m_y( 0 )
+		warp_all_to_map_my_empire_event_info()
+			: m_bEmpire(0)
+			, m_lMapIndexFrom(0)
+			, m_lMapIndexTo(0)
+			, m_x(0)
+			, m_y(0)
 		{
 		}
 	};
@@ -126,12 +125,11 @@ namespace quest
 
 	struct FBuildLuaGuildWarList
 	{
-		lua_State * L;
+		lua_State* L;
 		int m_count;
 
-		FBuildLuaGuildWarList(lua_State * L);
+		FBuildLuaGuildWarList(lua_State* L);
 		void operator() (DWORD g1, DWORD g2);
 	};
 }
 #endif /*__HEADER_QUEST_LUA__*/
-
