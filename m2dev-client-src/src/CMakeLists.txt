@@ -1,5 +1,4 @@
 add_subdirectory(AudioLib)
-add_subdirectory(Discord)
 add_subdirectory(EffectLib)
 add_subdirectory(EterBase)
 add_subdirectory(EterGrnLib)
