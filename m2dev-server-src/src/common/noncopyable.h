@@ -3,13 +3,14 @@
 
 class noncopyable
 {
-	protected:
-		noncopyable() {}
-		~noncopyable() {}
+protected:
+	noncopyable() {}
 
-	private:
-		noncopyable(const noncopyable &);
-		noncopyable& operator = (const noncopyable &);
+	~noncopyable() {}
+
+private:
+	noncopyable(const noncopyable&);
+	noncopyable& operator = (const noncopyable&);
 };
 
 #endif

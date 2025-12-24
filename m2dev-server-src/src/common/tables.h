@@ -3,273 +3,263 @@
 
 typedef	uint32_t IDENT;
 
-/**
- * @version 05/06/10	Bang2ni - Myshop Pricelist 관련 패킷 HEADER_XX_MYSHOP_PRICELIST_XXX 추가
- */
 enum
 {
-	HEADER_GD_LOGIN				= 1,
-	HEADER_GD_LOGOUT			= 2,
+	HEADER_GD_LOGIN = 1,
+	HEADER_GD_LOGOUT = 2,
 
-	HEADER_GD_PLAYER_LOAD		= 3,
-	HEADER_GD_PLAYER_SAVE		= 4,
-	HEADER_GD_PLAYER_CREATE		= 5,
-	HEADER_GD_PLAYER_DELETE		= 6,
+	HEADER_GD_PLAYER_LOAD = 3,
+	HEADER_GD_PLAYER_SAVE = 4,
+	HEADER_GD_PLAYER_CREATE = 5,
+	HEADER_GD_PLAYER_DELETE = 6,
 
-	HEADER_GD_LOGIN_KEY			= 7,
+	HEADER_GD_LOGIN_KEY = 7,
 	// 8 empty
-	HEADER_GD_BOOT				= 9,
-	HEADER_GD_PLAYER_COUNT		= 10,
-	HEADER_GD_QUEST_SAVE		= 11,
-	HEADER_GD_SAFEBOX_LOAD		= 12,
-	HEADER_GD_SAFEBOX_SAVE		= 13,
-	HEADER_GD_SAFEBOX_CHANGE_SIZE	= 14,
-	HEADER_GD_EMPIRE_SELECT		= 15,
+	HEADER_GD_BOOT = 9,
+	HEADER_GD_PLAYER_COUNT = 10,
+	HEADER_GD_QUEST_SAVE = 11,
+	HEADER_GD_SAFEBOX_LOAD = 12,
+	HEADER_GD_SAFEBOX_SAVE = 13,
+	HEADER_GD_SAFEBOX_CHANGE_SIZE = 14,
+	HEADER_GD_EMPIRE_SELECT = 15,
 
-	HEADER_GD_SAFEBOX_CHANGE_PASSWORD		= 16,
-	HEADER_GD_SAFEBOX_CHANGE_PASSWORD_SECOND	= 17, // Not really a packet, used internal
-	HEADER_GD_DIRECT_ENTER		= 18,
+	HEADER_GD_SAFEBOX_CHANGE_PASSWORD = 16,
+	HEADER_GD_SAFEBOX_CHANGE_PASSWORD_SECOND = 17, // Not really a packet, used internal
+	HEADER_GD_DIRECT_ENTER = 18,
 
-	HEADER_GD_GUILD_SKILL_UPDATE	= 19,
-	HEADER_GD_GUILD_EXP_UPDATE		= 20,
-	HEADER_GD_GUILD_ADD_MEMBER		= 21,
-	HEADER_GD_GUILD_REMOVE_MEMBER	= 22,
-	HEADER_GD_GUILD_CHANGE_GRADE	= 23,
-	HEADER_GD_GUILD_CHANGE_MEMBER_DATA	= 24,
-	HEADER_GD_GUILD_DISBAND		= 25,
-	HEADER_GD_GUILD_WAR			= 26,
-	HEADER_GD_GUILD_WAR_SCORE		= 27,
-	HEADER_GD_GUILD_CREATE		= 28,
+	HEADER_GD_GUILD_SKILL_UPDATE = 19,
+	HEADER_GD_GUILD_EXP_UPDATE = 20,
+	HEADER_GD_GUILD_ADD_MEMBER = 21,
+	HEADER_GD_GUILD_REMOVE_MEMBER = 22,
+	HEADER_GD_GUILD_CHANGE_GRADE = 23,
+	HEADER_GD_GUILD_CHANGE_MEMBER_DATA = 24,
+	HEADER_GD_GUILD_DISBAND = 25,
+	HEADER_GD_GUILD_WAR = 26,
+	HEADER_GD_GUILD_WAR_SCORE = 27,
+	HEADER_GD_GUILD_CREATE = 28,
 
-	HEADER_GD_ITEM_SAVE			= 30,
-	HEADER_GD_ITEM_DESTROY		= 31,
+	HEADER_GD_ITEM_SAVE = 30,
+	HEADER_GD_ITEM_DESTROY = 31,
 
-	HEADER_GD_ADD_AFFECT		= 32,
-	HEADER_GD_REMOVE_AFFECT		= 33,
+	HEADER_GD_ADD_AFFECT = 32,
+	HEADER_GD_REMOVE_AFFECT = 33,
 
-	HEADER_GD_HIGHSCORE_REGISTER	= 34,
-	HEADER_GD_ITEM_FLUSH		= 35,
+	HEADER_GD_HIGHSCORE_REGISTER = 34,
+	HEADER_GD_ITEM_FLUSH = 35,
 
-	HEADER_GD_PARTY_CREATE		= 36,
-	HEADER_GD_PARTY_DELETE		= 37,
-	HEADER_GD_PARTY_ADD			= 38,
-	HEADER_GD_PARTY_REMOVE		= 39,
-	HEADER_GD_PARTY_STATE_CHANGE	= 40,
-	HEADER_GD_PARTY_HEAL_USE		= 41,
+	HEADER_GD_PARTY_CREATE = 36,
+	HEADER_GD_PARTY_DELETE = 37,
+	HEADER_GD_PARTY_ADD = 38,
+	HEADER_GD_PARTY_REMOVE = 39,
+	HEADER_GD_PARTY_STATE_CHANGE = 40,
+	HEADER_GD_PARTY_HEAL_USE = 41,
 
-	HEADER_GD_FLUSH_CACHE		= 42,
-	HEADER_GD_RELOAD_PROTO		= 43,
+	HEADER_GD_FLUSH_CACHE = 42,
+	HEADER_GD_RELOAD_PROTO = 43,
 
-	HEADER_GD_CHANGE_NAME		= 44,
-	HEADER_GD_SMS				= 45,
+	HEADER_GD_CHANGE_NAME = 44,
+	HEADER_GD_SMS = 45,
 
-	HEADER_GD_GUILD_CHANGE_LADDER_POINT	= 46,
-	HEADER_GD_GUILD_USE_SKILL		= 47,
+	HEADER_GD_GUILD_CHANGE_LADDER_POINT = 46,
+	HEADER_GD_GUILD_USE_SKILL = 47,
 
-	HEADER_GD_REQUEST_EMPIRE_PRIV	= 48,
-	HEADER_GD_REQUEST_GUILD_PRIV	= 49,
+	HEADER_GD_REQUEST_EMPIRE_PRIV = 48,
+	HEADER_GD_REQUEST_GUILD_PRIV = 49,
 
-	HEADER_GD_MONEY_LOG				= 50,
+	HEADER_GD_MONEY_LOG = 50,
 
-	HEADER_GD_GUILD_DEPOSIT_MONEY				= 51,
-	HEADER_GD_GUILD_WITHDRAW_MONEY				= 52,
-	HEADER_GD_GUILD_WITHDRAW_MONEY_GIVE_REPLY	= 53,
+	HEADER_GD_GUILD_DEPOSIT_MONEY = 51,
+	HEADER_GD_GUILD_WITHDRAW_MONEY = 52,
+	HEADER_GD_GUILD_WITHDRAW_MONEY_GIVE_REPLY = 53,
 
-	HEADER_GD_REQUEST_CHARACTER_PRIV	= 54,
+	HEADER_GD_REQUEST_CHARACTER_PRIV = 54,
 
-	HEADER_GD_SET_EVENT_FLAG			= 55,
+	HEADER_GD_SET_EVENT_FLAG = 55,
 
-	HEADER_GD_PARTY_SET_MEMBER_LEVEL	= 56,
+	HEADER_GD_PARTY_SET_MEMBER_LEVEL = 56,
 
-	HEADER_GD_GUILD_WAR_BET		= 57,
+	HEADER_GD_GUILD_WAR_BET = 57,
 
-	HEADER_GD_CREATE_OBJECT		= 60,
-	HEADER_GD_DELETE_OBJECT		= 61,
-	HEADER_GD_UPDATE_LAND		= 62,
+	HEADER_GD_CREATE_OBJECT = 60,
+	HEADER_GD_DELETE_OBJECT = 61,
+	HEADER_GD_UPDATE_LAND = 62,
 
-	HEADER_GD_MARRIAGE_ADD		= 70,
-	HEADER_GD_MARRIAGE_UPDATE	= 71,
-	HEADER_GD_MARRIAGE_REMOVE	= 72,
+	HEADER_GD_MARRIAGE_ADD = 70,
+	HEADER_GD_MARRIAGE_UPDATE = 71,
+	HEADER_GD_MARRIAGE_REMOVE = 72,
 
-	HEADER_GD_WEDDING_REQUEST	= 73,
-	HEADER_GD_WEDDING_READY		= 74,
-	HEADER_GD_WEDDING_END		= 75,
+	HEADER_GD_WEDDING_REQUEST = 73,
+	HEADER_GD_WEDDING_READY = 74,
+	HEADER_GD_WEDDING_END = 75,
 
-	HEADER_GD_AUTH_LOGIN		= 100,
-	HEADER_GD_LOGIN_BY_KEY		= 101,
-	HEADER_GD_MALL_LOAD			= 107,
+	HEADER_GD_AUTH_LOGIN = 100,
+	HEADER_GD_LOGIN_BY_KEY = 101,
+	HEADER_GD_MALL_LOAD = 107,
 
-	HEADER_GD_MYSHOP_PRICELIST_UPDATE	= 108,		///< 가격정보 갱신 요청
-	HEADER_GD_MYSHOP_PRICELIST_REQ		= 109,		///< 가격정보 리스트 요청
+	HEADER_GD_MYSHOP_PRICELIST_UPDATE = 108,
+	HEADER_GD_MYSHOP_PRICELIST_REQ = 109,
 
-	HEADER_GD_BLOCK_CHAT				= 110,
+	HEADER_GD_BLOCK_CHAT = 110,
 
-	HEADER_GD_HAMMER_OF_TOR			= 114,
-	HEADER_GD_RELOAD_ADMIN			= 115,			///<운영자 정보 요청
-	HEADER_GD_BREAK_MARRIAGE		= 116,			///< 결혼 파기
-	HEADER_GD_ELECT_MONARCH			= 117,			///< 군주 투표
-	HEADER_GD_CANDIDACY				= 118,			///< 군주 등록
-	HEADER_GD_ADD_MONARCH_MONEY		= 119,			///< 군주 돈 증가 
-	HEADER_GD_TAKE_MONARCH_MONEY	= 120,			///< 군주 돈 감소 
-	HEADER_GD_COME_TO_VOTE			= 121,			///< 표결
-	HEADER_GD_RMCANDIDACY			= 122,			///< 후보 제거 (운영자)
-	HEADER_GD_SETMONARCH			= 123,			///<군주설정 (운영자)
-	HEADER_GD_RMMONARCH			= 124,			///<군주삭제
+	HEADER_GD_HAMMER_OF_TOR = 114,
+	HEADER_GD_RELOAD_ADMIN = 115,
+	HEADER_GD_BREAK_MARRIAGE = 116,
+	HEADER_GD_ELECT_MONARCH = 117,
+	HEADER_GD_CANDIDACY = 118,
+	HEADER_GD_ADD_MONARCH_MONEY = 119,
+	HEADER_GD_TAKE_MONARCH_MONEY = 120,
+	HEADER_GD_COME_TO_VOTE = 121,
+	HEADER_GD_RMCANDIDACY = 122,
+	HEADER_GD_SETMONARCH = 123,
+	HEADER_GD_RMMONARCH = 124,
 	HEADER_GD_DEC_MONARCH_MONEY = 125,
 
 	HEADER_GD_CHANGE_MONARCH_LORD = 126,
 
-	HEADER_GD_REQ_CHANGE_GUILD_MASTER	= 129,
+	HEADER_GD_REQ_CHANGE_GUILD_MASTER = 129,
 
-	HEADER_GD_REQ_SPARE_ITEM_ID_RANGE	= 130,
+	HEADER_GD_REQ_SPARE_ITEM_ID_RANGE = 130,
 
-	HEADER_GD_UPDATE_HORSE_NAME		= 131,
-	HEADER_GD_REQ_HORSE_NAME		= 132,
+	HEADER_GD_UPDATE_HORSE_NAME = 131,
+	HEADER_GD_REQ_HORSE_NAME = 132,
 
-	HEADER_GD_DC					= 133,		// Login Key를 지움
+	HEADER_GD_DC = 133,
 
-	HEADER_GD_VALID_LOGOUT			= 134,
+	HEADER_GD_VALID_LOGOUT = 134,
 
-	HEADER_GD_REQUEST_CHARGE_CASH	= 137,
+	HEADER_GD_REQUEST_CHARGE_CASH = 137,
 
-	HEADER_GD_DELETE_AWARDID	= 138,	// delete gift notify icon
-	
-	HEADER_GD_UPDATE_CHANNELSTATUS	= 139,
-	HEADER_GD_REQUEST_CHANNELSTATUS	= 140,
+	HEADER_GD_DELETE_AWARDID = 138,	// delete gift notify icon
 
-	HEADER_GD_SETUP			= 0xff,
+	HEADER_GD_UPDATE_CHANNELSTATUS = 139,
+	HEADER_GD_REQUEST_CHANNELSTATUS = 140,
 
-	///////////////////////////////////////////////
-	HEADER_DG_NOTICE			= 1,
+	HEADER_GD_SETUP = 0xff,
 
-	HEADER_DG_LOGIN_SUCCESS			= 30,
-	HEADER_DG_LOGIN_NOT_EXIST		= 31,
-	HEADER_DG_LOGIN_WRONG_PASSWD	= 33,
-	HEADER_DG_LOGIN_ALREADY			= 34,
+	HEADER_DG_NOTICE = 1,
 
-	HEADER_DG_PLAYER_LOAD_SUCCESS	= 35,
-	HEADER_DG_PLAYER_LOAD_FAILED	= 36,
-	HEADER_DG_PLAYER_CREATE_SUCCESS	= 37,
-	HEADER_DG_PLAYER_CREATE_ALREADY	= 38,
-	HEADER_DG_PLAYER_CREATE_FAILED	= 39,
-	HEADER_DG_PLAYER_DELETE_SUCCESS	= 40,
-	HEADER_DG_PLAYER_DELETE_FAILED	= 41,
+	HEADER_DG_LOGIN_SUCCESS = 30,
+	HEADER_DG_LOGIN_NOT_EXIST = 31,
+	HEADER_DG_LOGIN_WRONG_PASSWD = 33,
+	HEADER_DG_LOGIN_ALREADY = 34,
 
-	HEADER_DG_ITEM_LOAD			= 42,
+	HEADER_DG_PLAYER_LOAD_SUCCESS = 35,
+	HEADER_DG_PLAYER_LOAD_FAILED = 36,
+	HEADER_DG_PLAYER_CREATE_SUCCESS = 37,
+	HEADER_DG_PLAYER_CREATE_ALREADY = 38,
+	HEADER_DG_PLAYER_CREATE_FAILED = 39,
+	HEADER_DG_PLAYER_DELETE_SUCCESS = 40,
+	HEADER_DG_PLAYER_DELETE_FAILED = 41,
 
-	HEADER_DG_BOOT				= 43,
-	HEADER_DG_QUEST_LOAD		= 44,
+	HEADER_DG_ITEM_LOAD = 42,
 
-	HEADER_DG_SAFEBOX_LOAD					= 45,
-	HEADER_DG_SAFEBOX_CHANGE_SIZE			= 46,
-	HEADER_DG_SAFEBOX_WRONG_PASSWORD		= 47,
+	HEADER_DG_BOOT = 43,
+	HEADER_DG_QUEST_LOAD = 44,
+
+	HEADER_DG_SAFEBOX_LOAD = 45,
+	HEADER_DG_SAFEBOX_CHANGE_SIZE = 46,
+	HEADER_DG_SAFEBOX_WRONG_PASSWORD = 47,
 	HEADER_DG_SAFEBOX_CHANGE_PASSWORD_ANSWER = 48,
 
-	HEADER_DG_EMPIRE_SELECT		= 49,
+	HEADER_DG_EMPIRE_SELECT = 49,
 
-	HEADER_DG_AFFECT_LOAD		= 50,
-	HEADER_DG_MALL_LOAD			= 51,
+	HEADER_DG_AFFECT_LOAD = 50,
+	HEADER_DG_MALL_LOAD = 51,
 
-	HEADER_DG_DIRECT_ENTER		= 55,
+	HEADER_DG_DIRECT_ENTER = 55,
 
-	HEADER_DG_GUILD_SKILL_UPDATE	= 56,
-	HEADER_DG_GUILD_SKILL_RECHARGE	= 57,
-	HEADER_DG_GUILD_EXP_UPDATE		= 58,
+	HEADER_DG_GUILD_SKILL_UPDATE = 56,
+	HEADER_DG_GUILD_SKILL_RECHARGE = 57,
+	HEADER_DG_GUILD_EXP_UPDATE = 58,
 
-	HEADER_DG_PARTY_CREATE		= 59,
-	HEADER_DG_PARTY_DELETE		= 60,
-	HEADER_DG_PARTY_ADD			= 61,
-	HEADER_DG_PARTY_REMOVE		= 62,
-	HEADER_DG_PARTY_STATE_CHANGE	= 63,
-	HEADER_DG_PARTY_HEAL_USE		= 64,
-	HEADER_DG_PARTY_SET_MEMBER_LEVEL	= 65,
+	HEADER_DG_PARTY_CREATE = 59,
+	HEADER_DG_PARTY_DELETE = 60,
+	HEADER_DG_PARTY_ADD = 61,
+	HEADER_DG_PARTY_REMOVE = 62,
+	HEADER_DG_PARTY_STATE_CHANGE = 63,
+	HEADER_DG_PARTY_HEAL_USE = 64,
+	HEADER_DG_PARTY_SET_MEMBER_LEVEL = 65,
 
-	HEADER_DG_TIME			= 90,
-	HEADER_DG_ITEM_ID_RANGE		= 91,
+	HEADER_DG_TIME = 90,
+	HEADER_DG_ITEM_ID_RANGE = 91,
 
-	HEADER_DG_GUILD_ADD_MEMBER		= 92,
-	HEADER_DG_GUILD_REMOVE_MEMBER	= 93,
-	HEADER_DG_GUILD_CHANGE_GRADE	= 94,
-	HEADER_DG_GUILD_CHANGE_MEMBER_DATA	= 95,
-	HEADER_DG_GUILD_DISBAND		= 96,
-	HEADER_DG_GUILD_WAR			= 97,
-	HEADER_DG_GUILD_WAR_SCORE		= 98,
-	HEADER_DG_GUILD_TIME_UPDATE		= 99,
-	HEADER_DG_GUILD_LOAD		= 100,
-	HEADER_DG_GUILD_LADDER		= 101,
-	HEADER_DG_GUILD_SKILL_USABLE_CHANGE	= 102,
-	HEADER_DG_GUILD_MONEY_CHANGE	= 103,
-	HEADER_DG_GUILD_WITHDRAW_MONEY_GIVE	= 104,
+	HEADER_DG_GUILD_ADD_MEMBER = 92,
+	HEADER_DG_GUILD_REMOVE_MEMBER = 93,
+	HEADER_DG_GUILD_CHANGE_GRADE = 94,
+	HEADER_DG_GUILD_CHANGE_MEMBER_DATA = 95,
+	HEADER_DG_GUILD_DISBAND = 96,
+	HEADER_DG_GUILD_WAR = 97,
+	HEADER_DG_GUILD_WAR_SCORE = 98,
+	HEADER_DG_GUILD_TIME_UPDATE = 99,
+	HEADER_DG_GUILD_LOAD = 100,
+	HEADER_DG_GUILD_LADDER = 101,
+	HEADER_DG_GUILD_SKILL_USABLE_CHANGE = 102,
+	HEADER_DG_GUILD_MONEY_CHANGE = 103,
+	HEADER_DG_GUILD_WITHDRAW_MONEY_GIVE = 104,
 
-	HEADER_DG_SET_EVENT_FLAG		= 105,
+	HEADER_DG_SET_EVENT_FLAG = 105,
 
-	HEADER_DG_GUILD_WAR_RESERVE_ADD	= 106,
-	HEADER_DG_GUILD_WAR_RESERVE_DEL	= 107,
-	HEADER_DG_GUILD_WAR_BET		= 108,
+	HEADER_DG_GUILD_WAR_RESERVE_ADD = 106,
+	HEADER_DG_GUILD_WAR_RESERVE_DEL = 107,
+	HEADER_DG_GUILD_WAR_BET = 108,
 
-	HEADER_DG_RELOAD_PROTO		= 120,
-	HEADER_DG_CHANGE_NAME		= 121,
+	HEADER_DG_RELOAD_PROTO = 120,
+	HEADER_DG_CHANGE_NAME = 121,
 
-	HEADER_DG_AUTH_LOGIN		= 122,
+	HEADER_DG_AUTH_LOGIN = 122,
 
-	HEADER_DG_CHANGE_EMPIRE_PRIV	= 124,
-	HEADER_DG_CHANGE_GUILD_PRIV		= 125,
+	HEADER_DG_CHANGE_EMPIRE_PRIV = 124,
+	HEADER_DG_CHANGE_GUILD_PRIV = 125,
 
-	HEADER_DG_MONEY_LOG			= 126,
+	HEADER_DG_MONEY_LOG = 126,
 
-	HEADER_DG_CHANGE_CHARACTER_PRIV	= 127,
+	HEADER_DG_CHANGE_CHARACTER_PRIV = 127,
 
-	HEADER_DG_CREATE_OBJECT		= 140,
-	HEADER_DG_DELETE_OBJECT		= 141,
-	HEADER_DG_UPDATE_LAND		= 142,
+	HEADER_DG_CREATE_OBJECT = 140,
+	HEADER_DG_DELETE_OBJECT = 141,
+	HEADER_DG_UPDATE_LAND = 142,
 
-	HEADER_DG_MARRIAGE_ADD		= 150,
-	HEADER_DG_MARRIAGE_UPDATE		= 151,
-	HEADER_DG_MARRIAGE_REMOVE		= 152,
+	HEADER_DG_MARRIAGE_ADD = 150,
+	HEADER_DG_MARRIAGE_UPDATE = 151,
+	HEADER_DG_MARRIAGE_REMOVE = 152,
 
-	HEADER_DG_WEDDING_REQUEST		= 153,
-	HEADER_DG_WEDDING_READY		= 154,
-	HEADER_DG_WEDDING_START		= 155,
-	HEADER_DG_WEDDING_END		= 156,
+	HEADER_DG_WEDDING_REQUEST = 153,
+	HEADER_DG_WEDDING_READY = 154,
+	HEADER_DG_WEDDING_START = 155,
+	HEADER_DG_WEDDING_END = 156,
 
-	HEADER_DG_MYSHOP_PRICELIST_RES	= 157,		///< 가격정보 리스트 응답
-	HEADER_DG_RELOAD_ADMIN = 158, 				///< 운영자 정보 리로드 
-	HEADER_DG_BREAK_MARRIAGE = 159,				///< 결혼 파기
-	HEADER_DG_ELECT_MONARCH			= 160,			///< 군주 투표
-	HEADER_DG_CANDIDACY				= 161,			///< 군주 등록
-	HEADER_DG_ADD_MONARCH_MONEY		= 162,			///< 군주 돈 증가 
-	HEADER_DG_TAKE_MONARCH_MONEY	= 163,			///< 군주 돈 감소 
-	HEADER_DG_COME_TO_VOTE			= 164,			///< 표결
-	HEADER_DG_RMCANDIDACY			= 165,			///< 후보 제거 (운영자)
-	HEADER_DG_SETMONARCH			= 166,			///<군주설정 (운영자)
-	HEADER_DG_RMMONARCH			= 167,			///<군주삭제
+	HEADER_DG_MYSHOP_PRICELIST_RES = 157,
+	HEADER_DG_RELOAD_ADMIN = 158,
+	HEADER_DG_BREAK_MARRIAGE = 159,
+	HEADER_DG_ELECT_MONARCH = 160,
+	HEADER_DG_CANDIDACY = 161,
+	HEADER_DG_ADD_MONARCH_MONEY = 162,
+	HEADER_DG_TAKE_MONARCH_MONEY = 163,
+	HEADER_DG_COME_TO_VOTE = 164,
+	HEADER_DG_RMCANDIDACY = 165,
+	HEADER_DG_SETMONARCH = 166,
+	HEADER_DG_RMMONARCH = 167,
 	HEADER_DG_DEC_MONARCH_MONEY = 168,
 
 	HEADER_DG_CHANGE_MONARCH_LORD_ACK = 169,
-	HEADER_DG_UPDATE_MONARCH_INFO	= 170,
+	HEADER_DG_UPDATE_MONARCH_INFO = 170,
 
 	HEADER_DG_ACK_CHANGE_GUILD_MASTER = 173,
 
 	HEADER_DG_ACK_SPARE_ITEM_ID_RANGE = 174,
 
-	HEADER_DG_UPDATE_HORSE_NAME 	= 175,
-	HEADER_DG_ACK_HORSE_NAME		= 176,
+	HEADER_DG_UPDATE_HORSE_NAME = 175,
+	HEADER_DG_ACK_HORSE_NAME = 176,
 
-	HEADER_DG_NEED_LOGIN_LOG		= 177,
+	HEADER_DG_NEED_LOGIN_LOG = 177,
 
-	HEADER_DG_RESULT_CHARGE_CASH	= 179,
-	HEADER_DG_ITEMAWARD_INFORMER	= 180,	//gift notify
-	HEADER_DG_RESPOND_CHANNELSTATUS		= 181,
+	HEADER_DG_RESULT_CHARGE_CASH = 179,
+	HEADER_DG_ITEMAWARD_INFORMER = 180,	//gift notify
+	HEADER_DG_RESPOND_CHANNELSTATUS = 181,
 
-	HEADER_DG_MAP_LOCATIONS		= 0xfe,
-	HEADER_DG_P2P			= 0xff,
-
+	HEADER_DG_MAP_LOCATIONS = 0xfe,
+	HEADER_DG_P2P = 0xff,
 };
-
-/* ----------------------------------------------
- * table
- * ----------------------------------------------
- */
 
 /* game Server -> DB Server */
 #pragma pack(1)
@@ -284,7 +274,6 @@ typedef struct SRequestChargeCash
 	uint32_t		dwAID;		// id(primary key) - Account Table
 	uint32_t		dwAmount;
 	ERequestChargeType	eChargeType;
-
 } TRequestChargeCash;
 
 typedef struct SSimplePlayer
@@ -394,7 +383,7 @@ typedef struct SPlayerTable
 
 	// int16_t	sRandomHP;
 	// int16_t	sRandomSP;
-	
+
 	// Fix
 	int32_t       hp;
 	int32_t       sp;
@@ -538,7 +527,7 @@ typedef struct SSkillTable
 	uint32_t	preSkillVnum;
 	uint8_t	preSkillLevel;
 
-	int32_t	lMaxHit; 
+	int32_t	lMaxHit;
 	char	szSplashAroundDamageAdjustPoly[100 + 1];
 
 	uint8_t	bSkillAttrType;
@@ -551,9 +540,9 @@ typedef struct SShopItemTable
 	uint32_t		vnum;
 	uint8_t		count;
 
-    TItemPos	pos;			// PC 상점에만 이용
-	uint32_t		price;	// PC, shop_table_ex.txt 상점에만 이용
-	uint8_t		display_pos; // PC, shop_table_ex.txt 상점에만 이용, 보일 위치.
+	TItemPos	pos;
+	uint32_t		price;
+	uint8_t		display_pos;
 } TShopItemTable;
 
 typedef struct SShopTable
@@ -617,13 +606,10 @@ typedef struct SItemTable : public SEntityTable
 	uint8_t	bSpecular;
 	uint8_t	bGainSocketPct;
 
-	int16_t	sAddonType; // 기본 속성
+	int16_t	sAddonType;
 
-	// 아래 limit flag들은 realtime에 체크 할 일이 많고, 아이템 VNUM당 고정된 값인데,
-	// 현재 구조대로 매번 아이템마다 필요한 경우에 LIMIT_MAX_NUM까지 루프돌면서 체크하는 부하가 커서 미리 저장 해 둠.
-	char		cLimitRealTimeFirstUseIndex;		// 아이템 limit 필드값 중에서 LIMIT_REAL_TIME_FIRST_USE 플래그의 위치 (없으면 -1)
-	char		cLimitTimerBasedOnWearIndex;		// 아이템 limit 필드값 중에서 LIMIT_TIMER_BASED_ON_WEAR 플래그의 위치 (없으면 -1) 
-
+	char		cLimitRealTimeFirstUseIndex;
+	char		cLimitTimerBasedOnWearIndex;
 } TItemTable;
 
 struct TItemAttrTable
@@ -737,9 +723,9 @@ typedef struct SEmpireSelectPacket
 typedef struct SPacketGDSetup
 {
 	char	szPublicIP[16];	// Public IP which listen to users
-	uint8_t	bChannel;	// 채널
-	uint16_t	wListenPort;	// 클라이언트가 접속하는 포트 번호
-	uint16_t	wP2PPort;	// 서버끼리 연결 시키는 P2P 포트 번호
+	uint8_t	bChannel;
+	uint16_t	wListenPort;
+	uint16_t	wP2PPort;
 	int32_t	alMaps[32];
 	uint32_t	dwLoginCount;
 	uint8_t	bAuthServer;
@@ -800,7 +786,6 @@ typedef struct SPacketGuildChangeMemberData
 	uint8_t level;
 	uint8_t grade;
 } TPacketGuildChangeMemberData;
-
 
 typedef struct SPacketDGLoginAlready
 {
@@ -878,7 +863,7 @@ typedef struct SPacketPartySetMemberLevel
 
 typedef struct SPacketGDBoot
 {
-    uint32_t	dwItemIDRange[2];
+	uint32_t	dwItemIDRange[2];
 	char	szIP[16];
 } TPacketGDBoot;
 
@@ -917,8 +902,6 @@ typedef struct SPacketGuildWar
 	int32_t	lInitialScore;
 } TPacketGuildWar;
 
-// Game -> DB : 상대적 변화값
-// DB -> Game : 토탈된 최종값
 typedef struct SPacketGuildWarScore
 {
 	uint32_t dwGuildGainPoint;
@@ -1022,16 +1005,14 @@ typedef struct SPacketGDLoginByKey
 	char	szIP[MAX_HOST_LENGTH + 1];
 } TPacketGDLoginByKey;
 
-/**
- * @version 05/06/08	Bang2ni - 지속시간 추가
- */
 typedef struct SPacketGiveGuildPriv
 {
 	uint8_t type;
 	int32_t value;
 	uint32_t guild_id;
-	time_t duration_sec;	///< 지속시간
+	time_t duration_sec;
 } TPacketGiveGuildPriv;
+
 typedef struct SPacketGiveEmpirePriv
 {
 	uint8_t type;
@@ -1039,17 +1020,20 @@ typedef struct SPacketGiveEmpirePriv
 	uint8_t empire;
 	time_t duration_sec;
 } TPacketGiveEmpirePriv;
+
 typedef struct SPacketGiveCharacterPriv
 {
 	uint8_t type;
 	int32_t value;
 	uint32_t pid;
 } TPacketGiveCharacterPriv;
+
 typedef struct SPacketRemoveGuildPriv
 {
 	uint8_t type;
 	uint32_t guild_id;
 } TPacketRemoveGuildPriv;
+
 typedef struct SPacketRemoveEmpirePriv
 {
 	uint8_t type;
@@ -1064,16 +1048,13 @@ typedef struct SPacketDGChangeCharacterPriv
 	uint8_t bLog;
 } TPacketDGChangeCharacterPriv;
 
-/**
- * @version 05/06/08	Bang2ni - 지속시간 추가
- */
 typedef struct SPacketDGChangeGuildPriv
 {
 	uint8_t type;
 	int32_t value;
 	uint32_t guild_id;
 	uint8_t bLog;
-	time_t end_time_sec;	///< 지속시간
+	time_t end_time_sec;
 } TPacketDGChangeGuildPriv;
 
 typedef struct SPacketDGChangeEmpirePriv
@@ -1225,27 +1206,24 @@ typedef struct
 	uint32_t dwPID2;
 } TPacketWeddingEnd;
 
-/// 개인상점 가격정보의 헤더. 가변 패킷으로 이 뒤에 byCount 만큼의 TItemPriceInfo 가 온다.
 typedef struct SPacketMyshopPricelistHeader
-{ 
-	uint32_t	dwOwnerID;	///< 가격정보를 가진 플레이어 ID 
-	uint8_t	byCount;	///< 가격정보 갯수
+{
+	uint32_t	dwOwnerID;
+	uint8_t	byCount;
 } TPacketMyshopPricelistHeader;
 
-/// 개인상점의 단일 아이템에 대한 가격정보
 typedef struct SItemPriceInfo
 {
-	uint32_t	dwVnum;		///< 아이템 vnum
-	uint32_t	dwPrice;	///< 가격
+	uint32_t	dwVnum;
+	uint32_t	dwPrice;
 } TItemPriceInfo;
 
-/// 개인상점 아이템 가격정보 리스트 테이블
 typedef struct SItemPriceListTable
 {
-	uint32_t	dwOwnerID;	///< 가격정보를 가진 플레이어 ID
-	uint8_t	byCount;	///< 가격정보 리스트의 갯수
+	uint32_t	dwOwnerID;
+	uint8_t	byCount;
 
-	TItemPriceInfo	aPriceInfo[SHOP_PRICELIST_MAX_NUM];	///< 가격정보 리스트
+	TItemPriceInfo	aPriceInfo[SHOP_PRICELIST_MAX_NUM];
 } TItemPriceListTable;
 
 typedef struct
@@ -1257,13 +1235,14 @@ typedef struct
 //ADMIN_MANAGER
 typedef struct TAdminInfo
 {
-	int32_t m_ID;				//고유ID
-	char m_szAccount[32];	//계정
-	char m_szName[32];		//캐릭터이름
-	char m_szContactIP[16];	//접근아이피
-	char m_szServerIP[16];  //서버아이피
-	int32_t m_Authority;		//권한
+	int32_t m_ID;
+	char m_szAccount[32];
+	char m_szName[32];
+	char m_szContactIP[16];
+	char m_szServerIP[16];
+	int32_t m_Authority;
 } tAdminInfo;
+
 //END_ADMIN_MANAGER
 
 //BOOT_LOCALIZATION
@@ -1272,6 +1251,7 @@ struct tLocale
 	char szValue[32];
 	char szKey[32];
 };
+
 //BOOT_LOCALIZATION
 
 //RELOAD_ADMIN
@@ -1279,24 +1259,24 @@ typedef struct SPacketReloadAdmin
 {
 	char szIP[16];
 } TPacketReloadAdmin;
+
 //END_RELOAD_ADMIN
 
 typedef struct TMonarchInfo
 {
-	uint32_t pid[4];  // 군주의 PID
-	int64_t money[4];  // 군주의 별개 돈	
-	char name[4][32];  // 군주의 이름	
-	char date[4][32];  // 군주 등록 날짜
+	uint32_t pid[4];
+	int64_t money[4];
+	char name[4][32];
+	char date[4][32];
 } MonarchInfo;
 
 typedef struct TMonarchElectionInfo
 {
-	uint32_t pid;  // 투표 한사람 PID
-	uint32_t selectedpid; // 투표 당한 PID ( 군주 참가자 )
-	char date[32]; // 투표 날짜
+	uint32_t pid;
+	uint32_t selectedpid;
+	char date[32];
 } MonarchElectionInfo;
 
-// 군주 출마자
 typedef struct tMonarchCandidacy
 {
 	uint32_t pid;
@@ -1348,14 +1328,13 @@ typedef struct tNeedLoginLogInfo
 	uint32_t dwPlayerID;
 } TPacketNeedLoginLogInfo;
 
-//독일 선물 알림 기능 테스트용 패킷 정보
 typedef struct tItemAwardInformer
 {
 	char	login[LOGIN_MAX_LEN + 1];
-	char	command[20];		//명령어
-	uint32_t vnum;			//아이템
+	char	command[20];
+	uint32_t vnum;
 } TPacketItemAwardInfromer;
-// 선물 알림 기능 삭제용 패킷 정보
+
 typedef struct tDeleteAwardID
 {
 	uint32_t dwID;

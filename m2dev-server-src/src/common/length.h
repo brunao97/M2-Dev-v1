@@ -4,97 +4,77 @@
 #define WORD_MAX 0xffff
 enum EMisc
 {
-	MAX_HOST_LENGTH			= 15,
-	IP_ADDRESS_LENGTH		= 15,
-	LOGIN_MAX_LEN			= 30,
-	PASSWD_MAX_LEN			= 16,
-	PLAYER_PER_ACCOUNT		= 4,
-	ACCOUNT_STATUS_MAX_LEN	= 8,
-	CHARACTER_NAME_MAX_LEN	= 24,
-	SHOP_SIGN_MAX_LEN		= 32,
-	INVENTORY_MAX_NUM		= 90,
-	ABILITY_MAX_NUM			= 50,
-	EMPIRE_MAX_NUM			= 4,
-	BANWORD_MAX_LEN			= 24,
-	SMS_MAX_LEN				= 80,
-	MOBILE_MAX_LEN			= 32,
-	SOCIAL_ID_MAX_LEN		= 18,
+	MAX_HOST_LENGTH = 15,
+	IP_ADDRESS_LENGTH = 15,
+	LOGIN_MAX_LEN = 30,
+	PASSWD_MAX_LEN = 16,
+	PLAYER_PER_ACCOUNT = 4,
+	ACCOUNT_STATUS_MAX_LEN = 8,
+	CHARACTER_NAME_MAX_LEN = 24,
+	SHOP_SIGN_MAX_LEN = 32,
+	INVENTORY_MAX_NUM = 90,
+	ABILITY_MAX_NUM = 50,
+	EMPIRE_MAX_NUM = 4,
+	BANWORD_MAX_LEN = 24,
+	SMS_MAX_LEN = 80,
+	MOBILE_MAX_LEN = 32,
+	SOCIAL_ID_MAX_LEN = 18,
 
-	GUILD_NAME_MAX_LEN		= 12,
+	GUILD_NAME_MAX_LEN = 12,
 
-	SHOP_HOST_ITEM_MAX_NUM	= 40,	/* 호스트의 최대 아이템 개수 */
-	SHOP_GUEST_ITEM_MAX_NUM = 18,	/* 게스트의 최대 아이템 개수 */
+	SHOP_HOST_ITEM_MAX_NUM = 40,
+	SHOP_GUEST_ITEM_MAX_NUM = 18,
 
-	SHOP_PRICELIST_MAX_NUM	= 40,	///< 개인상점 가격정보 리스트에서 유지할 가격정보의 최대 갯수
+	SHOP_PRICELIST_MAX_NUM = 40,
 
-	CHAT_MAX_LEN			= 512,
+	CHAT_MAX_LEN = 512,
 
-	QUICKSLOT_MAX_NUM		= 36,
+	QUICKSLOT_MAX_NUM = 36,
 
-	JOURNAL_MAX_NUM			= 2,
+	JOURNAL_MAX_NUM = 2,
 
-	QUERY_MAX_LEN			= 8192,
+	QUERY_MAX_LEN = 8192,
 
-	FILE_MAX_LEN			= 128,
+	FILE_MAX_LEN = 128,
 
-	PLAYER_EXP_TABLE_MAX	= 120,
-	PLAYER_MAX_LEVEL_CONST	= 120,
+	PLAYER_EXP_TABLE_MAX = 120,
+	PLAYER_MAX_LEVEL_CONST = 120,
 
-	GUILD_MAX_LEVEL			= 20,
-	MOB_MAX_LEVEL			= 100,
+	GUILD_MAX_LEVEL = 20,
+	MOB_MAX_LEVEL = 100,
 
-	ATTRIBUTE_MAX_VALUE		= 20,
-	CHARACTER_PATH_MAX_NUM	= 64,
-	SKILL_MAX_NUM			= 255,
-	SKILLBOOK_DELAY_MIN		= 64800,
-	SKILLBOOK_DELAY_MAX		= 108000, 
-	SKILL_MAX_LEVEL			= 40,
+	ATTRIBUTE_MAX_VALUE = 20,
+	CHARACTER_PATH_MAX_NUM = 64,
+	SKILL_MAX_NUM = 255,
+	SKILLBOOK_DELAY_MIN = 64800,
+	SKILLBOOK_DELAY_MAX = 108000,
+	SKILL_MAX_LEVEL = 40,
 
-	APPLY_NAME_MAX_LEN		= 32,
+	APPLY_NAME_MAX_LEN = 32,
 	EVENT_FLAG_NAME_MAX_LEN = 32,
 
-	MOB_SKILL_MAX_NUM		= 5,
+	MOB_SKILL_MAX_NUM = 5,
 
-    POINT_MAX_NUM = 255,
+	POINT_MAX_NUM = 255,
 	DRAGON_SOUL_BOX_SIZE = 32,
 	DRAGON_SOUL_BOX_COLUMN_NUM = 8,
 	DRAGON_SOUL_BOX_ROW_NUM = DRAGON_SOUL_BOX_SIZE / DRAGON_SOUL_BOX_COLUMN_NUM,
 	DRAGON_SOUL_REFINE_GRID_SIZE = 15,
-	MAX_AMOUNT_OF_MALL_BONUS	= 20,
+	MAX_AMOUNT_OF_MALL_BONUS = 20,
 
-	WEAR_MAX_NUM				= 32,
+	WEAR_MAX_NUM = 32,
 
 	//LIMIT_GOLD
 	GOLD_MAX = 2000000000,
-
-		
 	//END_LIMIT_GOLD
 
 	SHOP_TAB_NAME_MAX = 32,
 	SHOP_TAB_COUNT_MAX = 3,
 
 	BELT_INVENTORY_SLOT_WIDTH = 4,
-	BELT_INVENTORY_SLOT_HEIGHT= 4,
+	BELT_INVENTORY_SLOT_HEIGHT = 4,
 
 	BELT_INVENTORY_SLOT_COUNT = BELT_INVENTORY_SLOT_WIDTH * BELT_INVENTORY_SLOT_HEIGHT,
-
-
-/**
-	 **** 현재까지 할당 된 아이템 영역 정리 (DB상 Item Position) ****
-	+------------------------------------------------------+ 0
-	| 캐릭터 기본 인벤토리 (45칸 * 2페이지) 90칸           | 
-	+------------------------------------------------------+ 90 = INVENTORY_MAX_NUM(90)
-	| 캐릭터 장비 창 (착용중인 아이템) 32칸                |
-	+------------------------------------------------------+ 122 = INVENTORY_MAX_NUM(90) + WEAR_MAX_NUM(32)
-	| 용혼석 장비 창 (착용중인 용혼석) 12칸                | 
-	+------------------------------------------------------+ 134 = 122 + DS_SLOT_MAX(6) * DRAGON_SOUL_DECK_MAX_NUM(2)
-	| 용혼석 장비 창 예약 (아직 미사용) 18칸               | 
-	+------------------------------------------------------+ 152 = 134 + DS_SLOT_MAX(6) * DRAGON_SOUL_DECK_RESERVED_MAX_NUM(3)
-	| 벨트 인벤토리 (벨트 착용시에만 벨트 레벨에 따라 활성)|
-	+------------------------------------------------------+ 168 = 152 + BELT_INVENTORY_SLOT_COUNT(16) = INVENTORY_AND_EQUIP_CELL_MAX
-	| 미사용                                               |
-	+------------------------------------------------------+ ??
-*/
 };
 
 enum EWearPositions
@@ -110,23 +90,23 @@ enum EWearPositions
 	WEAR_UNIQUE2,	// 8
 	WEAR_ARROW,		// 9
 	WEAR_SHIELD,	// 10
-    WEAR_ABILITY1,  // 11
-    WEAR_ABILITY2,  // 12
-    WEAR_ABILITY3,  // 13
-    WEAR_ABILITY4,  // 14
-    WEAR_ABILITY5,  // 15
-    WEAR_ABILITY6,  // 16
-    WEAR_ABILITY7,  // 17
-    WEAR_ABILITY8,  // 18
+	WEAR_ABILITY1,  // 11
+	WEAR_ABILITY2,  // 12
+	WEAR_ABILITY3,  // 13
+	WEAR_ABILITY4,  // 14
+	WEAR_ABILITY5,  // 15
+	WEAR_ABILITY6,  // 16
+	WEAR_ABILITY7,  // 17
+	WEAR_ABILITY8,  // 18
 	WEAR_COSTUME_BODY,	// 19
 	WEAR_COSTUME_HAIR,	// 20
-	
-	WEAR_RING1,			// 21	: 신규 반지슬롯1 (왼쪽)
-	WEAR_RING2,			// 22	: 신규 반지슬롯2 (오른쪽)
 
-	WEAR_BELT,			// 23	: 신규 벨트슬롯
+	WEAR_RING1,			// 21
+	WEAR_RING2,			// 22
 
-	WEAR_MAX = 32	// 
+	WEAR_BELT,			// 23
+
+	WEAR_MAX = 32	//
 };
 
 enum EDragonSoulDeckType
@@ -135,7 +115,7 @@ enum EDragonSoulDeckType
 	DRAGON_SOUL_DECK_1,
 	DRAGON_SOUL_DECK_MAX_NUM = 2,
 
-	DRAGON_SOUL_DECK_RESERVED_MAX_NUM = 3,	// NOTE: 중요! 아직 사용중이진 않지만, 3페이지 분량을 예약 해 둠. DS DECK을 늘릴 경우 반드시 그 수만큼 RESERVED에서 차감해야 함!
+	DRAGON_SOUL_DECK_RESERVED_MAX_NUM = 3,
 };
 
 enum ESex
@@ -157,7 +137,7 @@ enum EDirection
 	DIR_MAX_NUM
 };
 
-#define ABILITY_MAX_LEVEL	10  /* 기술 최대 레벨 */
+#define ABILITY_MAX_LEVEL	10
 
 enum EAbilityDifficulty
 {
@@ -170,9 +150,9 @@ enum EAbilityDifficulty
 
 enum EAbilityCategory
 {
-	CATEGORY_PHYSICAL,	/* 신체적 어빌리티 */
-	CATEGORY_MENTAL,	/* 정신적 어빌리티 */
-	CATEGORY_ATTRIBUTE,	/* 능력 어빌리티 */
+	CATEGORY_PHYSICAL,
+	CATEGORY_MENTAL,
+	CATEGORY_ATTRIBUTE,
 	CATEGORY_NUM_TYPES
 };
 
@@ -192,23 +172,23 @@ enum ESkillGroups
 
 enum ERaceFlags
 {
-	RACE_FLAG_ANIMAL	= (1 << 0),
-	RACE_FLAG_UNDEAD	= (1 << 1),
-	RACE_FLAG_DEVIL		= (1 << 2),
-	RACE_FLAG_HUMAN		= (1 << 3),
-	RACE_FLAG_ORC		= (1 << 4),
-	RACE_FLAG_MILGYO	= (1 << 5),
-	RACE_FLAG_INSECT	= (1 << 6),
-	RACE_FLAG_FIRE		= (1 << 7),
-	RACE_FLAG_ICE		= (1 << 8),
-	RACE_FLAG_DESERT	= (1 << 9),
-	RACE_FLAG_TREE		= (1 << 10),
-	RACE_FLAG_ATT_ELEC	= (1 << 11),
-	RACE_FLAG_ATT_FIRE	= (1 << 12),
-	RACE_FLAG_ATT_ICE	= (1 << 13),
-	RACE_FLAG_ATT_WIND	= (1 << 14),
-	RACE_FLAG_ATT_EARTH	= (1 << 15),
-	RACE_FLAG_ATT_DARK	= (1 << 16),
+	RACE_FLAG_ANIMAL = (1 << 0),
+	RACE_FLAG_UNDEAD = (1 << 1),
+	RACE_FLAG_DEVIL = (1 << 2),
+	RACE_FLAG_HUMAN = (1 << 3),
+	RACE_FLAG_ORC = (1 << 4),
+	RACE_FLAG_MILGYO = (1 << 5),
+	RACE_FLAG_INSECT = (1 << 6),
+	RACE_FLAG_FIRE = (1 << 7),
+	RACE_FLAG_ICE = (1 << 8),
+	RACE_FLAG_DESERT = (1 << 9),
+	RACE_FLAG_TREE = (1 << 10),
+	RACE_FLAG_ATT_ELEC = (1 << 11),
+	RACE_FLAG_ATT_FIRE = (1 << 12),
+	RACE_FLAG_ATT_ICE = (1 << 13),
+	RACE_FLAG_ATT_WIND = (1 << 14),
+	RACE_FLAG_ATT_EARTH = (1 << 15),
+	RACE_FLAG_ATT_DARK = (1 << 16),
 };
 
 enum ELoads
@@ -242,13 +222,13 @@ enum EParts
 
 enum EChatType
 {
-	CHAT_TYPE_TALKING,	/* 그냥 채팅 */
-	CHAT_TYPE_INFO,	/* 정보 (아이템을 집었다, 경험치를 얻었다. 등) */
-	CHAT_TYPE_NOTICE,	/* 공지사항 */
-	CHAT_TYPE_PARTY,	/* 파티말 */
-	CHAT_TYPE_GUILD,	/* 길드말 */
-	CHAT_TYPE_COMMAND,	/* 일반 명령 */
-	CHAT_TYPE_SHOUT,	/* 외치기 */
+	CHAT_TYPE_TALKING,
+	CHAT_TYPE_INFO,
+	CHAT_TYPE_NOTICE,
+	CHAT_TYPE_PARTY,
+	CHAT_TYPE_GUILD,
+	CHAT_TYPE_COMMAND,
+	CHAT_TYPE_SHOUT,
 	CHAT_TYPE_WHISPER,
 	CHAT_TYPE_BIG_NOTICE,
 	CHAT_TYPE_MONARCH_NOTICE,
@@ -257,13 +237,13 @@ enum EChatType
 
 enum EWhisperType
 {
-	WHISPER_TYPE_NORMAL		= 0,
-	WHISPER_TYPE_NOT_EXIST		= 1,
-	WHISPER_TYPE_TARGET_BLOCKED	= 2,
-	WHISPER_TYPE_SENDER_BLOCKED	= 3,
-	WHISPER_TYPE_ERROR		= 4,
-	WHISPER_TYPE_GM			= 5,
-	WHISPER_TYPE_SYSTEM		= 0xFF
+	WHISPER_TYPE_NORMAL = 0,
+	WHISPER_TYPE_NOT_EXIST = 1,
+	WHISPER_TYPE_TARGET_BLOCKED = 2,
+	WHISPER_TYPE_SENDER_BLOCKED = 3,
+	WHISPER_TYPE_ERROR = 4,
+	WHISPER_TYPE_GM = 5,
+	WHISPER_TYPE_SYSTEM = 0xFF
 };
 
 enum ECharacterPosition
@@ -391,41 +371,40 @@ enum EApplyTypes
 	APPLY_ATTBONUS_SURA,	// 61
 	APPLY_ATTBONUS_SHAMAN,	// 62
 	APPLY_ATTBONUS_MONSTER,	// 63
-	APPLY_MALL_ATTBONUS,			// 64 공격력 +x%
-	APPLY_MALL_DEFBONUS,			// 65 방어력 +x%
-	APPLY_MALL_EXPBONUS,			// 66 경험치 +x%
-	APPLY_MALL_ITEMBONUS,			// 67 아이템 드롭율 x/10배
-	APPLY_MALL_GOLDBONUS,			// 68 돈 드롭율 x/10배
-	APPLY_MAX_HP_PCT,				// 69 최대 생명력 +x%
-	APPLY_MAX_SP_PCT,				// 70 최대 정신력 +x%
-	APPLY_SKILL_DAMAGE_BONUS,		// 71 스킬 데미지 * (100+x)%
-	APPLY_NORMAL_HIT_DAMAGE_BONUS,	// 72 평타 데미지 * (100+x)%
-	APPLY_SKILL_DEFEND_BONUS,		// 73 스킬 데미지 방어 * (100-x)%
-	APPLY_NORMAL_HIT_DEFEND_BONUS,	// 74 평타 데미지 방어 * (100-x)%
-	APPLY_PC_BANG_EXP_BONUS,		// 75 PC방 아이템 EXP 보너스
-	APPLY_PC_BANG_DROP_BONUS,		// 76 PC방 아이템 드롭율 보너스
+	APPLY_MALL_ATTBONUS,			// 64
+	APPLY_MALL_DEFBONUS,			// 65
+	APPLY_MALL_EXPBONUS,			// 66
+	APPLY_MALL_ITEMBONUS,			// 67
+	APPLY_MALL_GOLDBONUS,			// 68
+	APPLY_MAX_HP_PCT,				// 69
+	APPLY_MAX_SP_PCT,				// 70
+	APPLY_SKILL_DAMAGE_BONUS,		// 71
+	APPLY_NORMAL_HIT_DAMAGE_BONUS,	// 72
+	APPLY_SKILL_DEFEND_BONUS,		// 73
+	APPLY_NORMAL_HIT_DEFEND_BONUS,	// 74
+	APPLY_PC_BANG_EXP_BONUS,		// 75
+	APPLY_PC_BANG_DROP_BONUS,		// 76
 
-	APPLY_EXTRACT_HP_PCT,			// 77 사용시 HP 소모
+	APPLY_EXTRACT_HP_PCT,			// 77
 
-	APPLY_RESIST_WARRIOR,			// 78 무사에게 저항
-	APPLY_RESIST_ASSASSIN,			// 79 자객에게 저항
-	APPLY_RESIST_SURA,				// 80 수라에게 저항
-	APPLY_RESIST_SHAMAN,			// 81 무당에게 저항
-	APPLY_ENERGY,					// 82 기력
-	APPLY_DEF_GRADE,				// 83 방어력. DEF_GRADE_BONUS는 클라에서 두배로 보여지는 의도된 버그(...)가 있다.
-	APPLY_COSTUME_ATTR_BONUS,		// 84 코스튬 아이템에 붙은 속성치 보너스
-	APPLY_MAGIC_ATTBONUS_PER,		// 85 마법 공격력 +x%
-	APPLY_MELEE_MAGIC_ATTBONUS_PER,			// 86 마법 + 밀리 공격력 +x%
-	
-	APPLY_RESIST_ICE,		// 87 냉기 저항
-	APPLY_RESIST_EARTH,		// 88 대지 저항
-	APPLY_RESIST_DARK,		// 89 어둠 저항
+	APPLY_RESIST_WARRIOR,			// 78
+	APPLY_RESIST_ASSASSIN,			// 79
+	APPLY_RESIST_SURA,				// 80
+	APPLY_RESIST_SHAMAN,			// 81
+	APPLY_ENERGY,					// 82
+	APPLY_DEF_GRADE,				// 83
+	APPLY_COSTUME_ATTR_BONUS,		// 84
+	APPLY_MAGIC_ATTBONUS_PER,		// 85
+	APPLY_MELEE_MAGIC_ATTBONUS_PER,			// 86
 
-	APPLY_ANTI_CRITICAL_PCT,	//90 크리티컬 저항
-	APPLY_ANTI_PENETRATE_PCT,	//91 관통타격 저항
+	APPLY_RESIST_ICE,		// 87
+	APPLY_RESIST_EARTH,		// 88
+	APPLY_RESIST_DARK,		// 89
 
+	APPLY_ANTI_CRITICAL_PCT,	//90
+	APPLY_ANTI_PENETRATE_PCT,	//91
 
-	MAX_APPLY_NUM,              // 
+	MAX_APPLY_NUM,
 };
 
 enum EOnClickEvents
@@ -465,18 +444,18 @@ enum EMobSizes
 
 enum EAIFlags
 {
-	AIFLAG_AGGRESSIVE	= (1 << 0),
-	AIFLAG_NOMOVE	= (1 << 1),
-	AIFLAG_COWARD	= (1 << 2),
-	AIFLAG_NOATTACKSHINSU	= (1 << 3),
-	AIFLAG_NOATTACKJINNO	= (1 << 4),
-	AIFLAG_NOATTACKCHUNJO	= (1 << 5),
-	AIFLAG_ATTACKMOB = (1 << 6 ),
-	AIFLAG_BERSERK	= (1 << 7),
-	AIFLAG_STONESKIN	= (1 << 8),
-	AIFLAG_GODSPEED	= (1 << 9),
-	AIFLAG_DEATHBLOW	= (1 << 10),
-	AIFLAG_REVIVE		= (1 << 11),
+	AIFLAG_AGGRESSIVE = (1 << 0),
+	AIFLAG_NOMOVE = (1 << 1),
+	AIFLAG_COWARD = (1 << 2),
+	AIFLAG_NOATTACKSHINSU = (1 << 3),
+	AIFLAG_NOATTACKJINNO = (1 << 4),
+	AIFLAG_NOATTACKCHUNJO = (1 << 5),
+	AIFLAG_ATTACKMOB = (1 << 6),
+	AIFLAG_BERSERK = (1 << 7),
+	AIFLAG_STONESKIN = (1 << 8),
+	AIFLAG_GODSPEED = (1 << 9),
+	AIFLAG_DEATHBLOW = (1 << 10),
+	AIFLAG_REVIVE = (1 << 11),
 };
 
 enum EMobStatType
@@ -492,13 +471,13 @@ enum EMobStatType
 
 enum EImmuneFlags
 {
-	IMMUNE_STUN		= (1 << 0),
-	IMMUNE_SLOW		= (1 << 1),
-	IMMUNE_FALL		= (1 << 2),
-	IMMUNE_CURSE	= (1 << 3),
-	IMMUNE_POISON	= (1 << 4),
-	IMMUNE_TERROR	= (1 << 5),
-	IMMUNE_REFLECT	= (1 << 6),
+	IMMUNE_STUN = (1 << 0),
+	IMMUNE_SLOW = (1 << 1),
+	IMMUNE_FALL = (1 << 2),
+	IMMUNE_CURSE = (1 << 3),
+	IMMUNE_POISON = (1 << 4),
+	IMMUNE_TERROR = (1 << 5),
+	IMMUNE_REFLECT = (1 << 6),
 };
 
 enum EMobEnchants
@@ -534,12 +513,6 @@ enum
 	SKILL_ATTR_TYPE_MELEE,
 	SKILL_ATTR_TYPE_RANGE,
 	SKILL_ATTR_TYPE_MAGIC
-		/*
-		   SKILL_ATTR_TYPE_FIRE,
-		   SKILL_ATTR_TYPE_ICE,
-		   SKILL_ATTR_TYPE_ELEC,
-		   SKILL_ATTR_TYPE_DARK,
-		   */
 };
 
 enum
@@ -571,23 +544,23 @@ enum EGuildWarState
 	GUILD_WAR_OVER,
 	GUILD_WAR_RESERVE,
 
-	GUILD_WAR_DURATION = 30*60, // 1시간
+	GUILD_WAR_DURATION = 30 * 60,
 	GUILD_WAR_WIN_POINT = 1000,
-	GUILD_WAR_LADDER_HALF_PENALTY_TIME = 12*60*60,
+	GUILD_WAR_LADDER_HALF_PENALTY_TIME = 12 * 60 * 60,
 };
 
-enum EAttributeSet 
-{            
+enum EAttributeSet
+{
 	ATTRIBUTE_SET_WEAPON,
-	ATTRIBUTE_SET_BODY, 
-	ATTRIBUTE_SET_WRIST, 
+	ATTRIBUTE_SET_BODY,
+	ATTRIBUTE_SET_WRIST,
 	ATTRIBUTE_SET_FOOTS,
 	ATTRIBUTE_SET_NECK,
 	ATTRIBUTE_SET_HEAD,
 	ATTRIBUTE_SET_SHIELD,
 	ATTRIBUTE_SET_EAR,
 	ATTRIBUTE_SET_MAX_NUM
-};  
+};
 
 enum EPrivType
 {
@@ -615,13 +588,13 @@ enum EMoneyLogType
 
 enum EPremiumTypes
 {
-	PREMIUM_EXP,		// 경험치가 1.2배
-	PREMIUM_ITEM,		// 아이템 드롭율이 2배
-	PREMIUM_SAFEBOX,		// 창고가 1칸에서 3칸
-	PREMIUM_AUTOLOOT,		// 돈 자동 줍기
-	PREMIUM_FISH_MIND,		// 고급 물고기 낚일 확률 상승
-	PREMIUM_MARRIAGE_FAST,	// 금실 증가 양을 빠르게합니다.
-	PREMIUM_GOLD,		// 돈 드롭율이 1.5배
+	PREMIUM_EXP,
+	PREMIUM_ITEM,
+	PREMIUM_SAFEBOX,
+	PREMIUM_AUTOLOOT,
+	PREMIUM_FISH_MIND,
+	PREMIUM_MARRIAGE_FAST,
+	PREMIUM_GOLD,
 	PREMIUM_MAX_NUM = 9
 };
 
@@ -651,18 +624,14 @@ enum SPECIAL_EFFECT
 	SE_AUTO_HPUP,
 	SE_AUTO_SPUP,
 
-	SE_EQUIP_RAMADAN_RING,		// 라마단 초승달의 반지(71135) 착용할 때 이펙트 (발동이펙트임, 지속이펙트 아님)
-	SE_EQUIP_HALLOWEEN_CANDY,		// 할로윈 사탕을 착용(-_-;)한 순간에 발동하는 이펙트
-	SE_EQUIP_HAPPINESS_RING,		// 크리스마스 행복의 반지(71143) 착용할 때 이펙트 (발동이펙트임, 지속이펙트 아님)
-	SE_EQUIP_LOVE_PENDANT,		// 발렌타인 사랑의 팬던트(71145) 착용할 때 이펙트 (발동이펙트임, 지속이펙트 아님)
-} ;
+	SE_EQUIP_RAMADAN_RING,
+	SE_EQUIP_HALLOWEEN_CANDY,
+	SE_EQUIP_HAPPINESS_RING,
+	SE_EQUIP_LOVE_PENDANT,
+};
 
 #include "item_length.h"
-
-// inventory의 position을 나타내는 구조체
-// int와의 암시적 형변환이 있는 이유는,
-// 인벤 관련된 모든 함수가 window_type은 받지 않고, cell 하나만 받았기 때문에,(기존에는 인벤이 하나 뿐이어서 inventory type이란게 필요없었기 때문에,)
-// 인벤 관련 모든 함수 호출부분을 수정하는 것이 난감하기 떄문이다.
+#include "../libthecore/typedef.h"
 
 enum EDragonSoulRefineWindowSize
 {
@@ -672,8 +641,8 @@ enum EDragonSoulRefineWindowSize
 enum EMisc2
 {
 	DRAGON_SOUL_EQUIP_SLOT_START = INVENTORY_MAX_NUM + WEAR_MAX_NUM,
-	DRAGON_SOUL_EQUIP_SLOT_END = DRAGON_SOUL_EQUIP_SLOT_START + (static_cast<int>(DS_SLOT_MAX) * static_cast<int>(DRAGON_SOUL_DECK_MAX_NUM)),
-	DRAGON_SOUL_EQUIP_RESERVED_SLOT_END = DRAGON_SOUL_EQUIP_SLOT_END + (static_cast<int>(DS_SLOT_MAX) * static_cast<int>(DRAGON_SOUL_DECK_RESERVED_MAX_NUM)),
+	DRAGON_SOUL_EQUIP_SLOT_END = DRAGON_SOUL_EQUIP_SLOT_START + (static_cast<int> (DS_SLOT_MAX) * static_cast<int> (DRAGON_SOUL_DECK_MAX_NUM)),
+	DRAGON_SOUL_EQUIP_RESERVED_SLOT_END = DRAGON_SOUL_EQUIP_SLOT_END + (static_cast<int> (DS_SLOT_MAX) * static_cast<int> (DRAGON_SOUL_DECK_RESERVED_MAX_NUM)),
 
 	BELT_INVENTORY_SLOT_START = DRAGON_SOUL_EQUIP_RESERVED_SLOT_END,
 	BELT_INVENTORY_SLOT_END = BELT_INVENTORY_SLOT_START + BELT_INVENTORY_SLOT_COUNT,
@@ -687,17 +656,17 @@ typedef struct SItemPos
 {
 	uint8_t window_type;
 	uint16_t cell;
-    SItemPos ()
-    {
-        window_type = INVENTORY;
+	SItemPos()
+	{
+		window_type = INVENTORY;
 		cell = WORD_MAX;
-    }
+	}
 
-	SItemPos (uint8_t _window_type, WORD _cell)
-    {
-        window_type = _window_type;
-        cell = _cell;
-    }
+	SItemPos(uint8_t _window_type, WORD _cell)
+	{
+		window_type = _window_type;
+		cell = _cell;
+	}
 
 	bool IsValidItemPosition() const
 	{
@@ -705,25 +674,29 @@ typedef struct SItemPos
 		{
 		case RESERVED_WINDOW:
 			return false;
+
 		case INVENTORY:
 		case EQUIPMENT:
 		case BELT_INVENTORY:
 			return cell < INVENTORY_AND_EQUIP_SLOT_MAX;
+
 		case DRAGON_SOUL_INVENTORY:
 			return cell < (DRAGON_SOUL_INVENTORY_MAX_NUM);
-		// 동적으로 크기가 정해지는 window는 valid 체크를 할 수가 없다.
+
 		case SAFEBOX:
 		case MALL:
 			return false;
+
 		default:
 			return false;
 		}
+
 		return false;
 	}
 
-	bool IsSamePosition(const SItemPos & other) const // ItemMove dupe exploit fix
+	bool IsSamePosition(const SItemPos& other) const // ItemMove dupe exploit fix
 	{
-		return *this==other
+		return *this == other
 			|| ((INVENTORY == window_type || EQUIPMENT == window_type)
 				&& (INVENTORY == other.window_type || EQUIPMENT == other.window_type)
 				&& cell == other.cell);
@@ -750,17 +723,18 @@ typedef struct SItemPos
 		return INVENTORY == window_type && cell < INVENTORY_MAX_NUM;
 	}
 
-	bool operator==(const struct SItemPos& rhs) const
+	bool operator== (const struct SItemPos& rhs) const
 	{
 		return (window_type == rhs.window_type) && (cell == rhs.cell);
 	}
-	bool operator<(const struct SItemPos& rhs) const
+
+	bool operator< (const struct SItemPos& rhs) const
 	{
 		return (window_type < rhs.window_type) || ((window_type == rhs.window_type) && (cell < rhs.cell));
 	}
 } TItemPos;
 
-const TItemPos NPOS (RESERVED_WINDOW, WORD_MAX);
+const TItemPos NPOS(RESERVED_WINDOW, WORD_MAX);
 
 typedef enum
 {
