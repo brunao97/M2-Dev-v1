@@ -33,10 +33,6 @@
 #include <skipjack.h>
 #include <tea.h>
 
-#ifdef __THEMIDA__
-#include <ThemidaSDK.h>
-#endif
-
 #include "Debug.h"
 
 using namespace CryptoPP;
@@ -195,11 +191,7 @@ void Cipher::CleanUp()
 
 size_t Cipher::Prepare(void* buffer, size_t* length)
 {
-#ifdef __THEMIDA__
-	VM_START
-#endif
-
-		assert(key_agreement_ == NULL);
+	assert(key_agreement_ == NULL);
 	key_agreement_ = new DH2KeyAgreement();
 	assert(key_agreement_ != NULL);
 	size_t agreed_length = key_agreement_->Prepare(buffer, length);
@@ -210,21 +202,13 @@ size_t Cipher::Prepare(void* buffer, size_t* length)
 		key_agreement_ = NULL;
 	}
 
-#ifdef __THEMIDA__
-	VM_END
-#endif
-
-		return agreed_length;
+	return agreed_length;
 }
 
 bool Cipher::Activate(bool polarity, size_t agreed_length,
 	const void* buffer, size_t length)
 {
-#ifdef __THEMIDA__
-	VM_START
-#endif
-
-		assert(activated_ == false);
+	assert(activated_ == false);
 	assert(key_agreement_ != NULL);
 	bool result = false;
 
@@ -235,20 +219,13 @@ bool Cipher::Activate(bool polarity, size_t agreed_length,
 
 	delete key_agreement_;
 	key_agreement_ = NULL;
-#ifdef __THEMIDA__
-	VM_END
-#endif
 
-		return result;
+	return result;
 }
 
 bool Cipher::SetUp(bool polarity)
 {
-#ifdef __THEMIDA__
-	VM_START
-#endif
-
-		assert(key_agreement_ != NULL);
+	assert(key_agreement_ != NULL);
 	const SecByteBlock& shared = key_agreement_->shared();
 
 	// Pick a block cipher algorithm
@@ -316,11 +293,8 @@ bool Cipher::SetUp(bool polarity)
 
 	assert(encoder_ != NULL);
 	assert(decoder_ != NULL);
-#ifdef __THEMIDA__
-	VM_END
-#endif
 
-		return true;
+	return true;
 }
 
 BlockCipherAlgorithm* BlockCipherAlgorithm::Pick(int hint)
@@ -408,18 +382,14 @@ DH2KeyAgreement::~DH2KeyAgreement()
 
 size_t DH2KeyAgreement::Prepare(void* buffer, size_t* length)
 {
-#ifdef __THEMIDA__
-	VM_START
-#endif
-
-		// RFC 5114, 1024-bit MODP Group with 160-bit Prime Order Subgroup
-		// http://tools.ietf.org/html/rfc5114#section-2.1
-		Integer p("0xB10B8F96A080E01DDE92DE5EAE5D54EC52C99FBCFB06A3C6"
-			"9A6A9DCA52D23B616073E28675A23D189838EF1E2EE652C0"
-			"13ECB4AEA906112324975C3CD49B83BFACCBDD7D90C4BD70"
-			"98488E9C219A73724EFFD6FAE5644738FAA31A4FF55BCCC0"
-			"A151AF5F0DC8B4BD45BF37DF365C1A65E68CFDA76D4DA708"
-			"DF1FB2BC2E4A4371");
+	// RFC 5114, 1024-bit MODP Group with 160-bit Prime Order Subgroup
+	// http://tools.ietf.org/html/rfc5114#section-2.1
+	Integer p("0xB10B8F96A080E01DDE92DE5EAE5D54EC52C99FBCFB06A3C6"
+		"9A6A9DCA52D23B616073E28675A23D189838EF1E2EE652C0"
+		"13ECB4AEA906112324975C3CD49B83BFACCBDD7D90C4BD70"
+		"98488E9C219A73724EFFD6FAE5644738FAA31A4FF55BCCC0"
+		"A151AF5F0DC8B4BD45BF37DF365C1A65E68CFDA76D4DA708"
+		"DF1FB2BC2E4A4371");
 
 	Integer g("0xA4D1CBD5C3FD34126765A442EFB99905F8104DD258AC507F"
 		"D6406CFF14266D31266FEA1E5C41564B777E690F5504F213"
@@ -489,11 +459,7 @@ size_t DH2KeyAgreement::Prepare(void* buffer, size_t* length)
 	memcpy(buf, spub_key.BytePtr(), spub_key_length);
 	memcpy(buf + spub_key_length, epub_key.BytePtr(), epub_key_length);
 
-#ifdef __THEMIDA__
-	VM_END
-#endif
-
-		return dh2_.AgreedValueLength();
+	return dh2_.AgreedValueLength();
 }
 
 bool DH2KeyAgreement::Agree(size_t agreed_length, const void* buffer, size_t length)
