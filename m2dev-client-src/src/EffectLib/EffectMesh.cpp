@@ -244,8 +244,6 @@ BOOL CEffectMesh::__LoadData_Ver002(int iSize, const BYTE* c_pbBuf)
 			pMeshData->pImageVector.push_back(pImage);
 		}
 
-		////////////////////////////////////
-
 		m_pEffectMeshDataVector[n] = pMeshData;
 	}
 
@@ -275,8 +273,6 @@ BOOL CEffectMesh::__LoadData_Ver001(int iSize, const BYTE* c_pbBuf)
 		c_pbBuf += 32;
 		memcpy(pMeshData->szDiffuseMapFileName, c_pbBuf, 128);
 		c_pbBuf += 128;
-
-		//
 
 		DWORD dwVertexCount;
 		DWORD dwIndexCount;

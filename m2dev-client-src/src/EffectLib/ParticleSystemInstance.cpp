@@ -163,8 +163,6 @@ void CParticleSystemInstance::CreateParticles(float fElapsedTime)
 		}
 
 		pInstance->m_v3StartPosition = v3TimePosition;
-		// NOTE : Update를 호출하지 않고 Rendering 되기 때문에 length가 0이 되는 문제가 있다.
-		//        Velocity를 구한 후 그만큼 빼준 값으로 초기화 해주도록 바꿨음 - [levites]
 		//pInstance->m_v3LastPosition = pInstance->m_v3Position;
 
 		// Direction & Velocity
@@ -229,8 +227,6 @@ void CParticleSystemInstance::CreateParticles(float fElapsedTime)
 		pInstance->m_fRotation = m_pParticleProperty->m_wRotationRandomStartingBegin;
 		pInstance->m_fRotation = frandom(m_pParticleProperty->m_wRotationRandomStartingBegin, m_pParticleProperty->m_wRotationRandomStartingEnd);
 
-		// Rotation - Lie 일 경우 LocalMatrix 의 Rotation 값을 Random 에 적용한다.
-		//            매번 할 필요는 없을듯. 어느 정도의 최적화가 필요. - [levites]
 		if (BILLBOARD_TYPE_LIE == m_pParticleProperty->m_byBillboardType && mc_pmatLocal)
 		{
 			pInstance->m_fRotation += fLieRotation;
@@ -518,7 +514,6 @@ void CParticleSystemInstance::OnInitialize()
 
 void CParticleSystemInstance::OnDestroy()
 {
-	// 2004. 3. 1. myevan. 파티클 제거 루틴
 	TParticleInstanceListVector::iterator i;
 
 	for (i = m_ParticleInstanceListVector.begin(); i != m_ParticleInstanceListVector.end(); ++i)

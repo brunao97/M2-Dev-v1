@@ -66,8 +66,6 @@ public:
 	bool GetEffectData(DWORD dwID, CEffectData** ppEffect);
 	bool GetEffectData(DWORD dwID, const CEffectData** c_ppEffect);
 
-	// Area에 직접 찍는 Effect용 함수... EffectInstance의 Pointer를 반환한다.
-	// EffectManager 내부 EffectInstanceMap을 이용하지 않는다.
 	void CreateUnsafeEffectInstance(DWORD dwEffectDataID, CEffectInstance** ppEffectInstance);
 	bool DestroyUnsafeEffectInstance(CEffectInstance* pEffectInstance);
 

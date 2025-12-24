@@ -181,7 +181,7 @@ void CEffectMeshInstance::OnRender()
 			fAlpha = GetTimeEventBlendValue(m_fLocalTime, *TableAlpha);
 		}
 
-		// Render //
+		// Render
 		CEffectMesh::TEffectMeshData* pMeshData = pEffectMesh->GetMeshDataPointer(i);
 
 		assert(m_MeshFrameController.GetCurrentFrame() < pMeshData->EffectFrameDataVector.size());
@@ -202,7 +202,7 @@ void CEffectMeshInstance::OnRender()
 			rFrameData.dwIndexCount / 3,
 			&rFrameData.PDTVertexVector[0],
 			sizeof(TPTVertex));
-		// Render //
+		// Render
 	}
 }
 

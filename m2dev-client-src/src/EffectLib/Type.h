@@ -74,12 +74,10 @@ enum EBillBoardType
 	BILLBOARD_TYPE_ALL,
 	BILLBOARD_TYPE_Y,
 
-	BILLBOARD_TYPE_LIE, // 바닥에 누은 형상
+	BILLBOARD_TYPE_LIE,
 
-	BILLBOARD_TYPE_2FACE, //     / and
-	BILLBOARD_TYPE_3FACE, //     / and
-
-	//BILLBOARD_TYPE_RAY, // 잔상
+	BILLBOARD_TYPE_2FACE,
+	BILLBOARD_TYPE_3FACE,
 };
 
 enum EMovingType
@@ -87,8 +85,6 @@ enum EMovingType
 	MOVING_TYPE_DIRECT,
 	MOVING_TYPE_BEZIER_CURVE,
 };
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
 struct CTimeEvent

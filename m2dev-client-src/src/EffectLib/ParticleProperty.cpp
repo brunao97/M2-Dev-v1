@@ -41,15 +41,11 @@ void CParticleProperty::Clear()
 	m_fTexAniDelay = 0.05f;
 	m_bTexAniRandomStartFrameFlag = FALSE;
 
-	//m_fGravity = 0.0f;
-	//m_fAirResistance = 0.0f;
-
 	m_TimeEventGravity.clear();
 	m_TimeEventAirResistance.clear();
 
 	m_TimeEventScaleX.clear();
 	m_TimeEventScaleY.clear();
-	//m_TimeEventScaleXY.clear();
 	m_TimeEventColor.clear();
 	m_TimeEventRotation.clear();
 
