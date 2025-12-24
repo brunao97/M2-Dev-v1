@@ -5,8 +5,7 @@ namespace xmas
 {
 	enum
 	{
-		MOB_SANTA_VNUM = 20031,	//»êÅ¸ 
-	//	MOB_SANTA_VNUM = 20095,	//³ëÇØ
+		MOB_SANTA_VNUM = 20031,
 		MOB_XMAS_TREE_VNUM = 20032,
 		MOB_XMAS_FIRWORK_SELLER_VNUM = 9004,
 	};
@@ -15,4 +14,5 @@ namespace xmas
 	void SpawnSanta(long lMapIndex, int iTimeGapSec);
 	void SpawnEventHelper(bool spawn);
 }
+
 #endif
