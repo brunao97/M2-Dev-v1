@@ -156,12 +156,10 @@ int Setup(LPSTR lpCmdLine); // Internal function forward
 
 bool PackInitialize(const char* c_pszFolder)
 {
-	NANOBEGIN
-
-		if (_access(c_pszFolder, 0) != 0)
-		{
-			return false;
-		}
+	if (_access(c_pszFolder, 0) != 0)
+	{
+		return false;
+	}
 
 	std::vector<std::string> packFiles =
 	{
@@ -272,7 +270,6 @@ bool PackInitialize(const char* c_pszFolder)
 		"locale_hu",
 		"locale_us",
 		"locale_pa",
-		"uiscript",
 		"ETC",
 		"uiloading",
 	};
@@ -284,8 +281,7 @@ bool PackInitialize(const char* c_pszFolder)
 		CPackManager::instance().AddPack(std::format("{}/{}.pck", c_pszFolder, packFileName));
 	}
 
-	NANOEND
-		return true;
+	return true;
 }
 
 bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
@@ -326,17 +322,15 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 	initguild();
 	initServerStateChecker();
 
-	NANOBEGIN
-
-		// RegisterDebugFlag
+	// RegisterDebugFlag
 	{
 		std::string stRegisterDebugFlag;
 
-		#ifdef _DISTRIBUTE
+#ifdef _DISTRIBUTE
 		stRegisterDebugFlag = "__DEBUG__ = 0";
-		#else
+#else
 		stRegisterDebugFlag = "__DEBUG__ = 1";
-		#endif
+#endif
 
 		if (!pyLauncher.RunLine(stRegisterDebugFlag.c_str()))
 		{
@@ -345,7 +339,7 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 		}
 	}
 
-		// RegisterCommandLine
+	// RegisterCommandLine
 	{
 		std::string stRegisterCmdLine;
 
@@ -360,7 +354,7 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 
 		if (CmdSize == stVec.size() && stVec[0] == loginMark)
 		{
-			char buf[MAX_PATH];	//TODO 아래 함수 string 형태로 수정
+			char buf[MAX_PATH];
 			base64_decode(stVec[2].c_str(), buf);
 			stVec[2] = buf;
 			string_join(seperator, stVec, &stCmdLine);
@@ -406,8 +400,7 @@ bool RunMainScript(CPythonLauncher& pyLauncher, const char* lpCmdLine)
 		}
 	}
 
-	NANOEND
-		return true;
+	return true;
 }
 
 bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
@@ -477,12 +470,9 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 
 		if (pyLauncher.Create())
 		{
-			ret = RunMainScript(pyLauncher, lpCmdLine);	//게임 실행중엔 함수가 끝나지 않는다.
+			ret = RunMainScript(pyLauncher, lpCmdLine);
 		}
 
-		//ProcessScanner_ReleaseQuitEvent();
-
-		//게임 종료시.
 		app->Clear();
 
 		timeEndPeriod(1);
@@ -588,7 +578,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			continue;
 		}
 
-		if (__IsLocaleVersion(szArgv[i])) // #0000829: [M2EU] 버전 파일이 항상 생기지 않도록 수정
+		if (__IsLocaleVersion(szArgv[i]))
 		{
 			char szModuleName[MAX_PATH];
 			char szVersionPath[MAX_PATH];
@@ -623,7 +613,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		else if ((strcmp(szArgv[i], "--force-set-locale") == 0))
 		{
-			// locale 설정엔 인자가 두 개 더 필요함 (로케일 명칭, 데이터 경로)
 			if (nArgc <= i + 2)
 			{
 				MessageBox(NULL, "Invalid arguments", ApplicationStringTable_GetStringz(IDS_APP_NAME, "APP_NAME"), MB_ICONSTOP);
@@ -675,9 +664,6 @@ static void GrannyError(granny_log_message_type Type,
 
 int Setup(LPSTR lpCmdLine)
 {
-	/*
-	 *	타이머 정밀도를 올린다.
-	 */
 	TIMECAPS tc;
 	UINT wTimerRes;
 
@@ -688,10 +674,6 @@ int Setup(LPSTR lpCmdLine)
 
 	wTimerRes = MINMAX(tc.wPeriodMin, 1, tc.wPeriodMax);
 	timeBeginPeriod(wTimerRes);
-
-	/*
-	 *	그래니 에러 핸들링
-	 */
 
 	granny_log_callback Callback;
 	Callback.Function = nullptr;
