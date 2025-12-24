@@ -1,11 +1,16 @@
-﻿file(GLOB_RECURSE FILE_SOURCES "*.h" "*.c" "*.cpp")
+﻿file(GLOB_RECURSE HEADER_FILES "*.h")
+file(GLOB_RECURSE SOURCE_FILES "*.c" "*.cpp")
 
-add_library(GameLib STATIC ${FILE_SOURCES})
+add_library(GameLib STATIC
+	${HEADER_FILES}
+	${SOURCE_FILES}
+)
 
-target_link_libraries(GameLib 
+target_link_libraries(GameLib
 	lzo2
 	cryptopp-static
 	mio
 )
 
-GroupSourcesByFolder(GameLib)
+source_group("Header Files" FILES ${HEADER_FILES})
+source_group("Source Files" FILES ${SOURCE_FILES})

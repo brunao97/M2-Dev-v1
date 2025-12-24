@@ -1,10 +1,15 @@
-﻿file(GLOB_RECURSE FILE_SOURCES "*.h" "*.c" "*.cpp")
+﻿file(GLOB_RECURSE HEADER_FILES "*.h")
+file(GLOB_RECURSE SOURCE_FILES "*.c" "*.cpp")
 
-add_library(EterLib STATIC ${FILE_SOURCES})
+add_library(EterLib STATIC
+	${HEADER_FILES}
+	${SOURCE_FILES}
+)
 
-target_link_libraries(EterLib 
+target_link_libraries(EterLib
 	cryptopp-static
 	mio
 )
 
-GroupSourcesByFolder(EterLib)
+source_group("Header Files" FILES ${HEADER_FILES})
+source_group("Source Files" FILES ${SOURCE_FILES})
