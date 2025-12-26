@@ -7,6 +7,5 @@
 #define __PET_SYSTEM__
 #define __UDP_BLOCK__
 
-// #define TW1X1_TEST                 // tw1x1 test server features
-
+#define __BL_ENABLE_PICKUP_ITEM_EFFECT__
 #endif

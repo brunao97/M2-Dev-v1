@@ -27,7 +27,7 @@ PyAPI_FUNC(int) PyCodec_Register(
        PyObject *search_function
        );
 
-/* Codec register lookup API.
+/* Codec lookup API.
 
    Looks up the given encoding and returns a CodecInfo object with
    function attributes which implement the different aspects of

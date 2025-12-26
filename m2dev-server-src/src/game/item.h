@@ -76,7 +76,11 @@ class CItem : public CEntity
 		WORD		GetCell()				{ return m_wCell;	}
 
 		LPITEM		RemoveFromCharacter();
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		bool		AddToCharacter(LPCHARACTER ch, TItemPos Cell, bool bHighlight = false);
+#else
 		bool		AddToCharacter(LPCHARACTER ch, TItemPos Cell);
+#endif
 		LPCHARACTER	GetOwner()		{ return m_pOwner; }
 
 		LPITEM		RemoveFromGround();
@@ -143,6 +147,7 @@ class CItem : public CEntity
 		void		SetOwnershipEvent(LPEVENT pkEvent);
 
 		DWORD		GetLastOwnerPID()	{ return m_dwLastOwnerPID; }
+	void		SetLastOwnerPID(DWORD pid) { m_dwLastOwnerPID = pid; }
 
 		int		GetAttributeSetIndex(); // 속성 붙는것을 지정한 배열의 어느 인덱스를 사용하는지 돌려준다.
 		void		AlterToMagicItem();

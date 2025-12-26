@@ -1059,7 +1059,11 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			SetItemLoaded()	{ m_bItemLoaded = true; }
 
 		void			ClearItem();
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		void			SetItem(TItemPos Cell, LPITEM item, bool bHighlight = false);
+#else
 		void			SetItem(TItemPos Cell, LPITEM item);
+#endif
 		LPITEM			GetItem(TItemPos Cell) const;
 		LPITEM			GetInventoryItem(WORD wCell) const;
 		bool			IsEmptyItemGrid(TItemPos Cell, BYTE size, int iExceptionCell = -1) const;

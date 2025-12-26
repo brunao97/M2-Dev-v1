@@ -39,6 +39,7 @@ CItem::~CItem()
 
 void CItem::Initialize()
 {
+	sys_err("[DEBUG_LOAD] CItem::Initialize called for Item ID: %u", m_dwID);
 	CEntity::Initialize(ENTITY_ITEM);
 
 	m_bWindow = RESERVED_WINDOW;
@@ -336,7 +337,11 @@ LPITEM CItem::RemoveFromCharacter()
 	}
 }
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+bool CItem::AddToCharacter(LPCHARACTER ch, TItemPos Cell, bool bHighlight)
+#else
 bool CItem::AddToCharacter(LPCHARACTER ch, TItemPos Cell)
+#endif
 {
 	assert(GetSectree() == NULL);
 	assert(m_pOwner == NULL);
@@ -360,12 +365,29 @@ bool CItem::AddToCharacter(LPCHARACTER ch, TItemPos Cell)
 		}
 	}
 
+	sys_err("[DEBUG_ITEM] === ITEM.CPP: AddToCharacter CALLED! Item=%s ===", GetName());
+
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+	sys_err("AddToCharacter DEBUG: Item=%s, bHighlight(in)=%d, LastOwnerPID=%u, PlayerPID=%u", 
+		GetName(), bHighlight ? 1 : 0, GetLastOwnerPID(), ch->GetPlayerID());
+	
+	// Removida a trava de LastOwnerPID - quem pedir bHighlight = true terá brilho!
+	
+	sys_err("AddToCharacter DEBUG: bHighlight(out)=%d", bHighlight ? 1 : 0);
+#else
+	sys_err("=== MACRO __BL_ENABLE_PICKUP_ITEM_EFFECT__ NOT DEFINED! ===");
+#endif
+
 	if (ch->GetDesc())
 		m_dwLastOwnerPID = ch->GetPlayerID();
 
 	event_cancel(&m_pkDestroyEvent);
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+	ch->SetItem(TItemPos(window_type, pos), this, bHighlight);
+#else
 	ch->SetItem(TItemPos(window_type, pos), this);
+#endif
 	m_pOwner = ch;
 
 	Save();

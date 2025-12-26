@@ -1466,6 +1466,8 @@ void CInputDB::GuildLadder(const char* c_pData)
 
 void CInputDB::ItemLoad(LPDESC d, const char * c_pData)
 {
+	sys_err("[DEBUG_LOGIN] ItemLoad called for Character");
+
 	LPCHARACTER ch;
 
 	if (!d || !(ch = d->GetCharacter()))

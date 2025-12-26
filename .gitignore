@@ -1,0 +1,32 @@
+# Ignore everything by default
+/*
+
+# Allow these specific directories
+!/m2dev-server-src/
+!/m2dev-server/
+!/m2dev-client-src/
+!/m2dev-client/
+
+# Allow .gitignore itself
+!.gitignore
+
+# Explicitly ignore logs/debug files even in allowed folders
+/m2dev-server/web_manager_debug.log
+
+# Ignore large binary files and build artifacts
+**/*.pck
+**/*.pdb
+**/*.lib
+**/*.exe
+**/*.dll
+**/ipch/
+**/Debug/
+**/Release/
+**/bin/
+**/obj/
+**/build/
+**/pack/
+
+# User specific large files
+/m2dev-client/Metin2.exe
+/m2dev-client/assets/

@@ -258,7 +258,11 @@ LPITEM CHARACTER::GetItem(TItemPos Cell) const
 	return NULL;
 }
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bHighlight)
+#else
 void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
+#endif
 {
 	WORD wCell = Cell.cell;
 	BYTE window_type = Cell.window_type;
@@ -405,7 +409,11 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem)
 			pack.vnum = pItem->GetVnum();
 			pack.flags = pItem->GetFlag();
 			pack.anti_flags	= pItem->GetAntiFlag();
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+			pack.highlight = bHighlight;
+#else
 			pack.highlight = (Cell.window_type == DRAGON_SOUL_INVENTORY);
+#endif
 
 			thecore_memcpy(pack.alSockets, pItem->GetSockets(), sizeof(pack.alSockets));
 			thecore_memcpy(pack.aAttr, pItem->GetAttributes(), sizeof(pack.aAttr));
@@ -461,7 +469,11 @@ void CHARACTER::SetWear(BYTE bCell, LPITEM item)
 		return;
 	}
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+	SetItem(TItemPos(INVENTORY, INVENTORY_MAX_NUM + bCell), item, false);
+#else
 	SetItem(TItemPos (INVENTORY, INVENTORY_MAX_NUM + bCell), item);
+#endif
 
 	if (!item && bCell == WEAR_WEAPON)
 	{
@@ -5630,7 +5642,11 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 				DestCell.window_type, DestCell.cell, count);
 			
 			item->RemoveFromCharacter();
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+			SetItem(DestCell, item, false);
+#else
 			SetItem(DestCell, item);
+#endif
 
 			if (INVENTORY == Cell.window_type && INVENTORY == DestCell.window_type)
 				SyncQuickslot(QUICKSLOT_TYPE_ITEM, Cell.cell, DestCell.cell);
@@ -5655,7 +5671,11 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, BYTE count)
 			// copy socket -- by mhh
 			FN_copy_item_socket(item2, item);
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+			item2->AddToCharacter(this, DestCell, false);
+#else
 			item2->AddToCharacter(this, DestCell);
+#endif
 
 			char szBuf[51+1];
 			snprintf(szBuf, sizeof(szBuf), "%u %u %u %u ", item2->GetID(), item2->GetCount(), item->GetCount(), item->GetCount() + item2->GetCount());
@@ -5785,6 +5805,8 @@ void CHARACTER::GiveGold(int iAmount)
 
 bool CHARACTER::PickupItem(DWORD dwVID)
 {
+	sys_err("[DEBUG_PICKUP] Character %s attempting to pickup VID: %u", GetName(), dwVID);
+
 	LPITEM item = ITEM_MANAGER::instance().FindByVID(dwVID);
 
 	if (IsObserverMode())
@@ -5837,6 +5859,23 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 							item2->SetCount(item2->GetCount() + bCount2);
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+							if (bCount2 > 0 && GetDesc())
+							{
+								TPacketGCItemSet pack;
+								pack.header = HEADER_GC_ITEM_SET;
+								pack.pos = TItemPos(INVENTORY, i);
+								pack.vnum = item2->GetOriginalVnum();
+								pack.count = item2->GetCount();
+								pack.flags = item2->GetFlag();
+								pack.anti_flags = item2->GetAntiFlag();
+								pack.highlight = true;
+								thecore_memcpy(pack.alSockets, item2->GetSockets(), sizeof(pack.alSockets));
+								thecore_memcpy(pack.aAttr, item2->GetAttributes(), sizeof(pack.aAttr));
+								GetDesc()->Packet(&pack, sizeof(TPacketGCItemSet));
+							}
+#endif
+
 							if (bCount == 0)
 							{
 								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item2->GetName());
@@ -5873,10 +5912,11 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 				item->RemoveFromGround();
 				
+// AutoGiveItem - DragonSoul
 				if (item->IsDragonSoul())
-					item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
+					item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell), true); // Highlight
 				else
-					item->AddToCharacter(this, TItemPos(INVENTORY, iEmptyCell));
+					item->AddToCharacter(this, TItemPos(INVENTORY, iEmptyCell), true); // Highlight
 
 				char szHint[32+1];
 				snprintf(szHint, sizeof(szHint), "%s %u %u", item->GetName(), item->GetCount(), item->GetOriginalVnum());
@@ -5930,10 +5970,11 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 			item->RemoveFromGround();
 
+// PickupItem - Party Owner
 			if (item->IsDragonSoul())
-				item->AddToCharacter(owner, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
+				item->AddToCharacter(owner, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell), true); // Highlight
 			else
-				item->AddToCharacter(owner, TItemPos(INVENTORY, iEmptyCell));
+				item->AddToCharacter(owner, TItemPos(INVENTORY, iEmptyCell), true); // Highlight
 
 			char szHint[32+1];
 			snprintf(szHint, sizeof(szHint), "%s %u %u", item->GetName(), item->GetCount(), item->GetOriginalVnum());
@@ -6021,7 +6062,11 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 		item2->RemoveFromCharacter();
 
 		if (item1->EquipTo(this, bEquipCell))
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+			item2->AddToCharacter(this, TItemPos(INVENTORY, bInvenCell), false);
+#else
 			item2->AddToCharacter(this, TItemPos(INVENTORY, bInvenCell));
+#endif
 		else
 			sys_err("SwapItem cannot equip %s! item1 %s", item2->GetName(), item1->GetName());
 	}
@@ -6033,8 +6078,13 @@ bool CHARACTER::SwapItem(BYTE bCell, BYTE bDestCell)
 		item1->RemoveFromCharacter();
 		item2->RemoveFromCharacter();
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		item1->AddToCharacter(this, TItemPos(INVENTORY, bCell2), false);
+		item2->AddToCharacter(this, TItemPos(INVENTORY, bCell1), false);
+#else
 		item1->AddToCharacter(this, TItemPos(INVENTORY, bCell2));
 		item2->AddToCharacter(this, TItemPos(INVENTORY, bCell1));
+#endif
 	}
 
 	return true;
@@ -6059,10 +6109,18 @@ bool CHARACTER::UnequipItem(LPITEM item)
 	item->RemoveFromCharacter();
 	if (item->IsDragonSoul())
 	{
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, pos), false);
+#else
 		item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, pos));
+#endif
 	}
 	else
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		item->AddToCharacter(this, TItemPos(INVENTORY, pos), false);
+#else
 		item->AddToCharacter(this, TItemPos(INVENTORY, pos));
+#endif
 
 	CheckMaximumPoints();
 

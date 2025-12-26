@@ -1,6 +1,4 @@
 
-/* String (str/bytes) object interface */
-
 #ifndef Py_STRINGOBJECT_H
 #define Py_STRINGOBJECT_H
 #ifdef __cplusplus
@@ -48,15 +46,14 @@ typedef struct {
      */
 } PyStringObject;
 
-#define SSTATE_NOT_INTERNED 0
-#define SSTATE_INTERNED_MORTAL 1
 #define SSTATE_INTERNED_IMMORTAL 2
 
 PyAPI_DATA(PyTypeObject) PyBaseString_Type;
 PyAPI_DATA(PyTypeObject) PyString_Type;
 
 #define PyString_Check(op) \
-                 PyType_FastSubclass(Py_TYPE(op), Py_TPFLAGS_STRING_SUBCLASS)
+    PyType_FastSubclass(Py_TYPE(op), Py_TPFLAGS_STRING_SUBCLASS)
+
 #define PyString_CheckExact(op) (Py_TYPE(op) == &PyString_Type)
 
 PyAPI_FUNC(PyObject *) PyString_FromStringAndSize(const char *, Py_ssize_t);
@@ -85,6 +82,7 @@ PyAPI_FUNC(PyObject *) PyString_InternFromString(const char *);
 PyAPI_FUNC(void) _Py_ReleaseInternedStrings(void);
 
 /* Use only if you know it's a string */
+
 #define PyString_CHECK_INTERNED(op) (((PyStringObject *)(op))->ob_sstate)
 
 /* Macro, trading safety for speed */
@@ -128,7 +126,7 @@ PyAPI_FUNC(PyObject*) PyString_AsEncodedObject(
 
 /* Encodes a string object and returns the result as Python string
    object.   
-   
+
    If the codec returns an Unicode object, the object is converted
    back to a string using the default encoding.
 
@@ -151,11 +149,11 @@ PyAPI_FUNC(PyObject*) PyString_AsDecodedObject(
 
 /* Decodes a string object and returns the result as Python string
    object.  
-   
+
    If the codec returns an Unicode object, the object is converted
    back to a string using the default encoding.
 
-   DEPRECATED - use PyString_AsDecodedObject() instead. */
+   DEPRECATED - use PyString_AsDecodedString() instead. */
 
 PyAPI_FUNC(PyObject*) PyString_AsDecodedString(
     PyObject *str,	 	/* string object */
@@ -170,9 +168,9 @@ PyAPI_FUNC(PyObject*) PyString_AsDecodedString(
    cause an exception).  */
 
 PyAPI_FUNC(int) PyString_AsStringAndSize(
-    register PyObject *obj,	/* string or Unicode object */
-    register char **s,		/* pointer to buffer variable */
-    register Py_ssize_t *len	/* pointer to length variable or NULL
+    PyObject *obj,	/* string or Unicode object */
+    char **s,		/* pointer to buffer variable */
+    Py_ssize_t *len	/* pointer to length variable or NULL
 				   (only possible for 0-terminated
 				   strings) */
     );

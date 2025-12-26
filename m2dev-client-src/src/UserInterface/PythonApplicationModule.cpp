@@ -1774,4 +1774,10 @@ void initapp()
 #else
 	PyModule_AddIntConstant(poModule, "ENABLE_NEW_EQUIPMENT_SYSTEM", 0);
 #endif
+
+#ifdef __BL_ENABLE_PICKUP_ITEM_EFFECT__
+	PyModule_AddIntConstant(poModule, "BL_ENABLE_PICKUP_ITEM_EFFECT", 1);
+#else
+	PyModule_AddIntConstant(poModule, "BL_ENABLE_PICKUP_ITEM_EFFECT", 0);
+#endif
 }

@@ -7,7 +7,7 @@ ErrorLog.txt
 /*.cfg
 /*.exe
 !/config.exe
-!/Metin2.exe
+Metin2.exe
 
 # =======================================================
 # FULLY CASE-INSENSITIVE BACKUP EXCLUSIONS

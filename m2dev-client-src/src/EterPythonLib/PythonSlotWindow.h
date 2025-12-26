@@ -10,6 +10,9 @@ namespace UI
 		ITEM_HEIGHT = 32,
 
 		SLOT_NUMBER_NONE = 0xffffffff,
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		SLOT_ACTIVE_EFFECT_COUNT = 3,
+#endif
 	};
 
 	enum ESlotStyle
@@ -26,6 +29,29 @@ namespace UI
 		SLOT_STATE_DISABLE = (1 << 2),
 		SLOT_STATE_ALWAYS_RENDER_COVER = (1 << 3),			// 현재 Cover 버튼은 슬롯에 무언가 들어와 있을 때에만 렌더링 하는데, 이 flag가 있으면 빈 슬롯이어도 커버 렌더링
 	};
+
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+	enum ESlotColorType
+	{
+		COLOR_TYPE_ORANGE,
+		COLOR_TYPE_WHITE,
+		COLOR_TYPE_RED,
+		COLOR_TYPE_GREEN,
+		COLOR_TYPE_YELLOW,
+		COLOR_TYPE_SKY,
+		COLOR_TYPE_PINK,
+	};
+
+	enum ESlotHilight
+	{
+		HILIGHTSLOT_ACCE,
+		HILIGHTSLOT_CHANGE_LOOK,
+		HILIGHTSLOT_AURA,
+		HILIGHTSLOT_CUBE,
+
+		HILIGHTSLOT_MAX
+	};
+#endif
 
 	class CSlotWindow : public CWindow
 	{
@@ -64,6 +90,9 @@ namespace UI
 			BYTE	byxPlacedItemSize;
 			BYTE	byyPlacedItemSize;
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+			D3DXCOLOR d3Color;
+#endif
 			CGraphicImageInstance* pInstance;
 			CNumberLine* pNumberLine;
 
@@ -76,7 +105,7 @@ namespace UI
 
 		typedef std::list<TSlot> TSlotList;
 		typedef TSlotList::iterator TSlotListIterator;
-		typedef struct SStoreCoolDown
+		struct SStoreCoolDown
 		{
 			float fCoolTime;
 			float fElapsedTime;
@@ -162,16 +191,24 @@ namespace UI
 		void ReserveDestroyCoolTimeFinishEffect(DWORD dwSlotIndex);
 
 		void ClearStoredSlotCoolTime(DWORD dwKey, DWORD dwSlotIndex);
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		void SetSlotDiffuseColor(DWORD dwIndex, int iColorType);
+#endif
 
 	protected:
 		void __Initialize();
 		void __CreateToggleSlotImage();
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		void __CreateSlotEnableEffect(int index);
+		void __DestroySlotEnableEffect(int index);
+#else
 		void __CreateSlotEnableEffect();
+		void __DestroySlotEnableEffect();
+#endif
 		void __CreateFinishCoolTimeEffect(TSlot* pSlot);
 		void __CreateBaseImage(const char* c_szFileName, float fr, float fg, float fb, float fa);
 
 		void __DestroyToggleSlotImage();
-		void __DestroySlotEnableEffect();
 		void __DestroyFinishCoolTimeEffect(TSlot* pSlot);
 		void __DestroyBaseImage();
 
@@ -219,7 +256,11 @@ namespace UI
 
 		CGraphicImageInstance* m_pBaseImageInstance;
 		CImageBox* m_pToggleSlotImage;
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+		CAniImageBox * m_pSlotActiveEffect[SLOT_ACTIVE_EFFECT_COUNT];
+#else
 		CAniImageBox* m_pSlotActiveEffect;
+#endif
 		std::deque<DWORD> m_ReserveDestroyEffectDeque;
 	};
 };

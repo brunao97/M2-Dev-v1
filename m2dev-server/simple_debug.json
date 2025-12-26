@@ -1,0 +1,16 @@
+{
+  "mysql": false,
+  "database": true,
+  "auth": true,
+  "channels": [
+    "Channel 1 Core 1",
+    "Channel 1 Core 2",
+    "Channel 1 Core 3",
+    "Channel 99 Core 1"
+  ],
+  "processes": [
+    "db.exe",
+    "game_auth.exe",
+    "channels"
+  ]
+}

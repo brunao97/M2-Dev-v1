@@ -62,7 +62,7 @@ extern double copysign(double, double);
 #endif
 
 /* On x86, Py_FORCE_DOUBLE forces a floating-point number out of an x87 FPU
-   register and into a 64-bit memory location, rounding from extended
+   and into a 64-bit memory location, rounding from extended
    precision to double precision in the process.  On other platforms it does
    nothing. */
 
@@ -106,8 +106,8 @@ PyAPI_FUNC(void) _Py_set_387controlword(unsigned short);
  *    it really can't be implemented correctly (& easily) before C99.
  *    Override in pyconfig.h if you have a better spelling on your platform.
  *  Py_FORCE_DOUBLE is used to avoid getting false negatives from a
- *    non-infinite value v sitting in an 80-bit x87 register such that
- *    v becomes infinite when spilled from the register to 64-bit memory.
+ *    non-infinite value v sitting in an 80-bit x87 such that
+ *    v becomes infinite when spilled from the to 64-bit memory.
  * Note: PC/pyconfig.h defines Py_IS_INFINITY as _isinf
  */
 #ifndef Py_IS_INFINITY

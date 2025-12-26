@@ -166,7 +166,7 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		sys_log(0, "ChannelServiceLogin [%s]", szLogin);
 
 		DBManager::instance().ReturnQuery(QID_AUTH_LOGIN, dwKey, p,
-				"SELECT '%s',password,social_id,id,status,availDt - NOW() > 0,"
+				"SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1('%s'))))),password,social_id,id,status,availDt - NOW() > 0,"
 				"UNIX_TIMESTAMP(silver_expire),"
 				"UNIX_TIMESTAMP(gold_expire),"
 				"UNIX_TIMESTAMP(safebox_expire),"
@@ -182,8 +182,8 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 	// END_OF_CHANNEL_SERVICE_LOGIN
 	else
 	{
-		DBManager::instance().ReturnQuery(QID_AUTH_LOGIN, dwKey, p, 
-				"SELECT PASSWORD('%s'),password,social_id,id,status,availDt - NOW() > 0,"
+		DBManager::instance().ReturnQuery(QID_AUTH_LOGIN, dwKey, p,
+				"SELECT CONCAT('*', UPPER(SHA1(UNHEX(SHA1('%s'))))),password,social_id,id,status,availDt - NOW() > 0,"
 				"UNIX_TIMESTAMP(silver_expire),"
 				"UNIX_TIMESTAMP(gold_expire),"
 				"UNIX_TIMESTAMP(safebox_expire),"

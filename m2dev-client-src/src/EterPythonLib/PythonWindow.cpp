@@ -1960,6 +1960,25 @@ namespace UI
 		for_each(m_ImageVector.begin(), m_ImageVector.end(), setRenderingMode);
 	}
 
+	void CAniImageBox::SetDiffuseColor(float fr, float fg, float fb, float fa)
+	{
+		struct FSetDiffuseColor
+		{
+			float r, g, b, a;
+			void operator() (CGraphicExpandedImageInstance* pInstance)
+			{
+				pInstance->SetDiffuseColor(r, g, b, a);
+			}
+		};
+
+		FSetDiffuseColor setDiffuseColor;
+		setDiffuseColor.r = fr;
+		setDiffuseColor.g = fg;
+		setDiffuseColor.b = fb;
+		setDiffuseColor.a = fa;
+		for_each(m_ImageVector.begin(), m_ImageVector.end(), setDiffuseColor);
+	}
+
 	void CAniImageBox::ResetFrame()
 	{
 		m_bycurIndex = 0;

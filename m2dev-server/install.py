@@ -64,11 +64,10 @@ def try_symlink(target, link_name, is_dir):
 	try:
 		if os.path.lexists(link_name):
 			os.remove(link_name)
-		
+
 		if os.name == "nt":  # Windows
 			if is_dir:
 				# For directories, create junction
-				import subprocess
 				subprocess.run(["mklink", "/J", link_name, target], shell=True, check=True)
 			else:
 				# For files, copy instead of symlink

@@ -1,0 +1,77 @@
+quest auto_skill_master_upgrade begin
+	state start begin
+		when login or levelup begin
+			-- Check all skills every time player logs in or levels up
+			local skill_group = pc.get_skill_group()
+			local job = pc.get_job()
+
+			-- Define skill ranges based on job and skill group
+			local skill_ranges = {
+				[0] = { -- Warrior
+					[1] = {1, 2, 3, 4, 5, 6},     -- Skill group 1
+					[2] = {1, 2, 3, 4, 5, 6}      -- Skill group 2
+				},
+				[1] = { -- Assassin
+					[1] = {1, 2, 3, 4, 5, 6},
+					[2] = {1, 2, 3, 4, 5, 6}
+				},
+				[2] = { -- Sura
+					[1] = {1, 2, 3, 4, 5, 6},
+					[2] = {1, 2, 3, 4, 5, 6}
+				},
+				[3] = { -- Shaman
+					[1] = {1, 2, 3, 4, 5, 6},
+					[2] = {1, 2, 3, 4, 5, 6}
+				}
+			}
+
+			if skill_ranges[job] and skill_ranges[job][skill_group] then
+				for _, skill_index in ipairs(skill_ranges[job][skill_group]) do
+					-- Calculate skill vnum
+					local skill_vnum = 100 * job + skill_group * 10 + skill_index
+
+					-- Check current skill level
+					local current_level = pc.get_skill_level(skill_vnum)
+
+					-- If skill is at level 17, notify player that they can upgrade to Master
+					if current_level == 17 then
+						syschat(string.format("Skill %d reached level 17! Use a Master Skill Book to upgrade to Master.", skill_vnum))
+					end
+				end
+			end
+		end
+
+		when info or button begin
+			-- Manual trigger for checking skills
+			local skill_group = pc.get_skill_group()
+			local job = pc.get_job()
+
+			local skill_ranges = {
+				[0] = {[1] = {1, 2, 3, 4, 5, 6}, [2] = {1, 2, 3, 4, 5, 6}},
+				[1] = {[1] = {1, 2, 3, 4, 5, 6}, [2] = {1, 2, 3, 4, 5, 6}},
+				[2] = {[1] = {1, 2, 3, 4, 5, 6}, [2] = {1, 2, 3, 4, 5, 6}},
+				[3] = {[1] = {1, 2, 3, 4, 5, 6}, [2] = {1, 2, 3, 4, 5, 6}}
+			}
+
+			local master_ready_count = 0
+
+			if skill_ranges[job] and skill_ranges[job][skill_group] then
+				for _, skill_index in ipairs(skill_ranges[job][skill_group]) do
+					local skill_vnum = 100 * job + skill_group * 10 + skill_index
+					local current_level = pc.get_skill_level(skill_vnum)
+
+					if current_level == 17 then
+						master_ready_count = master_ready_count + 1
+					end
+				end
+			end
+
+			if master_ready_count > 0 then
+				syschat(string.format("You have %d skill(s) ready for Master upgrade!", master_ready_count))
+				syschat("Use Master Skill Books at the skill trainers to upgrade.")
+			else
+				syschat("No skills ready for Master upgrade at this time.")
+			end
+		end
+	end
+end

@@ -488,6 +488,7 @@ namespace UI
 		void AppendImage(const char* c_szFileName);
 		void SetRenderingRect(float fLeft, float fTop, float fRight, float fBottom);
 		void SetRenderingMode(int iMode);
+		void SetDiffuseColor(float fr, float fg, float fb, float fa);
 
 		void ResetFrame();
 

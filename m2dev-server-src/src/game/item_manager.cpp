@@ -58,6 +58,12 @@ void ITEM_MANAGER::GracefulShutdown()
 
 bool ITEM_MANAGER::Initialize(TItemTable * table, int size)
 {
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
+	sys_err("=== [STARTUP CHECK] ITEM_MANAGER::Initialize CALLED - Binary compiled at: %s %s [HIGHLIGHT ENABLED] ===", __DATE__, __TIME__);
+#else
+	sys_err("=== [STARTUP CHECK] ITEM_MANAGER::Initialize CALLED - Binary compiled at: %s %s [HIGHLIGHT DISABLED!!!] ===", __DATE__, __TIME__);
+#endif
+	
 	if (!m_vec_prototype.empty())
 		m_vec_prototype.clear();
 

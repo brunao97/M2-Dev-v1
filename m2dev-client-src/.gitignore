@@ -51,6 +51,9 @@
 *.bAk
 *.baK
 *.bak
+*.bat
+*.ps1
+
 
 # Files ending in "double extension" .X.BAK (e.g., File.txt.Bak)
 *.*.BAK

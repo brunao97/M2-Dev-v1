@@ -1,8 +1,8 @@
 WELCOME_MSG = "Database connector is running..."
 
-SQL_ACCOUNT		= "127.0.0.1 account mt2 mt2 0"
-SQL_PLAYER		= "127.0.0.1 player mt2 mt2 0"
-SQL_COMMON		= "127.0.0.1 common mt2 mt2 0"
+SQL_ACCOUNT		= "127.0.0.1 account mt2 mt2 3306"
+SQL_PLAYER		= "127.0.0.1 player mt2 mt2 3306"
+SQL_COMMON		= "127.0.0.1 common mt2 mt2 3306"
 
 TABLE_POSTFIX = ""
 

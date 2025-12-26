@@ -409,7 +409,7 @@ bool Main(HINSTANCE hInstance, LPSTR lpCmdLine)
 	g_isScreenShotKey = true;
 #endif
 
-	DWORD dwRandSeed = time(NULL) + DWORD(GetCurrentProcess());
+	DWORD dwRandSeed = time(NULL) + GetCurrentProcessId();
 	srandom(dwRandSeed);
 	srand(random());
 

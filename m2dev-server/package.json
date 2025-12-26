@@ -1,0 +1,13 @@
+{
+  "name": "metin2-server-manager",
+  "version": "1.0.0",
+  "description": "Metin2 Server Manager Web Interface",
+  "main": "web_manager.js",
+  "scripts": {
+    "dev": "bun run web_manager.js",
+    "start": "bun run web_manager.js"
+  },
+  "keywords": ["metin2", "server", "manager", "web"],
+  "author": "M2-Dev",
+  "license": "MIT"
+}
