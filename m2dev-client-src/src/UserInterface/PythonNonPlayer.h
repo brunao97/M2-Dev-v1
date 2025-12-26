@@ -137,6 +137,15 @@ public:
 
 	// Function for outer
 	void				GetMatchableMobList(int iLevel, int iInterval, TMobTableList* pMobTableList);
+	DWORD				GetMonsterMaxHP(DWORD dwVnum);
+	DWORD				GetMonsterRaceFlag(DWORD dwVnum);
+	BYTE				GetMonsterLevel(DWORD dwVnum);
+	void				GetMonsterDamage(DWORD dwVnum, DWORD* pdwMin, DWORD* pdwMax);
+	BYTE				GetMonsterDX(DWORD dwVnum);
+	BYTE				GetMonsterST(DWORD dwVnum);
+	float				GetMonsterDamageMultiply(DWORD dwVnum);
+	DWORD				GetMonsterExp(DWORD dwVnum);
+	bool				IsMonsterStone(DWORD dwVnum);
 
 protected:
 	TNonPlayerDataMap	m_NonPlayerDataMap;

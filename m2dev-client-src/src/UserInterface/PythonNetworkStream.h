@@ -469,6 +469,14 @@ protected:
 	bool RecvTargetPacket();
 	bool RecvViewEquipPacket();
 	bool RecvDamageInfoPacket();
+#ifdef ENABLE_SEND_TARGET_INFO
+	bool RecvTargetInfoPacket();
+
+public:
+	bool SendTargetInfoLoadPacket(DWORD dwVID);
+
+protected:
+#endif
 
 	// Mount
 	bool RecvMountPacket();

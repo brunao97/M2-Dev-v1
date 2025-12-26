@@ -2272,6 +2272,21 @@ PyObject* netRegisterErrorLog(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildNone();
 }
 
+PyObject* netSendTargetInfoLoad(PyObject* poSelf, PyObject* poArgs)
+{
+	int dwBID;
+
+	if (!PyTuple_GetInteger(poArgs, 0, &dwBID))
+	{
+		return Py_BuildException();
+	}
+
+	CPythonNetworkStream& rkNetStream = CPythonNetworkStream::Instance();
+	rkNetStream.SendTargetInfoLoadPacket(dwBID);
+
+	return Py_BuildNone();
+}
+
 void initnet()
 {
 	static PyMethodDef s_methods[] =
@@ -2434,6 +2449,8 @@ void initnet()
 
 		// Log
 		{ "RegisterErrorLog",						netRegisterErrorLog,						METH_VARARGS },
+
+		{ "SendTargetInfoLoad",					netSendTargetInfoLoad,					METH_VARARGS },
 
 		{ NULL,										NULL,										NULL },
 	};

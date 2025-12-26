@@ -8,4 +8,5 @@
 #define __UDP_BLOCK__
 
 #define __BL_ENABLE_PICKUP_ITEM_EFFECT__
+#define __SEND_TARGET_INFO__
 #endif

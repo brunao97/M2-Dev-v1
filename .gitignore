@@ -1,6 +1,8 @@
 # Ignore everything by default
 /*
 
+!/Target_Information_System/
+
 # Allow these specific directories
 !/m2dev-server-src/
 !/m2dev-server/
@@ -28,5 +30,5 @@
 **/pack/
 
 # User specific large files
-/m2dev-client/Metin2.exe
 /m2dev-client/assets/
+/m2dev-client/Metin2.exe

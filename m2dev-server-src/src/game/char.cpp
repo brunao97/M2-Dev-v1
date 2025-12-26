@@ -57,6 +57,11 @@
 #include "PetSystem.h"
 #endif
 #include "DragonSoul.h"
+#ifdef __SEND_TARGET_INFO__
+#include <algorithm>
+#include <iterator>
+using namespace std;
+#endif
 
 extern const BYTE g_aBuffOnAttrPoints;
 extern bool RaceToJob(unsigned race, unsigned* ret_job);
@@ -138,6 +143,9 @@ void CHARACTER::Initialize()
 	m_fSyncTime = get_float_time() - 3;
 	m_dwPlayerID = 0;
 	m_dwKillerPID = 0;
+#ifdef __SEND_TARGET_INFO__
+	dwLastTargetInfoPulse = 0;
+#endif
 
 	m_iMoveCount = 0;
 

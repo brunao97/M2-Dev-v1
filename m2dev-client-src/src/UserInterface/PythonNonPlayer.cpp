@@ -185,6 +185,92 @@ void CPythonNonPlayer::GetMatchableMobList(int iLevel, int iInterval, TMobTableL
 	*/
 }
 
+DWORD CPythonNonPlayer::GetMonsterMaxHP(DWORD dwVnum)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+		return 0;
+
+	return pTable->dwMaxHP;
+}
+
+DWORD CPythonNonPlayer::GetMonsterRaceFlag(DWORD dwVnum)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+		return 0;
+
+	return pTable->dwRaceFlag;
+}
+
+BYTE CPythonNonPlayer::GetMonsterLevel(DWORD dwVnum)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+		return 0;
+
+	return pTable->bLevel;
+}
+
+void CPythonNonPlayer::GetMonsterDamage(DWORD dwVnum, DWORD* pdwMin, DWORD* pdwMax)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+	{
+		*pdwMin = 0;
+		*pdwMax = 0;
+		return;
+	}
+
+	*pdwMin = pTable->dwDamageRange[0];
+	*pdwMax = pTable->dwDamageRange[1];
+}
+
+BYTE CPythonNonPlayer::GetMonsterDX(DWORD dwVnum)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+		return 0;
+
+	return pTable->bDex;
+}
+
+BYTE CPythonNonPlayer::GetMonsterST(DWORD dwVnum)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+		return 0;
+
+	return pTable->bStr;
+}
+
+float CPythonNonPlayer::GetMonsterDamageMultiply(DWORD dwVnum)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+		return 0;
+
+	return pTable->fDamMultiply;
+}
+
+DWORD CPythonNonPlayer::GetMonsterExp(DWORD dwVnum)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+		return 0;
+
+	return pTable->dwExp;
+}
+
+bool CPythonNonPlayer::IsMonsterStone(DWORD dwVnum)
+{
+	const TMobTable* pTable = GetTable(dwVnum);
+	if (!pTable)
+		return false;
+
+	return pTable->bType == 2; // TYPE_STONE
+}
+
 void CPythonNonPlayer::Clear()
 {
 }

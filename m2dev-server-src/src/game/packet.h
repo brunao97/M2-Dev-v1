@@ -173,6 +173,10 @@ enum
 	HEADER_GC_MOUNT				= 61,
 	HEADER_GC_OWNERSHIP				= 62,
 	HEADER_GC_TARGET			 	= 63,
+#ifdef __SEND_TARGET_INFO__
+	HEADER_GC_TARGET_INFO			= 58,
+	HEADER_CG_TARGET_INFO_LOAD		= 59,
+#endif
 
 	HEADER_GC_WARP				= 65,
 
@@ -1433,6 +1437,23 @@ typedef struct packet_target
 	uint32_t	dwVID;
 	uint8_t	bHPPercent;
 } TPacketGCTarget;
+
+#ifdef __SEND_TARGET_INFO__
+typedef struct packet_target_info
+{
+	BYTE	header;
+	DWORD	dwVID;
+	DWORD	race;
+	DWORD	dwVnum;
+	BYTE	count;
+} TPacketGCTargetInfo;
+
+typedef struct packet_target_info_load
+{
+	BYTE header;
+	DWORD dwVID;
+} TPacketCGTargetInfoLoad;
+#endif
 
 typedef struct packet_warp
 {

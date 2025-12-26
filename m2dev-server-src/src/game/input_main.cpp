@@ -40,6 +40,41 @@
 #include "locale_service.h"
 #include "DragonSoul.h"
 
+#ifdef __SEND_TARGET_INFO__
+void CInputMain::TargetInfoLoad(LPCHARACTER ch, const char* c_pData)
+{
+	TPacketCGTargetInfoLoad* p = (TPacketCGTargetInfoLoad*)c_pData;
+	LPCHARACTER m_ch = CHARACTER_MANAGER::instance().Find(p->dwVID);
+
+	if (!m_ch || !ch)
+		return;
+
+	if (ch->GetLastTargetInfoPulse() + PASSES_PER_SEC(1) > get_dword_time())
+		return;
+
+	ch->SetLastTargetInfoPulse(get_dword_time());
+
+	if (m_ch->IsMonster() || m_ch->IsStone())
+	{
+		std::vector<LPITEM> vec_item;
+		if (ITEM_MANAGER::instance().CreateDropItemVector(m_ch, ch, vec_item))
+		{
+			for (size_t i = 0; i < vec_item.size(); ++i)
+			{
+				TPacketGCTargetInfo pInfo;
+				pInfo.header = HEADER_GC_TARGET_INFO;
+				pInfo.dwVID = m_ch->GetVID();
+				pInfo.race = m_ch->GetRaceNum();
+				pInfo.dwVnum = vec_item[i]->GetVnum();
+				pInfo.count = vec_item[i]->GetCount();
+				ch->GetDesc()->Packet(&pInfo, sizeof(TPacketGCTargetInfo));
+				M2_DELETE(vec_item[i]);
+			}
+		}
+	}
+}
+#endif
+
 extern void SendShout(const char * szText, BYTE bEmpire);
 extern int g_nPortalLimitTime;
 
@@ -3255,6 +3290,12 @@ int CInputMain::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 		case HEADER_CG_TARGET:
 			Target(ch, c_pData);
 			break;
+
+#ifdef __SEND_TARGET_INFO__
+		case HEADER_CG_TARGET_INFO_LOAD:
+			TargetInfoLoad(ch, c_pData);
+			break;
+#endif
 
 		case HEADER_CG_WARP:
 			Warp(ch, c_pData);
