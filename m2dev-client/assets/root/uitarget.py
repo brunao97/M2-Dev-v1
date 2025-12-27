@@ -342,7 +342,6 @@ class TargetBoard(ui.ThinBoard):
 
 			def __LoadInformation(self, race):
 				import dbg
-				dbg.TraceError("TARGET_INFO: __LoadInformation called for race %d" % race)
 				self.__ResetBoard()
 				self.race = race
 				self.__LoadInformation_Default(race)
@@ -352,7 +351,6 @@ class TargetBoard(ui.ThinBoard):
 
 			def __LoadInformation_Default_GetHitRate(self, race):
 				import dbg
-				dbg.TraceError("TARGET_INFO: __LoadInformation_Default_GetHitRate called for race %d" % race)
 				attacker_dx = nonplayer.GetMonsterDX(race)
 				attacker_level = nonplayer.GetMonsterLevel(race)
 
@@ -369,7 +367,6 @@ class TargetBoard(ui.ThinBoard):
 
 			def __LoadInformation_Default(self, race):
 				import dbg
-				dbg.TraceError("TARGET_INFO: __LoadInformation_Default called for race %d" % race)
 				try:
 					self.AppendSeperator()
 					self.AppendTextLine(localeInfo.TARGET_INFO_MAX_HP % str(nonplayer.GetMonsterMaxHP(race)))
@@ -426,13 +423,11 @@ class TargetBoard(ui.ThinBoard):
 
 					self.AppendTextLine(localeInfo.TARGET_INFO_MAINRACE % mainrace)
 					self.AppendTextLine(localeInfo.TARGET_INFO_SUBRACE % subrace)
-					dbg.TraceError("TARGET_INFO: __LoadInformation_Race completed successfully")
 				except Exception, e:
 					dbg.TraceError("TARGET_INFO: __LoadInformation_Race ERROR: %s" % str(e))
 
 			def __LoadInformation_Drops(self, race):
 				import dbg
-				dbg.TraceError("TARGET_INFO: __LoadInformation_Drops called for race %d" % race)
 				self.AppendSeperator()
 
 				if race in constInfo.MONSTER_INFO_DATA:

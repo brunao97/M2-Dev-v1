@@ -38,3 +38,8 @@
 **/m2dev-dump-proto
 # User specific large files
 /m2dev-client/Metin2.exe
+
+# Secrets
+.env
+translation_tool/.env
+

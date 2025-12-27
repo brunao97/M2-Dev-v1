@@ -1,0 +1,50 @@
+UI_DEF_FONT	Tahoma:12
+UI_DEF_FONT_LARGE	Tahoma:14
+UI_DEF_FONT_SMALL	Tahoma:9
+AFF_LOVE_POINT	Pontos de Amor: %d%%
+ALIGNMENT_NAME	Pontos de Karma:
+ATTACK_ERROR_UNKNOWN	Erro de Ataque Desconhecido: %s
+CANNOT_ATTACK_DEST_IN_SAFE	O combatente está muito longe.
+CANNOT_ATTACK_SELF_IN_SAFE	Não posso atacar.
+CANNOT_EQUIP_IN_EXCHANGE	Você não pode alterar seu equipamento enquanto negocia.
+CANNOT_EQUIP_IN_SHOP	Você não pode mudar seu equipamento enquanto negocia.
+CANNOT_OPEN_PRIVATE_SHOP_IN_SAFE_AREA	Você não pode abrir uma Loja Privada numa área pública.
+CANNOT_SHOOT_DEST_IN_SAFE	O inimigo está muito longe.
+CANNOT_SHOOT_EMPTY_ARROW	Preciso de Flechas!
+CANNOT_SHOOT_SELF_IN_SAFE	Não posso fazer isto.
+CANNOT_SKILL_APPROACH	Tenho certeza que não posso chegar mais perto.
+CANNOT_SKILL_ATTACK	Não posso atacar.
+CANNOT_SKILL_BLUE	Você não pode usar a Alma do Lobo Anil quando a Alma do Lobo Rubro está ativada.
+CANNOT_SKILL_DEST_IN_SAFE	O inimigo está muito longe.
+CANNOT_SKILL_EQUIP_FISHING_ROD	Preciso de uma Vara de Pesca.
+CANNOT_SKILL_HAVE_TO_RIDE	Preciso de um Cavalo para usar isto.
+CANNOT_SKILL_NEED_EMPTY_BOTTLE	Não tenho uma Garrafa Vazia.
+CANNOT_SKILL_NEED_POISON_BOTTLE	Não tenho uma Garrafa de Veneno.
+CANNOT_SKILL_NEED_TARGET	Quem é o alvo?
+CANNOT_SKILL_NOT_ENOUGH_HP	Não tenho HP suficiente!
+CANNOT_SKILL_NOT_ENOUGH_SP	Não tenho MP suficiente!
+CANNOT_SKILL_NOT_HORSE_SKILL	Não posso usar isto enquanto estou montado.
+CANNOT_SKILL_NOT_MATCHABLE_WEAPON	Não posso usar esta Habilidade com esta arma.
+CANNOT_SKILL_NOT_YET_LEARN	Não aprendi esta Habilidade.
+CANNOT_SKILL_ONLY_FOR_ALLIANCE	Isto afeta apenas membros do Grupo.
+CANNOT_SKILL_ONLY_FOR_CORPSE	Isto afeta apenas pessoas mortas.
+CANNOT_SKILL_RED	Você não pode usar a Alma do Lobo Rubro quando a Alma do Lobo Anil está ativada.
+CANNOT_SKILL_REMOVE_FISHING_ROD	Não posso usar esta Habilidade com uma Cana de Pesca.
+CANNOT_SKILL_SELF_IN_SAFE	Não posso atacar daqui.
+CANNOT_SKILL_USE_SELF	Não posso usar isto em mim mesmo.
+CANNOT_SKILL_WAIT_COOLTIME	Ainda não posso usar esta Habilidade.
+CANNOT_USE	Você não pode usar isto.
+CANNOT_WHISPER_DEST_REFUSE	%s bloqueou completamente o sussurro.	SA
+CANNOT_WHISPER_NOT_LOGON	%s não está online.	SA
+CANNOT_WHISPER_SELF_REFUSE	Você não pode sussurrar para alguém quando você bloqueia completamente o sussurro.	SNA
+CHANNEL	Canal
+CHANNELING_CANNOT_LOGOUT	Você não pode voltar para a tela de login.
+CHANNEL_EMPTY_SERVER	Sem servidores
+CHANNEL_NORMAL	Canal %d
+CHANNEL_NOTIFY_FULL	O canal está cheio! Por favor, escolha outro.
+CHANNEL_NOT_FIND_INFO	Você não pode obter esta informação no Canal.
+CHANNEL_PVP	Duelo livre
+CHANNEL_SELECT_CHANNEL	Escolha o Canal
+CHANNEL_SELECT_REGION	Escolha a região.
+CHANNEL_SELECT_SERVER	Escolha o Servidor
+CHANNEL_TEST_SERVER	Servidor de testes

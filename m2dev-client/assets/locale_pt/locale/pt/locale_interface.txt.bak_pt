@@ -1,25 +1,25 @@
-ACEITAR	Aceitar
-ATTACH_METIN_INFO	Você quer usar a Pedra Espiritual?
+ACCEPT	Aceitar
+ATTACH_METIN_INFO	Queres usar a Pedra Espiritual?
 ATTACH_METIN_TITLE	Usar a Pedra Espiritual
-CANCELAR	Cancelar
-CHANGE_PASSWORD_CONFIRM	Confirmar a nova Senha
-CHANGE_PASSWORD_NEW	Nova Senha
-CHANGE_PASSWORD_OLD	Senha Antiga
-CHANGE_PASSWORD_TITLE	Alterar a Senha
+CANCEL	Cancelar
+CHANGE_PASSWORD_CONFIRM	Confirmar a nova Palavra-passe
+CHANGE_PASSWORD_NEW	Nova Palavra-passe
+CHANGE_PASSWORD_OLD	Palavra-passe Antiga
+CHANGE_PASSWORD_TITLE	Alterar a Palavra-passe
 CHARACTER_ACTION	Emoções
 CHARACTER_EMOTICON	Emoções
 CHARACTER_MAIN	Personagem
-CHARACTER_MUTUAL_ACTION	Emoção Compartilhada
+CHARACTER_MUTUAL_ACTION	Emoção Partilhada
 CHARACTER_NORMAL_ACTION	Emoções Normais
 CHARACTER_QUEST	Missões
 CHARACTER_SKILL	Habilidades
-FECHAR	Fechar
+CLOSE	Fechar
 COMB_APPEARANCE	Disfarce 1
 COMB_ATTRIBUTE	Disfarce 2
 COMB_SKILLBOOK_TILE	Trocar livros
 COMB_TITLE	
-COSTUME_TITLE	Trajes
-COSTUME_WINDOW_TITLE	Trajes
+COSTUME_TITLE	Disfarces
+COSTUME_WINDOW_TITLE	Disfarces
 CREATE_ATT_GRADE	FRÇ
 CREATE_CREATE	Criar
 CREATE_DEX_GRADE	DES
@@ -29,15 +29,15 @@ CREATE_MAN	Homem
 CREATE_NAME	Nome
 CREATE_NEXT	Próximo
 CREATE_PREV	Voltar
-CREATE_SEX	Gênero
+CREATE_SEX	Género
 CREATE_SHAPE	Forma
 CREATE_SP	INT
 CREATE_STAT_RESET	Reset
 CREATE_WOMAN	Mulher
-CUBE_INFO_TITLE	Manual de Refinação
+CUBE_INFO_TITLE	Manual de Refinamento
 CUBE_REQUIRE_MATERIAL	Materiais necessários
 CUBE_REQUIRE_MATERIAL_OR	ou
-CUBE_TITLE	Janela de Refinação
+CUBE_TITLE	Janela de Refinamento
 DO_REFINE	Refinar
 DRAGONSOUL_ACTIVATE	Activar
 DRAGONSOUL_PAGE_BUTTON_1	Cru(a)
@@ -84,83 +84,83 @@ GUILD_BUILDING_PLY	Tábuas
 GUILD_BUILDING_POSITION	Posição
 GUILD_BUILDING_PREVIEW	Pré-visualizar
 GUILD_BUILDING_PRICE	Preço
-GUILD_BUILDING_REFRESH	Atualizar (F5)
+GUILD_BUILDING_REFRESH	Actualizar (F5)
 GUILD_BUILDING_STONE	Pedras
-GUILD_BUILDING_TITLE	Construções da Guilda
+GUILD_BUILDING_TITLE	Construções da Guild
 GUILD_CRYSTAL	Cristal
 GUILD_DEPOSIT	Depósito
 GUILD_DROP_RESOURCE1	Aqui
 GUILD_DROP_RESOURCE2	Deixar Recurso
 GUILD_GEM	Gema
 GUILD_GRADE_CHANGE_GRADE_NAME	Novo Nome de Estatuto
-GUILD_GRADE_NUM	Nº.
+GUILD_GRADE_NUM	N.º
 GUILD_GRADE_PERMISSION_DELETE	Expulsar
 GUILD_GRADE_PERMISSION_JOIN	Convidar
 GUILD_GRADE_PERMISSION_NOTICE	Escrever
 GUILD_GRADE_PERMISSION_SKILL	Habilidades
 GUILD_GRADE_RANK	Estatuto
 GUILD_GRADE_WRITE	Escrever
-GUILD_INFO	Informações da Guilda
+GUILD_INFO	Informações da Guild
 GUILD_INFO_CUR_EXP	Experiência
 GUILD_INFO_DECALRE_WAR	Declarar Guerra
-GUILD_INFO_ENEMY_GUILD	Inimigos da Guilda
+GUILD_INFO_ENEMY_GUILD	Inimigos da Guild
 GUILD_INFO_ENEMY_GUILD_EMPTY	Nenhum
-GUILD_INFO_LEVEL	Nível da Guilda
+GUILD_INFO_LEVEL	Nível da Guild
 GUILD_INFO_MARK	Símbolo
 GUILD_INFO_MASTER	Líder
 GUILD_INFO_MASTER_VALUE	Líder
 GUILD_INFO_MEMBER_AVG_LEVEL	Nível Médio
 GUILD_INFO_MEMBER_NUM	Nº. de Membros
-GUILD_INFO_NAME	Nome da Guilda
-GUILD_INFO_NAME_VALUE	Este é um Nome de Guilda
+GUILD_INFO_NAME	Nome da Guild
+GUILD_INFO_NAME_VALUE	Este é um Nome de Guild
 GUILD_INFO_OFFER_EXP	Doar EXP
 GUILD_INFO_REST_EXP	EXP Necessária
 GUILD_INFO_UPLOAD_MARK	Enviar Ícone
 GUILD_INFO_UPLOAD_SYMBOL	Enviar Bandeira
-GUILD_MARK	Ícone da Guilda
+GUILD_MARK	Ícone da Guild
 GUILD_MEMBER_JOB	Raça
-Cavaleiro da Guilda	Líder
-NÍVEL_DO_MEMBRO_DA_GUILDA	Nível
-NOME_DO_MEMBRO_DA_GUILDA	Nome
-ESTATUTO_DO_MEMBRO_DA_GUILDA	Estatuto
-GRAVIDADE_ESPECÍFICA_DO_MEMBRO_DA_GUILDA	Doar
-METIN_DA_GUILDA	Pedra Metin
-MINERAL_DA_GUILDA	Mineral
-DINHEIRO_DA_GUILDA	Yang
-NOME_DA_GUILDA	Guilda
-INFORMAÇÃO_DE_RECURSOS_DA_GUILDA	Informação de recursos
-HABILIDADE_ATIVA_DA_GUILDA	Ativo
-HABILIDADE_DA_GUILDA_CURAR_GSP	Reabastecer Poder
-HABILIDADE_PASSIVA_DA_GUILDA	Passivo
-PODER_DE_HABILIDADE_DA_GUILDA	Energia
-ESTADO_DE_HABILIDADE_DA_GUILDA	Habilidades da Guilda
-SÍMBOLO_DA_GUILDA	Bandeira da Guilda
-GUERRA_DA_GUILDA_ACEITAR	Aceitar Guerra
-GUERRA_DA_GUILDA_TIPO_DE_BATALHA	Tipo de Guerra
-GUERRA_DA_GUILDA_CTF	Bandeira
-GUERRA_DA_GUILDA_DECLARAR	Declarar Guerra a
-GUERRA_DA_GUILDA_INIMIGO	Inimigo
-GUERRA_DA_GUILDA_NORMAL	Campal
-GUERRA_DA_GUILDA_WARP	Arena
-ÁGUA_DA_GUILDA	Água
-PEDRA_DE_ÁGUA_DA_GUILDA	Gema
-RETIRADA_DA_GUILDA	Pegar
-AJUDA_TECLA_DE_ATAQUE	Ataque: Segure a Barra de Espaços ou o Botão Esquerdo do Mouse.
-AJUDA_ALTERAR_MODO_PK	Alterar Modo de Ataque: Aperte 'Ctrl' + 'B' para alterar o Modo de Ataque.
-AJUDA_BOTÃO_DE_PERSONAGEM1	(Janela de Personagem, Janela de Inventário,
-AJUDA_BOTÃO_DE_PERSONAGEM2	Lista de Amigos e Opções)
-AJUDA_CONTROLAR_CÂMERA_POR_BOTÃO_DO_MEIO	Visão da Câmera: Botão do Meio do Mouse ou Botão Direito do Mouse
-AJUDA_CONTROLAR_CÂMERA_POR_BOTÃO_DIREITO	Visão da Câmera: Botão do Meio do Mouse ou Botão Direito do Mouse
-AJUDA_EXP	Experiência
-AJUDA_FÚRIA	Loja de Itens Online
-AJUDA_JANELA_DE_GUILDA	Abrir Janela de Guilda: Alt + G
-AJUDA_AJUDA	Ajuda: H
-AJUDA_HP	Vida (HP)
-AJUDA_JANELA_DE_MENSAGEM	Abrir a Lista de Amigos: Alt + M
-AJUDA_MOUSE_ESQUERDO	A função do botão Esquerdo do Mouse
-AJUDA_MOUSE_DIREITO	A função do botão Direito do Mouse
+GUILD_MEMBER_KNIGHT	Líder
+GUILD_MEMBER_LEVEL	Nível
+GUILD_MEMBER_NAME	Nome
+GUILD_MEMBER_RANK	Estatuto
+GUILD_MEMBER_SPECIFIC_GRAVITY	Doar
+GUILD_METIN_STONE	Pedra Metin
+GUILD_MINENAL	Mineral
+GUILD_MONEY	Yang
+GUILD_NAME	Guild
+GUILD_RESOURCE_INFO	Informação de recursos
+GUILD_SKILL_ACTIVE	Activo
+GUILD_SKIlL_HEAL_GSP	Reabastecer Poder
+GUILD_SKILL_PASSIVE	Passivo
+GUILD_SKILL_POWER	Energia
+GUILD_SKILL_STATE	Habilidades da Guild
+GUILD_SYMBOL	Bandeira da Guild
+GUILD_WAR_ACCEPT	Aceitar Guerra
+GUILD_WAR_BATTLE_TYPE	Tipo de Guerra
+GUILD_WAR_CTF	Bandeira
+GUILD_WAR_DECLARE	Declarar Guerra a
+GUILD_WAR_ENEMY	Inimigo
+GUILD_WAR_NORMAL	Campal
+GUILD_WAR_WARP	Arena
+GUILD_WATER	Água
+GUILD_WATER_STONE	Gema
+GUILD_WITHDRAW	Pegar
+HELP_ATTACK_KEY	Ataque: Carrega na Barra de Espaços ou no Botão Esquerdo do Rato.
+HELP_CHANGE_PK_MODE	Alterar Modo de Ataque: Carrega no 'Ctrl' + 'B' para alterar o Modo de Ataque.
+HELP_CHARACTER_BUTTON1	(Janela de Personagem, Janela de Inventário,
+HELP_CHARACTER_BUTTON2	Lista de Amigos e Opções)
+HELP_CONTROL_CAMERA_BY_MIDDLEBUTTON	Visão da Câmera: Botão do Meio do Rato ou Botão Direito do Rato
+HELP_CONTROL_CAMERA_BY_RIGHTBUTTON	Visão da Câmera: Botão do Meio do Rato ou Botão Direito do Rato
+HELP_EXP	Experiência
+HELP_FURY	Loja de Itens Online
+HELP_GUILD_WINDOW	Abrir Janela de Guild: Alt + G
+HELP_HELP	Ajuda: H
+HELP_HP	Vida (VD)
+HELP_MESSENGER_WINDOW	Abrir a Lista de Amigos: Alt + M
+HELP_MOUSE_LEFT	A função do botão Esquerdo do Rato
+HELP_MOUSE_RIGHT	A função do botão Direito do Rato
 HELP_MOVE_KEY	Painel: W, S, A, D e/ou as setas para mover a personagem.
-HELP_OPEN_CHARACTER	Abrir Janela de Personagem: C
+HELP_OPEN_CHARACTER	Abrir Janela de Carácter: C
 HELP_OPEN_CHAT	Abrir Janela de Chat: Enter
 HELP_OPEN_INVENTORY	Abrir Janela de Inventário: I
 HELP_OPEN_LOG	Abrir Janela de Mensagens Antigas: L
@@ -169,43 +169,43 @@ HELP_OPEN_QUEST	Abrir Janela de Tarefas: N
 HELP_OPEN_SKILL	Abrir Janela de Habilidades: V
 HELP_OPEN_WHISPER	Abrir Janela de Mensagens Privadas: Shift + Enter
 HELP_OPEN_ZONEMAP	Abrir Mapa Grande: M
-HELP_PICK_ITEM	Recolher Drops: Tecla 'Z' e '' ou Botão Esquerdo do Rato.
+HELP_PICK_ITEM	Recolher Items: Tecla 'Z' e '' ou Botão Esquerdo do Rato.
 HELP_QUICKSLOT	Campos de Acesso Rápido
-HELP_SCREEN_CAPTURE	Gravar Print - Tecla 'Print Screen' para tirar uma Print. (Esta será gravada na pasta do Metin2)
+HELP_SCREEN_CAPTURE	Gravar Print - Tecla 'Print Screen' para tirares uma Print. (Esta será gravada na pasta do Metin2)
 HELP_SHOW_ALL_NAME	Mostrar Nomes: Alt
-HELP_SP	Mana (SP)
+HELP_SP	Mana (MN)
 HELP_SYSTEM_BUTTON	Botão de Sistema
 INVENTORY_PAGE_BUTTON_TOOLTIP_1	1. Inventário
 INVENTORY_PAGE_BUTTON_TOOLTIP_2	2. Inventário
 INVENTORY_TITLE	Inventário
 ITEM_MALL	Item Shop
-LOAD_ERROR	O Arquivo está com erros. Por favor, instale de novo. Aperte agora no 'ESC'.
+LOAD_ERROR	O Ficheiro está com erros. Por favor instala de novo. Carrega agora no 'ESC'.
 LOGIN_CONNECT	Entrar
-LOGIN_CONNECTING	Você está se conectando ao Servidor
+LOGIN_CONNECTING	Estás a conectar-te ao Servidor
 LOGIN_DEFAULT_SERVERADDR	Nome do servidor, Canal 1
 LOGIN_EXIT	Sair
-LOGIN_REGION_TITLE	Escolha um lugar para emitir o recibo.
+LOGIN_REGION_TITLE	Escolhe um lugar para emitir o recibo.
 LOGIN_SELECT_BUTTON	Mudar
 LOGIN_SELECT_EXIT	Sair
 LOGIN_SELECT_OK	Entrar
-LOGIN_SELECT_TITLE	Escolha o Servidor
-MALL_PASSWORD_TITLE	Senha
+LOGIN_SELECT_TITLE	Escolhe o Servidor
+MALL_PASSWORD_TITLE	Palavra-passe
 MALL_TITLE	Armazém de Artigos
 MARKET_TITLE	Carregar
-MARKLIST_REFRESH	Atualizar
-MARKLIST_TITLE	Registar uma assinatura da Guilda
+MARKLIST_REFRESH	Actualizar
+MARKLIST_TITLE	Registar uma assinatura da Guild
 MESSAGE	Isto é uma Mensagem
 MESSENGER_ADD_FRIEND	Adicionar amigo
 MESSENGER_DELETE_FRIEND	Apagar amigo
 MESSENGER_MOBILE	Enviar Mensagem
-MESSENGER_OPEN_GUILD	Área da Guilda
+MESSENGER_OPEN_GUILD	Área da Guild
 MESSENGER_TITLE	Amigos
-MESSENGER_USE_GUILD_MOVE_SKILL	Usar Habilidade de Movimento da Guilda
-MESSENGER_WHISPER	Sussurrar
+MESSENGER_USE_GUILD_MOVE_SKILL	Usar Habilidade de Movimento da Guild
+MESSENGER_WHISPER	Segredar
 MINIMIZE	Minimizar
 MOUSEBUTTON_ATTACK	Atacar
 MOUSEBUTTON_AUTO_ATTACK	Atacar Automaticamente
-MOUSEBUTTON_CAMERA	Câmera
+MOUSEBUTTON_CAMERA	Camera
 MOUSEBUTTON_SKILL	Habilidades
 MUSICLIST_TITLE	Escolhas de Música
 NO	Não
@@ -216,30 +216,30 @@ OPTION_ALWAYS_SHOW_NAME_ON	Ligado
 OPTION_BLOCK	Bloquear
 OPTION_BLOCK_EXCHANGE	Trocas
 OPTION_BLOCK_FRIEND	Amigo
-OPTION_BLOCK_GUILD	Guilda
+OPTION_BLOCK_GUILD	Guild
 OPTION_BLOCK_PARTY	Grupo
 OPTION_BLOCK_PARTY_REQUEST	Pedidos
-OPTION_BLOCK_WHISPER	Sussurros
+OPTION_BLOCK_WHISPER	Segredos
 OPTION_CAMERA_DISTANCE	Visão
 OPTION_CAMERA_DISTANCE_LONG	De longe
 OPTION_CAMERA_DISTANCE_SHORT	De perto
-OPTION_DELETE_MOBILE_BUTTON	Apagar Contato
+OPTION_DELETE_MOBILE_BUTTON	Apagar Contacto
 OPTION_EFFECT	Mostrar Dano
 OPTION_ENV_EFFECT	Ambiente
-OPTION_ENV_EFFECT_OFF	Desligado
-OPTION_ENV_EFFECT_ON	Ligado
+OPTION_ENV_EFFECT_OFF	Off
+OPTION_ENV_EFFECT_ON	On
 OPTION_FOG	Nevoeiro
 OPTION_FOG_DENSE	Denso
 OPTION_FOG_LIGHT	Leve
 OPTION_FOG_MIDDLE	Médio
-OPTION_INPUT_MOBILE_BUTTON	Inserir o Contato
-OPTION_MOBILE	Celular
-OPTION_MOB_INFO	Info Monstro
+OPTION_INPUT_MOBILE_BUTTON	Introduzir o Contacto
+OPTION_MOBILE	Telemóvel
+OPTION_MOB_INFO	Info monstro
 OPTION_MOB_INFO_AGGR	Agressivo
 OPTION_MOB_INFO_LEVEL	Nível
 OPTION_MUSIC	Música
 OPTION_MUSIC_CHANGE	Alterar
-OPTION_MUSIC_DEFAULT_THEMA	Música Padrão do Metin2
+OPTION_MUSIC_DEFAULT_THEMA	Música Standard do Metin2
 OPTION_NAME_COLOR	Mostrar Cor
 OPTION_NAME_COLOR_EMPIRE	Cor do Reino
 OPTION_NAME_COLOR_NORMAL	Normal
@@ -248,13 +248,13 @@ OPTION_NIGHT_MODE_OFF	Off
 OPTION_NIGHT_MODE_ON	On
 OPTION_PVPMODE	Modo PvP
 OPTION_PVPMODE_FREE	Livre
-OPTION_PVPMODE_FREE_TOOLTIP	Você pode atacar todos os jogadores
-OPTION_PVPMODE_GUILD	Guilda
-OPTION_PVPMODE_GUILD_TOOLTIP	Você pode atacar todos os jogadores, menos os da sua Guilda.
+OPTION_PVPMODE_FREE_TOOLTIP	Poderás atacar todos os jogadores
+OPTION_PVPMODE_GUILD	Guild
+OPTION_PVPMODE_GUILD_TOOLTIP	Podes atacar todos os jogadores menos os da tua Guild.
 OPTION_PVPMODE_PEACE	Paz
-OPTION_PVPMODE_PEACE_TOOLTIP	Você não pode atacar jogadores do seu reino.
+OPTION_PVPMODE_PEACE_TOOLTIP	Não podes atacar jogadores do teu reino.
 OPTION_PVPMODE_REVENGE	Hostil
-OPTION_PVPMODE_REVENGE_TOOLTIP	Você só poderá atacar aqueles que tenham mau Karma igualmente.
+OPTION_PVPMODE_REVENGE_TOOLTIP	Só poderás atacar aqueles que tenham mau Karma igualmente.
 OPTION_SALESTEXT	Nome da loja
 OPTION_SALESTEXT_VIEW_OFF	Esconder
 OPTION_SALESTEXT_VIEW_ON	Mostrar
@@ -276,8 +276,8 @@ OPTION_TITLE	Opções
 OPTION_VIEW_CHAT	Linha de Chat
 OPTION_VIEW_CHAT_OFF	Esconder
 OPTION_VIEW_CHAT_ON	Mostrar
-PARTY_MEMBER_INFO_NAME	Nome do Grupo
-PASSWORD_DESC_1	Escreva sua senha
+PARTY_MEMBER_INFO_NAME	Nome do grupo
+PASSWORD_DESC_1	Escreve a tua password
 PASSWORD_DESC_2	para abrir o armazém.
 PASSWORD_DESC_3	Já alteraste a tua palavra-passe?
 PASSWORD_DESC_4	Caso não o faças, a tua palavra-passe será "000000".
@@ -329,7 +329,7 @@ SYSTEM_MALL	Loja de Itens
 SYSTEM_OPTION	Opções do Sistema
 TASKBAR_CHARACTER	Personagem [C/V/B/N]
 TASKBAR_CHAT	Janela de Chat [Enter]
-TASKBAR_DISABLE	Desativada
+TASKBAR_DISABLE	Desactivada
 TASKBAR_DRAGON_SOUL	Alquimia de Pedra do Dragão
 TASKBAR_EXPAND	Expandir Janela
 TASKBAR_INVENTORY	Inventário [I]
@@ -338,7 +338,7 @@ TASKBAR_NEXT_QUICKSLOT	Próximo Campo de Acesso Rápido [Shift+Número, Alt]
 TASKBAR_PREV_QUICKSLOT	Pré-visualizar Campo de Acesso Rápido [Shift+Número]
 TASKBAR_SYSTEM	Opções[ESC]
 WHISPER_BAN	Bloquear
-WHISPER_NAME	Sussurrar
+WHISPER_NAME	Segredar
 WHISPER_REPORT	
 WHISPER_SEND	Enviar
 YES	Sim
