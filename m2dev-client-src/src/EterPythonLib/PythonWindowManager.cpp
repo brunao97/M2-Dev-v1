@@ -1160,6 +1160,20 @@ namespace UI
 		m_pMiddleCaptureWindow = NULL;
 	}
 
+	BOOL CWindowManager::RunMouseWheel(int nLen)
+	{
+		SetMousePosition(m_lMouseX, m_lMouseY);
+
+		CWindow* pWin = GetPointWindow();
+
+		if (pWin)
+		{
+			return pWin->OnMouseWheel(nLen);
+		}
+
+		return FALSE;
+	}
+
 	// IME
 	void CWindowManager::RunIMEUpdate()
 	{

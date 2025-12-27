@@ -11,6 +11,10 @@
 
 # Allow .gitignore itself
 !.gitignore
+!.agent/
+!/.agent/**
+!/.agent/rules/
+!/.agent/rules/*
 
 # Explicitly ignore logs/debug files even in allowed folders
 /m2dev-server/web_manager_debug.log
@@ -30,5 +34,4 @@
 **/pack/
 
 # User specific large files
-/m2dev-client/assets/
 /m2dev-client/Metin2.exe

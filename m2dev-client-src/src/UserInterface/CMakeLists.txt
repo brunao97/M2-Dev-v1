@@ -1,4 +1,4 @@
-﻿file(GLOB_RECURSE HEADER_FILES "*.h")
+file(GLOB_RECURSE HEADER_FILES "*.h")
 file(GLOB_RECURSE SOURCE_FILES "*.c" "*.cpp")
 
 add_executable(UserInterface WIN32
@@ -15,13 +15,13 @@ set_target_properties(UserInterface PROPERTIES
 	OUTPUT_NAME_RELWITHDEBINFO "Metin2_Debug"
 )
 
-# Copy executable to client folder after build (for all configurations)
-add_custom_command(TARGET UserInterface POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		$<TARGET_FILE:UserInterface>
-		"G:/metin2-files-clean-64/M2-Dev/m2dev-client/Metin2_Debug.exe"
-	COMMENT "Copying Metin2_Debug.exe to client folder"
-)
+# Copy command commented out to avoid build errors - copy manually after build
+# add_custom_command(TARGET UserInterface POST_BUILD
+# 	COMMAND ${CMAKE_COMMAND} -E copy_if_different
+# 		$<TARGET_FILE:UserInterface>
+# 		"G:/metin2-files-clean-64/M2-Dev/m2dev-client/Metin2_Debug.exe"
+# 	COMMENT "Copying Metin2_Debug.exe to client folder"
+# )
 
 target_link_libraries(UserInterface
 	AudioLib

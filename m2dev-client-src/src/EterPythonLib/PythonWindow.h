@@ -212,6 +212,7 @@ namespace UI
 		virtual BOOL	OnMouseRightButtonDoubleClick();
 		virtual BOOL	OnMouseMiddleButtonDown();
 		virtual BOOL	OnMouseMiddleButtonUp();
+		virtual BOOL	OnMouseWheel(int nLen);
 
 		virtual BOOL	OnKeyDown(int ikey);
 		virtual BOOL	OnKeyUp(int ikey);

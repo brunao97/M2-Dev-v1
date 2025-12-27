@@ -143,6 +143,7 @@ namespace UI
 		void		RunMouseRightButtonDoubleClick(long x, long y);
 		void		RunMouseMiddleButtonDown(long x, long y);
 		void		RunMouseMiddleButtonUp(long x, long y);
+		BOOL		RunMouseWheel(int nLen);
 
 		void		RunIMEUpdate();
 		void		RunIMETabEvent();

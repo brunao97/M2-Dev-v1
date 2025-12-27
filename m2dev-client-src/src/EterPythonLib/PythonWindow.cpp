@@ -872,6 +872,16 @@ namespace UI
 		return FALSE;
 	}
 
+	BOOL CWindow::OnMouseWheel(int nLen)
+	{
+		long lValue;
+		if (PyCallClassMemberFunc(m_poHandler, "OnMouseWheel", Py_BuildValue("(i)", nLen), &lValue))
+			if (0 != lValue)
+				return TRUE;
+
+		return FALSE;
+	}
+
 	BOOL CWindow::OnIMETabEvent()
 	{
 		long lValue;

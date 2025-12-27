@@ -29,7 +29,7 @@
 #include "GameType.h"
 extern DWORD __DEFAULT_CODE_PAGE__;
 
-#define APP_NAME	"Metin 2"
+#define APP_NAME	"James2 - AS MELHORES SALADAS"
 
 enum
 {
