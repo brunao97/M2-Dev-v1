@@ -735,7 +735,6 @@ class TargetBoard(ui.ThinBoard):
 		self.__Initialize()
 
 	def OnPressedCloseButton(self):
-		player.ClearTarget()
 		self.Close()
 
 	if app.ENABLE_SEND_TARGET_INFO:
@@ -764,6 +763,7 @@ class TargetBoard(ui.ThinBoard):
 
 	def Close(self):
 		self.__Initialize()
+		player.ClearTarget()
 		if app.ENABLE_SEND_TARGET_INFO:
 			if self.infoBoard:
 				self.infoBoard.Hide()
