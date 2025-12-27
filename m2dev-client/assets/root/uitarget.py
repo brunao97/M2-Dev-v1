@@ -613,6 +613,12 @@ class TargetBoard(ui.ThinBoard):
 		hpGauge.MakeGauge(130, "red")
 		hpGauge.Hide()
 
+		hpPercentageText = ui.TextLine()
+		hpPercentageText.SetParent(self)
+		hpPercentageText.SetDefaultFontName()
+		hpPercentageText.SetOutline()
+		hpPercentageText.Hide()
+
 		closeButton = ui.Button()
 		closeButton.SetParent(self)
 		closeButton.SetUpVisual("d:/ymir work/ui/public/close_button_01.sub")
@@ -627,6 +633,8 @@ class TargetBoard(ui.ThinBoard):
 		else:
 			hpGauge.SetPosition(175, 17)
 			hpGauge.SetWindowHorizontalAlignRight()
+			hpPercentageText.SetWindowHorizontalAlignRight()
+			hpPercentageText.SetPosition(200, 13)
 			closeButton.SetWindowHorizontalAlignRight()
 
 		closeButton.SetEvent(ui.__mem_func__(self.OnPressedCloseButton))
@@ -689,6 +697,7 @@ class TargetBoard(ui.ThinBoard):
 
 		self.name = name
 		self.hpGauge = hpGauge
+		self.hpPercentageText = hpPercentageText
 		self.closeButton = closeButton
 		self.nameString = 0
 		self.nameLength = 0
@@ -755,6 +764,9 @@ class TargetBoard(ui.ThinBoard):
 
 	def Close(self):
 		self.__Initialize()
+		if app.ENABLE_SEND_TARGET_INFO:
+			if self.infoBoard:
+				self.infoBoard.Hide()
 		self.Hide()
 
 	def Open(self, vid, name):
@@ -836,6 +848,8 @@ class TargetBoard(ui.ThinBoard):
 		self.name.SetHorizontalAlignCenter()
 		self.name.SetWindowHorizontalAlignCenter()
 		self.hpGauge.Hide()
+		if hasattr(self, "hpPercentageText"):
+			self.hpPercentageText.Hide()
 		self.SetSize(250, 40)
 
 		if app.ENABLE_SEND_TARGET_INFO:
@@ -905,6 +919,8 @@ class TargetBoard(ui.ThinBoard):
 			self.UpdatePosition()
 
 		self.hpGauge.SetPercentage(hpPercentage, 100)
+		self.hpPercentageText.SetText("%d%%" % hpPercentage)
+		self.hpPercentageText.Show()
 
 	def ShowDefaultButton(self):
 

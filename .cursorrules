@@ -1,0 +1,201 @@
+# M2-Dev Project Rules
+
+## Project Overview
+Este é um projeto Metin2 completo com servidor e cliente. O projeto inclui:
+- **m2dev-server**: Servidor Metin2 com gerenciamento web (Node.js/Bun)
+- **m2dev-client**: Cliente do jogo Metin2
+- **m2dev-server-src**: Código fonte do servidor (C++)
+- **m2dev-client-src**: Código fonte do cliente (C++)
+
+## Tecnologias Principais
+- **Backend**: Node.js/Bun, Python, C++
+- **Frontend Web**: HTML, CSS (Tailwind), JavaScript
+- **Database**: MySQL/MariaDB
+- **Quest System**: Sistema de quests compiladas (.quest -> .qc)
+
+## Regras de Arquivos
+
+### Arquivos .bat (Batch)
+- **NÃO criar arquivos .bat sem autorização explícita**
+- Se for necessário criar um arquivo .bat temporário:
+  1. Execute o arquivo imediatamente após criação
+  2. Delete o arquivo após execução bem-sucedida
+  3. Informe o usuário sobre a criação e remoção
+
+### Arquivos .md (Markdown)
+- **NÃO criar arquivos .md sem solicitação ou aprovação explícita**
+- Documentação só deve ser criada quando explicitamente solicitada
+- README.md existentes podem ser atualizados apenas se necessário
+
+### Arquivos Temporários
+- Não criar arquivos temporários desnecessários
+- Se criar arquivos temporários, removê-los após uso
+- Preferir usar variáveis de ambiente ou memória quando possível
+
+## Estrutura do Projeto
+
+### Servidor (m2dev-server)
+- **web_manager.js**: Interface web de gerenciamento (porta 8080)
+- **start.py**: Script para iniciar servidor
+- **stop.py**: Script para parar servidor
+- **compile_quests.ps1**: Script PowerShell para compilar quests
+- **channels/**: Diretório com canais do servidor (auth, db, channel1-4, channel99)
+- **share/**: Arquivos compartilhados (conf, data, locale)
+- **sql/**: Scripts SQL para inicialização do banco de dados
+
+### Quest System
+- Quests estão em `share/locale/english/quest/`
+- Compilador: `qc.exe` (gera arquivos .qc)
+- Lista de quests: `locale_list`
+- Para compilar: executar `compile_quests.ps1`
+
+### Web Manager
+- Interface dark theme com Tailwind CSS
+- Porta padrão: 8080
+- Funcionalidades:
+  - Status do sistema (MySQL, Database, Auth, Channels)
+  - Controles de operação (Iniciar, Parar, Reiniciar)
+  - Visualização de logs
+  - Estatísticas (contas, players)
+
+## Comandos Importantes
+
+### Servidor Web
+```bash
+cd m2dev-server
+bun run dev    # Inicia servidor web na porta 8080
+```
+
+### Compilar Quests
+```bash
+cd m2dev-server
+powershell -ExecutionPolicy Bypass -File compile_quests.ps1
+```
+
+### Iniciar Servidor Game
+```bash
+cd m2dev-server
+python start.py
+```
+
+## Regras de Desenvolvimento
+
+### Compilação de Código Fonte
+- **SEMPRE compilar o módulo correspondente após alterar código fonte**
+- Se alterar código em `m2dev-server-src/`: **COMPILAR O SERVIDOR**
+  - Usar CMake: `cd m2dev-server-src/build && cmake --build . --target game --config Release`
+  - Ou MSBuild: compilar o projeto `game.vcxproj` em modo Release
+  - O servidor compila bibliotecas/módulos, mas **NÃO gera executável** - apenas recompila o código fonte
+  - Após compilar, informar ao usuário que é necessário reiniciar o servidor
+- Se alterar código em `m2dev-client-src/`: **COMPILAR O CLIENTE**
+  - Seguir processo de compilação do cliente correspondente
+  - O cliente **GERA EXECUTÁVEL** após compilação
+  - Verificar data/hora do executável após compilação para confirmar atualização
+  - Após compilar, informar ao usuário que é necessário reiniciar o cliente
+- **NUNCA considerar alterações concluídas sem compilar o módulo afetado**
+
+### Antes de Executar Comandos
+- **SEMPRE analisar o projeto antes de usar comandos npm, bun, etc.**
+- Verificar se as dependências estão instaladas
+- Verificar se os arquivos necessários existem
+
+### Testes
+- **NÃO testar o app automaticamente** (conforme regra do usuário)
+- Apenas executar testes quando explicitamente solicitado
+
+### Portas
+- Porta 8080: Web Manager
+- Verificar se a porta está livre antes de iniciar servidor
+- Se ocupada, informar ao usuário ou usar porta alternativa
+
+### Banco de Dados
+- Scripts SQL em `m2dev-server/sql/`
+- Estrutura principal: `account.sql`, `player.sql`, `common.sql`, `log.sql`
+- Sempre verificar sintaxe SQL antes de executar
+
+## Quest System Details
+- Formato: Arquivos .quest (Lua-like syntax)
+- Compilador: qc.exe gera arquivos binários
+- Localização: `share/locale/english/quest/`
+- Total de quests: ~239 (207 compiladas com sucesso)
+- Erros comuns: "must start with 'quest'", problemas de sintaxe
+
+## Frontend Web Manager
+- Framework: Tailwind CSS (via CDN)
+- Tema: Dark mode (class-based)
+- Ícones: Lucide Icons
+- Fontes: Geist, Inter
+- Cores customizadas via CSS variables
+- Responsivo: Grid layout adaptativo
+
+## Convenções de Código
+
+### JavaScript/Node.js
+- Usar template literals com cuidado (problemas conhecidos com HTML)
+- Preferir concatenação de strings para HTML complexo
+- Usar async/await para operações assíncronas
+
+### Python
+- Scripts de gerenciamento em Python 3
+- Usar path.join para caminhos multiplataforma
+- Verificar processos antes de iniciar/parar
+
+### Cliente Python (root)
+- **NÃO usar `lambdas`** no `serverCommandList` ou em callbacks do `stringCommander.py`. O sistema utiliza inspeção de objeto (`im_func`) que falha com funções anônimas, causando crash no carregamento da fase de jogo.
+- Sempre declarar métodos de classe (`def __Metodo(self):`) e usá-los como callback (`"comando": self.__Metodo`).
+- **Verificação de Pasta Ativa**: O cliente pode ler da pasta `assets/root/` ou do arquivo compactado `root.pck`. Sempre valide se as alterações estão ativas usando um comando de chat de debug (ex: `/DEBUG_ROOT`).
+- Se as alterações na pasta `assets` não refletirem, é necessário recompilar os arquivos `.pck` usando o `PackMaker.exe`.
+
+### SQL
+- Sempre validar sintaxe antes de executar
+- Usar transações quando apropriado
+- Backup antes de alterações estruturais
+
+## Notas Importantes
+- O projeto usa Bun como runtime JavaScript (alternativa ao Node.js)
+- Porta 8080 pode estar ocupada - sempre verificar antes de iniciar
+- Quests precisam ser compiladas antes do servidor iniciar completamente
+- Sistema de logs em `channels/*/log/` e `syslog.log`, `syserr.log`
+
+## Aprendizados de Implementação: Pickup Highlight
+
+### 🔍 Estrutura de Execução (Cores/Núcleos)
+- No Metin2 Windows Server, cada canal pode ter múltiplos núcleos (**Cores**).
+- Cada mapa do jogo pode estar em um core diferente (ex: Mapa 1 no core2, Mapa 2 no core1).
+- **CRÍTICO**: O `game.exe` compilado deve ser copiado para TODOS os núcleos (`channel1/core1`, `channel1/core2`, etc.) e renomeado adequadamente (ex: `channel1_core1.exe`).
+- O `start.py` executa os arquivos individuais de cada pasta. Se você atualizar apenas um, o efeito não aparecerá em outros mapas.
+
+### 🛡️ Lógica de Highlight (BHighlight)
+- **Problema de Relog/Mover**: Se o `bHighlight` tiver valor padrão `true`, o efeito de brilho aparecerá toda vez que o player logar ou mover itens no inventário.
+- **Solução Ideal**: 
+    1. Definir o valor padrão de `bHighlight` como `false` nas declarações das funções (`item.h`).
+    2. Passar `true` explicitamente **apenas** nas origens desejadas: `CShop::Buy` (comprar no NPC) e `CHARACTER::PickupItem` (pegar do chão).
+    3. Remover travas de `LastOwnerPID` no `item.cpp`, pois agora o controle de "quem brilha" é feito na chamada da função, não na lógica interna do item.
+
+### 📝 Depuração Eficiente (C++)
+- Usar `sys_err` com prefixos identificáveis (ex: `[DEBUG_ITEM]`, `[DEBUG_PICKUP]`) para facilitar a filtragem via grep/PowerShell.
+- Incluir `__DATE__` e `__TIME__` nos logs de inicialização (`Initialize`) para confirmar que o binário que está rodando é realmente a versão mais recente compilada.
+- Sempre verificar qual `syserr.log` de qual core o personagem está gerando logs para evitar confusão de "log não aparecendo".
+
+## Aprendizados de Implementação: UI e Logs
+
+### 🐍 Interface Python/C++
+- **Exposição de Flags**: Ao usar diretivas de pré-processador (`#ifdef`) no C++ para controlar features, elas DEVEM ser expostas ao Python explicitamente.
+  - Arquivo: `UserInterface/PythonApplicationModule.cpp` (ou similar).
+  - Método: `PyModule_AddIntConstant(poModule, "NOME_DA_FLAG", 1);`.
+  - Sintoma de erro: `AttributeError: 'module' object has no attribute 'NOME_DA_FLAG'` no `syserr.txt`.
+
+### 🛡️ Inicialização e Estabilidade de UI
+- **Inicialização Completa**: Sempre inicialize todas as listas, dicionários e variáveis de membro no método `__init__` das classes de janela (ex: `uitarget.py`).
+  - Problema: Métodos como `SetTarget` ou `OnUpdate` podem ser chamados por pacotes de rede antes que a janela seja "aberta" ou totalmente carregada.
+  - Sintoma: `AttributeError: 'Classe' object has no attribute 'lista_filhos'`.
+- **Validação de Constantes**: Adicione verificações de segurança (`hasattr`) no início dos scripts Python se eles dependerem de constantes que podem não existir em binários antigos.
+  ```python
+  if not hasattr(app, "FEATURE_FLAG"):
+      app.FEATURE_FLAG = 0
+  ```
+
+### 📜 Análise de Logs (Client)
+- **Filtragem de Ruído**: O `syserr.txt` do cliente é frequentemente inundado com logs de pacotes de rede (`HEADER_GC_CHARACTER_MOVE`, etc.).
+- **Técnica**: Use `grep -a` (ou `Select-String` no PowerShell) para filtrar por erros específicos ou padrões de debug, ignorando o ruído.
+  - Exemplo: `grep -a "TARGET_INFO" syserr.txt` para ver apenas logs da feature específica.

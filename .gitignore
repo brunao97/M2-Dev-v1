@@ -1,5 +1,5 @@
 # Ignore everything by default
-/*
+# /*
 
 !/Target_Information_System/
 
@@ -32,6 +32,9 @@
 **/obj/
 **/build/
 **/pack/
-
+**/item_proto
+**/mob_proto
+**/m2dev-tools-3rd
+**/m2dev-dump-proto
 # User specific large files
 /m2dev-client/Metin2.exe

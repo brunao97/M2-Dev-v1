@@ -188,3 +188,14 @@ The SQL files are located in `m2server/sql/`. The primary schemas are:
 - **Adicionado**: Guia de desenvolvimento de Quests (Lua).
     - Cobre triggers, condições (with), funções essenciais e fluxo de implementação.
     - Disponível em `.agent/rules/questing.md`.
+
+### [26/12/2025] - Correção de Item Proto (Pedra de Resfriamento+5)
+- **Problema**: O item `28532` (Pedra de Resfriamento+5) estava configurado como `ITEM_NONE` e não equipável.
+- **Correção Server-Side**:
+    - Atualizado `item_proto.txt` (Server/DB) para `ITEM_METIN`, `WEAR_WEAPON` e `APPLY_CAST_SPEED` (35%).
+- **Correção Client-Side**:
+    - Compilada a ferramenta `dump_proto` a partir do source.
+    - Gerado binário `item_proto` atualizado e aplicado em `locale_pt` / `locale_en`.
+    - Reempacotados `locale_pt.pck` e `locale_en.pck` com `PackMaker`.
+- **Documentação**:
+    - Criado guia de gerenciamento de Proto em `.agent/rules/proto-management.md`.
