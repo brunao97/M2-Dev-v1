@@ -234,6 +234,115 @@ class Window(object):
 	def IsScissorRectEnabled(self):
 		return wndMgr.IsScissorRectEnabled(self.hWnd)
 
+class AnimatedWindow(Window):
+	"""
+	Classe base para janelas com animação de scale ao abrir/fechar.
+	
+	Uso:
+		class MyWindow(ui.AnimatedWindow):
+			def __init__(self):
+				ui.AnimatedWindow.__init__(self)
+				self.SetAnimationSpeed(15.0)  # Opcional
+	
+	Métodos:
+		Show() - Mostra a janela com animação de scale (0.0 -> 1.0)
+		Hide() - Esconde a janela com animação de scale (1.0 -> 0.0)
+		ShowWithoutAnimation() - Mostra instantaneamente sem animação
+		HideWithoutAnimation() - Esconde instantaneamente sem animação
+		SetAnimationSpeed(speed) - Define velocidade da animação (padrão: 15.0)
+	"""
+	
+	def __init__(self, layer="UI"):
+		Window.__init__(self, layer)
+		self.isScaleAnimating = False
+		self.hideAfterAnimation = False
+		self.animationSpeed = 15.0  # Velocidade padrão da animação
+		
+	def __del__(self):
+		Window.__del__(self)
+	
+	def SetAnimationSpeed(self, speed):
+		"""
+		Define a velocidade da animação de scale.
+		
+		Args:
+			speed (float): Velocidade da animação
+				- 10.0 = Muito lento (elegante)
+				- 15.0 = Padrão (equilibrado)
+				- 20.0 = Rápido (responsivo)
+				- 25.0 = Muito rápido
+		"""
+		self.animationSpeed = speed
+	
+	def Show(self):
+		"""
+		Mostra a janela com animação de scale.
+		A janela cresce suavemente de 0% até 100% do tamanho.
+		"""
+		# Começar com scale 0 (invisível)
+		wndMgr.SetWindowScale(self.hWnd, 0.0, 0.0)
+		
+		# Mostrar a janela
+		Window.Show(self)
+		
+		# Animar para scale 1 (tamanho normal)
+		wndMgr.SetWindowScaleSmooth(self.hWnd, 1.0, 1.0, self.animationSpeed)
+		self.isScaleAnimating = True
+		self.hideAfterAnimation = False
+	
+	def ShowWithoutAnimation(self):
+		"""
+		Mostra a janela instantaneamente sem animação.
+		Útil para casos especiais onde a animação não é desejada.
+		"""
+		wndMgr.SetWindowScale(self.hWnd, 1.0, 1.0)
+		Window.Show(self)
+		self.isScaleAnimating = False
+		self.hideAfterAnimation = False
+	
+	def Hide(self):
+		"""
+		Esconde a janela com animação de scale.
+		A janela diminui suavemente de 100% até 0% do tamanho.
+		"""
+		if not self.IsShow():
+			return
+		
+		# Animar para scale 0
+		wndMgr.SetWindowScaleSmooth(self.hWnd, 0.0, 0.0, self.animationSpeed)
+		self.isScaleAnimating = True
+		self.hideAfterAnimation = True
+	
+	def HideWithoutAnimation(self):
+		"""
+		Esconde a janela instantaneamente sem animação.
+		Útil para casos especiais onde a animação não é desejada.
+		"""
+		wndMgr.SetWindowScale(self.hWnd, 1.0, 1.0)
+		Window.Hide(self)
+		self.isScaleAnimating = False
+		self.hideAfterAnimation = False
+	
+	def OnUpdate(self):
+		"""
+		Atualiza a animação de scale.
+		Este método é chamado automaticamente pelo sistema.
+		
+		IMPORTANTE: Se você sobrescrever este método em uma classe filha,
+		certifique-se de chamar ui.AnimatedWindow.OnUpdate(self) primeiro!
+		"""
+		if self.isScaleAnimating:
+			# Verificar se a animação terminou
+			if not wndMgr.IsWindowScaleAnimating(self.hWnd):
+				self.isScaleAnimating = False
+				
+				# Se deve esconder após a animação
+				if self.hideAfterAnimation:
+					Window.Hide(self)
+					self.hideAfterAnimation = False
+					# Resetar scale para 1.0 para próxima abertura
+					wndMgr.SetWindowScale(self.hWnd, 1.0, 1.0)
+
 class ListBoxEx(Window):
 
 	class Item(Window):

@@ -3586,6 +3586,68 @@ PyObject* wndMgrIsScissorRectEnabled(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("b", pWindow->IsScissorRectEnabled());
 }
 
+// Scale Animation Functions
+PyObject* wndMgrSetWindowScale(PyObject* poSelf, PyObject* poArgs)
+{
+	UI::CWindow* pWindow;
+	if (!PyTuple_GetWindow(poArgs, 0, &pWindow))
+		return Py_BuildException();
+
+	float fScaleX;
+	if (!PyTuple_GetFloat(poArgs, 1, &fScaleX))
+		return Py_BuildException();
+
+	float fScaleY;
+	if (!PyTuple_GetFloat(poArgs, 2, &fScaleY))
+		return Py_BuildException();
+
+	pWindow->SetScale(fScaleX, fScaleY);
+	return Py_BuildNone();
+}
+
+PyObject* wndMgrSetWindowScaleSmooth(PyObject* poSelf, PyObject* poArgs)
+{
+	UI::CWindow* pWindow;
+	if (!PyTuple_GetWindow(poArgs, 0, &pWindow))
+		return Py_BuildException();
+
+	float fTargetScaleX;
+	if (!PyTuple_GetFloat(poArgs, 1, &fTargetScaleX))
+		return Py_BuildException();
+
+	float fTargetScaleY;
+	if (!PyTuple_GetFloat(poArgs, 2, &fTargetScaleY))
+		return Py_BuildException();
+
+	float fSpeed;
+	if (!PyTuple_GetFloat(poArgs, 3, &fSpeed))
+		return Py_BuildException();
+
+	pWindow->SetScaleSmooth(fTargetScaleX, fTargetScaleY, fSpeed);
+	return Py_BuildNone();
+}
+
+PyObject* wndMgrGetWindowScale(PyObject* poSelf, PyObject* poArgs)
+{
+	UI::CWindow* pWindow;
+	if (!PyTuple_GetWindow(poArgs, 0, &pWindow))
+		return Py_BuildException();
+
+	float fScaleX, fScaleY;
+	pWindow->GetScale(&fScaleX, &fScaleY);
+
+	return Py_BuildValue("(ff)", fScaleX, fScaleY);
+}
+
+PyObject* wndMgrIsWindowScaleAnimating(PyObject* poSelf, PyObject* poArgs)
+{
+	UI::CWindow* pWindow;
+	if (!PyTuple_GetWindow(poArgs, 0, &pWindow))
+		return Py_BuildException();
+
+	return Py_BuildValue("i", pWindow->IsScaleAnimating());
+}
+
 #if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
 PyObject* wndMgrSetSlotDiffuseColor(PyObject* poSelf, PyObject* poArgs)
 {
@@ -3811,6 +3873,12 @@ void initwndMgr()
 		{ "EnableScissorRect",			wndMgrEnableScissorRect,			METH_VARARGS },
 		{ "DisableScissorRect",			wndMgrDisableScissorRect,			METH_VARARGS },
 		{ "IsScissorRectEnabled",		wndMgrIsScissorRectEnabled,			METH_VARARGS },
+
+		// Scale Animation
+		{ "SetWindowScale",				wndMgrSetWindowScale,			METH_VARARGS },
+		{ "SetWindowScaleSmooth",		wndMgrSetWindowScaleSmooth,		METH_VARARGS },
+		{ "GetWindowScale",				wndMgrGetWindowScale,			METH_VARARGS },
+		{ "IsWindowScaleAnimating",		wndMgrIsWindowScaleAnimating,	METH_VARARGS },
 
 		{ NULL,							NULL,								NULL },
 	};

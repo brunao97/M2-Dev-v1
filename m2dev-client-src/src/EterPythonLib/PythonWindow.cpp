@@ -76,7 +76,13 @@ namespace UI
 		m_bEnableScissorRect(false),
 		m_pParent(NULL),
 		m_dwFlag(0),
-		m_isUpdatingChildren(FALSE)
+		m_isUpdatingChildren(FALSE),
+		m_fScaleX(1.0f),
+		m_fScaleY(1.0f),
+		m_fTargetScaleX(1.0f),
+		m_fTargetScaleY(1.0f),
+		m_fScaleSpeed(10.0f),
+		m_bScaleAnimating(false)
 	{
 #ifdef _DEBUG
 		static DWORD DEBUG_dwGlobalCounter = 0;
@@ -196,6 +202,9 @@ namespace UI
 
 		__RemoveReserveChildren();
 
+		// Update scale animation
+		UpdateScaleAnimation();
+
 		OnUpdate();
 
 		m_isUpdatingChildren = TRUE;
@@ -303,6 +312,81 @@ namespace UI
 	bool CWindow::IsScissorRectEnabled() const
 	{
 		return m_bEnableScissorRect;
+	}
+
+	// Scale Animation Methods
+	void CWindow::SetScale(float fScaleX, float fScaleY)
+	{
+		m_fScaleX = fScaleX;
+		m_fScaleY = fScaleY;
+		m_fTargetScaleX = fScaleX;
+		m_fTargetScaleY = fScaleY;
+		m_bScaleAnimating = false;
+	}
+
+	void CWindow::SetScaleSmooth(float fTargetScaleX, float fTargetScaleY, float fSpeed)
+	{
+		m_fTargetScaleX = fTargetScaleX;
+		m_fTargetScaleY = fTargetScaleY;
+		m_fScaleSpeed = fSpeed;
+		m_bScaleAnimating = true;
+	}
+
+	void CWindow::GetScale(float* pfScaleX, float* pfScaleY)
+	{
+		if (pfScaleX)
+			*pfScaleX = m_fScaleX;
+		if (pfScaleY)
+			*pfScaleY = m_fScaleY;
+	}
+
+	bool CWindow::IsScaleAnimating()
+	{
+		return m_bScaleAnimating;
+	}
+
+	void CWindow::UpdateScaleAnimation()
+	{
+		if (!m_bScaleAnimating)
+			return;
+
+		// Usar delta time para animação suave
+		static DWORD s_dwLastTime = timeGetTime();
+		DWORD dwCurTime = timeGetTime();
+		float fElapsedTime = (dwCurTime - s_dwLastTime) / 1000.0f;
+		s_dwLastTime = dwCurTime;
+
+		float fDelta = fElapsedTime * m_fScaleSpeed;
+
+		// Interpolar suavemente para o target
+		if (fabs(m_fScaleX - m_fTargetScaleX) > 0.01f)
+		{
+			float diff = m_fTargetScaleX - m_fScaleX;
+			m_fScaleX += diff * fDelta;
+		}
+		else
+		{
+			m_fScaleX = m_fTargetScaleX;
+		}
+
+		if (fabs(m_fScaleY - m_fTargetScaleY) > 0.01f)
+		{
+			float diff = m_fTargetScaleY - m_fScaleY;
+			m_fScaleY += diff * fDelta;
+		}
+		else
+		{
+			m_fScaleY = m_fTargetScaleY;
+		}
+
+		// Parar animação quando chegar no target
+		if (fabs(m_fScaleX - m_fTargetScaleX) <= 0.01f &&
+			fabs(m_fScaleY - m_fTargetScaleY) <= 0.01f)
+		{
+			m_fScaleX = m_fTargetScaleX;
+			m_fScaleY = m_fTargetScaleY;
+			m_bScaleAnimating = false;
+		}
 	}
 
 	void CWindow::OnRender()

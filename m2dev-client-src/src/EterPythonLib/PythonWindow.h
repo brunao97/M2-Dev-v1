@@ -164,6 +164,13 @@ namespace UI
 		void			EnableScissorRect();
 		void			DisableScissorRect();
 		bool			IsScissorRectEnabled() const;
+	
+		// Scale Animation Support
+		void			SetScale(float fScaleX, float fScaleY);
+		void			SetScaleSmooth(float fTargetScaleX, float fTargetScaleY, float fSpeed);
+		void			GetScale(float* pfScaleX, float* pfScaleY);
+		bool			IsScaleAnimating();
+		void			UpdateScaleAnimation();
 		/////////////////////////////////////
 
 		virtual void	OnRender();
@@ -255,6 +262,14 @@ namespace UI
 
 		BOOL				m_isUpdatingChildren;
 		TWindowContainer	m_pReserveChildList;
+	
+		// Scale Animation Members
+		float				m_fScaleX;
+		float				m_fScaleY;
+		float				m_fTargetScaleX;
+		float				m_fTargetScaleY;
+		float				m_fScaleSpeed;
+		bool				m_bScaleAnimating;
 
 #ifdef _DEBUG
 	public:
